@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" 
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String
+  url         String
+  type        ProjectType @default(CODING) // Case Study (Figma) or Coding Project
+  tags        String[]    // Tech stack or design tools
+  imageUrl    String?     // Project thumbnail
+  githubUrl   String?     // For coding projects
+  liveUrl     String?     // Live demo
+  featured    Boolean     @default(false)
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime    @default(now())
+}
+
+model Competition {
+  id          Int      @id @default(autoincrement())
+  name        String
+  type        String   // "Hackathon", "Competition", "Award", etc.
+  description String
+  result      String   // "1st Place", "Winner", "Finalist", etc.
+  organizer   String?  // Organization/company that hosted
+  imageUrl    String?  // Competition logo or certificate
+  url         String?  // Link to project/certificate
+  tags        String[] // Related technologies, topics, or categories
+  date        DateTime
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model BlogPost {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  excerpt     String   // Short summary
+  content     String   @db.Text // Full markdown content
+  coverImage  String?
+  tags        String[] // Categories/topics
+  published   Boolean  @default(false)
+  readTime    Int?     // Estimated read time in minutes
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum ProjectType {
+  CODING
+  CASE_STUDY
+}
+
+
