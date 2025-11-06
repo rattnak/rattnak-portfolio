@@ -1,6 +1,5 @@
-import { PrismaClient, ProjectType } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { ProjectType } from "@prisma/client";
+import { prisma } from "./prisma";
 
 export async function getProjects() {
   return prisma.project.findMany({

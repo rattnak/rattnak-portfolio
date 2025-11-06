@@ -86,6 +86,27 @@ export const mockCompetitions = [
     name: 'HackMIT 2024',
     type: 'Hackathon',
     description: 'Built an AI-powered study assistant that won 1st place among 200+ teams',
+    content: `## The Challenge
+
+At HackMIT 2024, our team set out to solve a common problem faced by students: inefficient study habits and information overload. We wanted to create an intelligent study companion that could understand individual learning patterns and provide personalized assistance.
+
+## Our Solution
+
+We developed an AI-powered study assistant that combines natural language processing with spaced repetition algorithms. The application analyzes study materials, generates custom quizzes, and adapts to each user's learning pace and style.
+
+### Key Features
+- **Smart Content Analysis**: Automatically extracts key concepts from study materials
+- **Personalized Quizzing**: Generates questions based on user's weak areas
+- **Progress Tracking**: Visual analytics dashboard showing learning progress
+- **Collaborative Study**: Real-time study groups with shared flashcards
+
+## Technical Implementation
+
+Built with React for the frontend and Python with FastAPI for the backend. We integrated OpenAI's GPT-4 for content analysis and question generation, and implemented a custom spaced repetition algorithm based on the SM-2 algorithm.
+
+## Impact
+
+Our project impressed the judges with its practical application and technical execution. We competed against 200+ teams and secured 1st place. The project has since been used by over 500 students at MIT.`,
     result: '1st Place',
     organizer: 'MIT',
     imageUrl: '/img/competitions/hackmit.png',
@@ -100,6 +121,34 @@ export const mockCompetitions = [
     name: 'Google Code Jam',
     type: 'Competition',
     description: 'Advanced to Round 2 in Google\'s annual coding competition',
+    content: `## About the Competition
+
+Google Code Jam is one of the most prestigious coding competitions in the world, attracting tens of thousands of participants globally. The competition tests algorithmic thinking, problem-solving skills, and implementation speed across multiple rounds.
+
+## My Journey
+
+### Qualification Round
+Successfully solved 4 out of 5 problems within the time limit, securing a spot in Round 1 with a top 20% ranking.
+
+### Round 1
+Advanced to Round 2 by solving challenging problems involving:
+- Dynamic programming optimization
+- Graph theory algorithms
+- Number theory and combinatorics
+
+## Key Achievements
+
+- Ranked in the top 3,000 globally out of 30,000+ participants
+- Demonstrated proficiency in competitive programming techniques
+- Solved complex algorithmic challenges under time pressure
+
+## Skills Developed
+
+This competition significantly improved my ability to:
+- Break down complex problems into manageable components
+- Optimize algorithms for time and space complexity
+- Work efficiently under pressure
+- Debug code quickly and effectively`,
     result: 'Round 2 Qualifier',
     organizer: 'Google',
     imageUrl: '/img/competitions/codejam.png',
@@ -114,6 +163,34 @@ export const mockCompetitions = [
     name: 'Dean\'s List Award',
     type: 'Award',
     description: 'Recognized for academic excellence with a GPA above 3.75',
+    content: `## Academic Achievement
+
+The Dean's List is a prestigious academic honor awarded to students who demonstrate exceptional performance in their coursework. This recognition reflects consistent dedication to academic excellence throughout the semester.
+
+## Requirements
+
+- Maintain a GPA of 3.75 or higher
+- Complete a full course load (minimum 12 credits)
+- Demonstrate academic integrity and ethical conduct
+
+## Significance
+
+This achievement represents:
+- Strong foundational knowledge across multiple disciplines
+- Effective time management and study skills
+- Commitment to continuous learning and improvement
+- Balance between academic rigor and personal development
+
+## Academic Focus
+
+My coursework this semester included:
+- Advanced algorithms and data structures
+- Software engineering principles
+- Database systems
+- Web application development
+- Computer systems architecture
+
+This recognition motivates me to continue pursuing academic excellence while applying classroom knowledge to real-world projects.`,
     result: 'Dean\'s List',
     organizer: 'University',
     imageUrl: null,
