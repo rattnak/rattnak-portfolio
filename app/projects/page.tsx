@@ -1,5 +1,5 @@
 // app/projects/page.tsx
-import { mockProjects } from "@/lib/mockData";
+import { getAllProjects } from "@/lib/database";
 import ProjectsClient from "@/components/ProjectsClient";
 
 export const metadata = {
@@ -7,8 +7,8 @@ export const metadata = {
   description: "Explore my development and design projects",
 };
 
-export default function ProjectsPage() {
-  const projects = mockProjects;
+export default async function ProjectsPage() {
+  const projects = await getAllProjects();
 
   return (
     <div className="min-h-screen">

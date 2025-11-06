@@ -1,5 +1,5 @@
 // app/achievements/page.tsx
-import { mockCompetitions } from "@/lib/mockData";
+import { getAllCompetitions } from "@/lib/database";
 import CompetitionCard from "@/components/CompetitionCard";
 
 export const metadata = {
@@ -7,16 +7,9 @@ export const metadata = {
   description: "Awards, competitions, and recognition",
 };
 
-export default function AchievementsPage() {
-  // Sort achievements: featured first, then by date descending
-  const achievements = [...mockCompetitions].sort((a, b) => {
-    // Featured items come first
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-
-    // Then sort by date descending
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+export default async function AchievementsPage() {
+  // Competitions are already sorted in getAllCompetitions (featured first, then by date descending)
+  const achievements = await getAllCompetitions();
 
   return (
     <div className="min-h-screen">

@@ -1,12 +1,11 @@
 // components/BlogSection.tsx
-import { mockBlogPosts } from "@/lib/mockData";
+import { getAllPublishedBlogPosts } from "@/lib/database";
 import BlogCard from "./BlogCard";
 import Link from "next/link";
 
 export default async function BlogSection() {
-  // TODO: Switch back to getRecentBlogPosts(3) after database is synced
-  // const posts = await getRecentBlogPosts(3);
-  const posts = mockBlogPosts;
+  const allPosts = await getAllPublishedBlogPosts();
+  const posts = allPosts.slice(0, 3);
 
   return (
     <section id="blog" className="section" style={{ borderTop: '1px solid var(--border)' }}>

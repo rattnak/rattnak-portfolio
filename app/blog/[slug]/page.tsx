@@ -1,5 +1,5 @@
 // app/blog/[slug]/page.tsx
-import { mockBlogPosts } from "@/lib/mockData";
+import { getAllBlogSlugs, getBlogPostBySlug } from "@/lib/database";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
@@ -8,14 +8,15 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return mockBlogPosts.map((post) => ({
-    slug: post.slug,
+  const slugs = await getAllBlogSlugs();
+  return slugs.map((slug) => ({
+    slug: slug,
   }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const blog = mockBlogPosts.find((post) => post.slug === slug);
+  const blog = await getBlogPostBySlug(slug);
 
   if (!blog) {
     return {
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
-  const blog = mockBlogPosts.find((post) => post.slug === slug);
+  const blog = await getBlogPostBySlug(slug);
 
   if (!blog) notFound();
 

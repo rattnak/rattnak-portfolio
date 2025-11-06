@@ -1,20 +1,10 @@
 // components/Competitions.tsx
-import { mockCompetitions } from "@/lib/mockData";
+import { getFeaturedCompetitions } from "@/lib/database";
 import CompetitionListItem from "./CompetitionListItem";
 
 export default async function CompetitionsSection() {
-  // TODO: Switch back to getCompetitions() after database is synced
-  // const competitions = await getCompetitions();
-
-  // Sort competitions: featured first, then by date descending
-  const competitions = [...mockCompetitions].sort((a, b) => {
-    // Featured items come first
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-
-    // Then sort by date descending
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+  // Competitions are already sorted in getFeaturedCompetitions (featured first, then by date descending)
+  const competitions = await getFeaturedCompetitions();
 
   return (
     <section id="competitions" className="section" style={{ borderTop: '1px solid var(--border)' }}>

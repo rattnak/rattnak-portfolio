@@ -1,5 +1,5 @@
 // app/blog/page.tsx
-import { mockBlogPosts } from "@/lib/mockData";
+import { getAllPublishedBlogPosts } from "@/lib/database";
 import BlogCard from "@/components/BlogCard";
 
 export const metadata = {
@@ -7,8 +7,8 @@ export const metadata = {
   description: "Thoughts on software, design, and technology",
 };
 
-export default function BlogPage() {
-  const publishedPosts = mockBlogPosts.filter(post => post.publishedAt !== null);
+export default async function BlogPage() {
+  const publishedPosts = await getAllPublishedBlogPosts();
 
   return (
     <div className="min-h-screen">

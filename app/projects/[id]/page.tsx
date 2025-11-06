@@ -1,22 +1,24 @@
 // app/projects/[id]/page.tsx
-import { mockProjects } from "@/lib/mockData";
+import { getAllProjects, getProjectById } from "@/lib/database";
 import { notFound } from "next/navigation";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function generateStaticParams() {
-  return mockProjects.map((project) => ({
+  const projects = await getAllProjects();
+  return projects.map((project) => ({
     id: project.id.toString(),
   }));
 }
 
 export async function generateMetadata({ params }: Props) {
-  const project = mockProjects.find((p) => p.id.toString() === params.id);
+  const { id } = await params;
+  const project = await getProjectById(parseInt(id));
 
   if (!project) {
     return {
@@ -30,8 +32,9 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default function ProjectDetailPage({ params }: Props) {
-  const project = mockProjects.find((p) => p.id.toString() === params.id);
+export default async function ProjectDetailPage({ params }: Props) {
+  const { id } = await params;
+  const project = await getProjectById(parseInt(id));
 
   if (!project) {
     notFound();

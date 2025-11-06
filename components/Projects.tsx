@@ -1,11 +1,9 @@
 // components/Projects.tsx
-import { mockProjects } from "@/lib/mockData";
+import { getFeaturedProjects } from "@/lib/database";
 import ProjectsClient from "./ProjectsClient";
 
 export default async function ProjectsSection() {
-  // TODO: Switch back to getProjects() after database is synced
-  // const projects = await getProjects();
-  const projects = mockProjects;
+  const projects = await getFeaturedProjects();
 
   return (
     <section id="projects" className="section" style={{ borderTop: '1px solid var(--border)' }}>

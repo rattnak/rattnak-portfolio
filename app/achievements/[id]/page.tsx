@@ -1,5 +1,5 @@
 // app/achievements/[id]/page.tsx
-import { mockCompetitions } from "@/lib/mockData";
+import { getAllCompetitions, getCompetitionById } from "@/lib/database";
 import { notFound } from "next/navigation";
 import AchievementDetailClient from "@/components/AchievementDetailClient";
 
@@ -8,14 +8,15 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return mockCompetitions.map((competition) => ({
+  const competitions = await getAllCompetitions();
+  return competitions.map((competition) => ({
     id: competition.id.toString(),
   }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const achievement = mockCompetitions.find((c) => c.id === parseInt(id));
+  const achievement = await getCompetitionById(parseInt(id));
 
   if (!achievement) {
     return {
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function AchievementDetailPage({ params }: Props) {
   const { id } = await params;
-  const achievement = mockCompetitions.find((c) => c.id === parseInt(id));
+  const achievement = await getCompetitionById(parseInt(id));
 
   if (!achievement) {
     notFound();
