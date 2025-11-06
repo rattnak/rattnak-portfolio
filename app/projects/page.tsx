@@ -11,15 +11,22 @@ export default function ProjectsPage() {
   const projects = mockProjects;
 
   return (
-    <div className="min-h-screen" style={{ paddingTop: '5rem', paddingBottom: '4rem' }}>
-      <div className="container">
+    <div className="min-h-screen">
+      <div className="container" style={{ paddingTop: '4.5rem', paddingBottom: '4rem' }}>
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+        <div style={{ marginBottom: '1rem' }}>
+          <h1 className="text-4xl md:text-5xl font-bold" style={{
+            color: 'var(--text-primary)',
+            marginBottom: '0.5rem',
+            letterSpacing: '-0.02em'
+          }}>
             Projects
           </h1>
-          <p className="text-lg max-w-3xl" style={{ color: 'var(--text-secondary)' }}>
-            A collection of my development and design work, ranging from full-stack applications to UI/UX case studies.
+          <p className="text-lg" style={{
+            color: 'var(--text-secondary)',
+            lineHeight: '1.5'
+          }}>
+            A collection of my development and design work.
           </p>
         </div>
 

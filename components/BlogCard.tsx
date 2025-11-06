@@ -2,6 +2,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Tag from "./Tag";
 
 type Props = {
   id: number;
@@ -26,13 +27,17 @@ export default function BlogCard({
   return (
     <Link href={`/blog/${slug}`} className="block">
       <motion.div
-        whileHover={{ y: -4, boxShadow: 'var(--shadow-lg)' }}
+        whileHover={{ y: -2 }}
         transition={{ duration: 0.2 }}
         className="card group cursor-pointer"
+        style={{ display: 'flex', flexDirection: 'column' }}
       >
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-xs">
-            <span style={{ color: 'var(--text-muted)' }}>
+        <div className="blog-card-content">
+          <div className="flex items-center" style={{ gap: '0.5rem', fontSize: '0.75rem', marginBottom: '0.75rem' }}>
+            <span style={{
+              color: 'var(--text-muted)',
+              fontWeight: 500
+            }}>
               {publishedAt
                 ? new Date(publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                 : "Draft"}
@@ -40,40 +45,44 @@ export default function BlogCard({
             {readTime && (
               <>
                 <span style={{ color: 'var(--text-muted)' }}>•</span>
-                <span style={{ color: 'var(--text-muted)' }}>
+                <span style={{
+                  color: 'var(--text-muted)',
+                  fontWeight: 500
+                }}>
                   {readTime} min read
                 </span>
               </>
             )}
           </div>
 
-          <h3
-            className="text-xl font-semibold transition-colors"
-            style={{ color: 'var(--text-primary)' }}
-          >
+          <h3 className="project-card-title">
             {title}
           </h3>
 
-          <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-            {excerpt}
-          </p>
-
           {tags && tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-2">
+            <div className="flex items-center overflow-hidden project-card-tags" style={{ marginTop: '0.75rem', marginBottom: '0.75rem', pointerEvents: 'none', flexWrap: 'nowrap' }}>
               {tags.slice(0, 3).map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="text-xs px-2 py-1 rounded"
-                  style={{
-                    backgroundColor: 'var(--background-secondary)',
-                    color: 'var(--text-secondary)'
-                  }}
-                >
+                <Tag key={idx} size="sm">
                   {tag}
-                </span>
+                </Tag>
               ))}
+              {tags.length > 3 && (
+                <span style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--text-muted)',
+                  fontWeight: 500,
+                  marginLeft: '0.25rem',
+                  flexShrink: 0
+                }}>
+                  +{tags.length - 3}
+                </span>
+              )}
             </div>
           )}
+
+          <p className="project-card-description">
+            {excerpt}
+          </p>
         </div>
       </motion.div>
     </Link>
