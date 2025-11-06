@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Chanrattnak Mong – Portfolio",
+  title: "Chanrattnak Mong - Portfolio",
   description: "Software Engineer & Product Engineer creating elegant digital experiences",
 };
 
