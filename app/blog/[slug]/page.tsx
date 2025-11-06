@@ -7,6 +7,28 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+export async function generateStaticParams() {
+  return mockBlogPosts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const blog = mockBlogPosts.find((post) => post.slug === slug);
+
+  if (!blog) {
+    return {
+      title: "Blog Post Not Found",
+    };
+  }
+
+  return {
+    title: `${blog.title} - Chanrattnak Mong`,
+    description: blog.excerpt,
+  };
+}
+
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
   const blog = mockBlogPosts.find((post) => post.slug === slug);
@@ -14,30 +36,52 @@ export default async function BlogDetailPage({ params }: Props) {
   if (!blog) notFound();
 
   return (
-    <div className="section" style={{ minHeight: 'calc(100vh - 4rem)' }}>
-      <div className="container max-w-4xl">
+    <div className="min-h-screen">
+      <div className="container" style={{
+        paddingTop: '4.5rem',
+        paddingBottom: '4rem',
+        maxWidth: '56rem'
+      }}>
         {/* Back button */}
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-sm link-text mb-8 group"
+          className="inline-flex items-center group transition-colors hover:text-[var(--accent-primary)]"
+          style={{
+            gap: '0.5rem',
+            fontSize: '0.875rem',
+            color: 'var(--text-secondary)',
+            marginBottom: '2rem'
+          }}
         >
-          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="transition-transform group-hover:-translate-x-1" style={{ width: '0.875rem', height: '0.875rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Back to Blog
         </Link>
 
         {/* Blog Header */}
-        <div className="space-y-6 mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold" style={{ color: 'var(--text-primary)' }}>
+        <div style={{ marginBottom: '3rem' }}>
+          <h1 style={{
+            fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+            marginBottom: '1rem',
+            lineHeight: 1.2,
+            letterSpacing: '-0.02em'
+          }}>
             {blog.title}
           </h1>
 
-          <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+          <p style={{
+            fontSize: '1.0625rem',
+            lineHeight: 1.6,
+            color: 'var(--text-secondary)',
+            marginBottom: '1rem'
+          }}>
             {blog.excerpt}
           </p>
 
-          <div className="flex items-center gap-6 text-sm" style={{ color: 'var(--text-muted)' }}>
+          <div className="flex items-center flex-wrap" style={{ gap: '1rem', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
             <span>
               {new Date(blog.publishedAt).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -50,14 +94,18 @@ export default async function BlogDetailPage({ params }: Props) {
           </div>
 
           {blog.tags && (
-            <div className="flex flex-wrap gap-2 pt-2">
+            <div className="flex flex-wrap" style={{ gap: '0.5rem', opacity: 0.7 }}>
               {blog.tags.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="text-sm px-4 py-2 rounded-full"
                   style={{
+                    fontSize: '0.75rem',
+                    padding: '0.375rem 0.75rem',
+                    borderRadius: '0.25rem',
                     backgroundColor: 'var(--background-secondary)',
-                    color: 'var(--text-secondary)'
+                    color: 'var(--text-secondary)',
+                    fontWeight: 500,
+                    border: '1px solid var(--border)'
                   }}
                 >
                   {tag}
@@ -69,11 +117,17 @@ export default async function BlogDetailPage({ params }: Props) {
 
         {/* Cover image */}
         {blog.coverImage && (
-          <div className="mb-12">
+          <div style={{
+            marginBottom: '3rem',
+            borderRadius: '0.75rem',
+            overflow: 'hidden',
+            backgroundColor: 'var(--background-secondary)',
+            border: '1px solid var(--border)'
+          }}>
             <img
               src={blog.coverImage}
               alt={blog.title}
-              className="rounded-lg w-full object-cover aspect-video"
+              className="w-full object-cover aspect-video"
             />
           </div>
         )}
