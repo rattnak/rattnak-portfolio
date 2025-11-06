@@ -8,14 +8,28 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen" style={{ paddingTop: '5rem', paddingBottom: '4rem' }}>
-      <div className="container max-w-3xl">
+    <div style={{
+      minHeight: 'calc(100vh - 4rem)'
+    }}>
+      <div className="container" style={{
+        maxWidth: '42rem',
+        width: '100%',
+        paddingTop: '4.5rem',
+        paddingBottom: '4rem'
+      }}>
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-            Get In Touch
+        <div style={{ marginBottom: '1rem' }}>
+          <h1 className="text-4xl md:text-5xl font-bold" style={{
+            color: 'var(--text-primary)',
+            marginBottom: '0.5rem',
+            letterSpacing: '-0.02em'
+          }}>
+            Get in Touch 
           </h1>
-          <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-lg" style={{
+            color: 'var(--text-secondary)',
+            lineHeight: '1.7'
+          }}>
             Have a project in mind or want to collaborate? I'm always open to discussing new opportunities and interesting ideas.
           </p>
         </div>

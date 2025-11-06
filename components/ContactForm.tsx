@@ -49,13 +49,17 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-8 p-6 sm:p-8 md:p-10 rounded-2xl"
-      style={{
-        backgroundColor: 'transparent', // keeps current design
-      }}
+      className="contact-form"
     >
-      <div className="space-y-2">
-        <label htmlFor="name" className="block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <label
+          htmlFor="name"
+          style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--text-primary)'
+          }}
+        >
           Name
         </label>
         <input
@@ -65,8 +69,12 @@ export default function ContactForm() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all"
+          className="focus:outline-none focus:ring-2 transition-all"
           style={{
+            width: '100%',
+            padding: '0.75rem 1rem',
+            fontSize: '0.9375rem',
+            borderRadius: '0.5rem',
             backgroundColor: 'var(--background)',
             border: '1px solid var(--border)',
             color: 'var(--text-primary)',
@@ -76,8 +84,15 @@ export default function ContactForm() {
         />
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="email" className="block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <label
+          htmlFor="email"
+          style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--text-primary)'
+          }}
+        >
           Email
         </label>
         <input
@@ -87,8 +102,12 @@ export default function ContactForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all"
+          className="focus:outline-none focus:ring-2 transition-all"
           style={{
+            width: '100%',
+            padding: '0.75rem 1rem',
+            fontSize: '0.9375rem',
+            borderRadius: '0.5rem',
             backgroundColor: 'var(--background)',
             border: '1px solid var(--border)',
             color: 'var(--text-primary)',
@@ -98,8 +117,15 @@ export default function ContactForm() {
         />
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="message" className="block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <label
+          htmlFor="message"
+          style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--text-primary)'
+          }}
+        >
           Message
         </label>
         <textarea
@@ -108,12 +134,17 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           required
-          rows={6}
-          className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all resize-none"
+          rows={5}
+          className="focus:outline-none focus:ring-2 transition-all resize-none"
           style={{
+            width: '100%',
+            padding: '0.75rem 1rem',
+            fontSize: '0.9375rem',
+            borderRadius: '0.5rem',
             backgroundColor: 'var(--background)',
             border: '1px solid var(--border)',
             color: 'var(--text-primary)',
+            lineHeight: '1.6',
             '--tw-ring-color': 'var(--accent-primary)',
           } as React.CSSProperties}
           placeholder="Tell me about your project or collaboration idea..."
@@ -121,44 +152,67 @@ export default function ContactForm() {
       </div>
 
       {status === "success" && (
-        <div className="p-4 rounded-lg" style={{
+        <div style={{
+          padding: '1rem',
+          borderRadius: '0.5rem',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           border: '1px solid rgba(59, 130, 246, 0.2)'
         }}>
-          <p className="text-sm font-medium" style={{ color: 'var(--accent-primary)' }}>
+          <p style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--accent-primary)',
+            margin: 0
+          }}>
             Thank you! Your message has been sent successfully. I'll get back to you soon.
           </p>
         </div>
       )}
 
       {status === "error" && (
-        <div className="p-4 rounded-lg" style={{
+        <div style={{
+          padding: '1rem',
+          borderRadius: '0.5rem',
           backgroundColor: 'rgba(239, 68, 68, 0.1)',
           border: '1px solid rgba(239, 68, 68, 0.2)'
         }}>
-          <p className="text-sm font-medium" style={{ color: '#ef4444' }}>
+          <p style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: '#ef4444',
+            margin: 0
+          }}>
             {errorMessage}
           </p>
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={status === "submitting"}
-        className="btn btn-primary group disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {status === "submitting" ? "Sending..." : "Send Message"}
-        {status !== "submitting" && (
-          <svg
-            className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        )}
-      </button>
+      <div style={{ marginTop: '0.5rem' }}>
+        <button
+          type="submit"
+          disabled={status === "submitting"}
+          className="btn btn-primary group"
+          style={{
+            opacity: status === "submitting" ? 0.5 : 1,
+            cursor: status === "submitting" ? 'not-allowed' : 'pointer',
+            width: 'auto',
+            minWidth: '10rem'
+          }}
+        >
+          {status === "submitting" ? "Sending..." : "Send Message"}
+          {status !== "submitting" && (
+            <svg
+              className="transition-transform group-hover:translate-x-0.5"
+              style={{ width: '1rem', height: '1rem' }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          )}
+        </button>
+      </div>
     </form>
   );
 }
