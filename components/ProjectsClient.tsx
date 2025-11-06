@@ -35,12 +35,25 @@ export default function ProjectsClient({ projects }: Props) {
 
   return (
     <>
-      <div className="flex gap-6 mb-12" style={{ borderBottom: '1px solid var(--border)' }}>
+      {/* Filter Tabs */}
+      <div style={{
+        display: 'flex',
+        gap: '2rem',
+        marginBottom: '1rem',
+        borderBottom: '1px solid var(--border)',
+        paddingBottom: '0'
+      }}>
         <button
           onClick={() => setFilter("ALL")}
-          className="text-sm pb-3 transition-all relative group"
+          className="transition-all relative"
           style={{
-            color: filter === "ALL" ? 'var(--text-primary)' : 'var(--text-secondary)'
+            color: filter === "ALL" ? 'var(--text-primary)' : 'var(--text-secondary)',
+            fontSize: '0.9375rem',
+            fontWeight: 500,
+            paddingBottom: '0.75rem',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer'
           }}
           onMouseEnter={(e) => {
             if (filter !== "ALL") {
@@ -53,16 +66,25 @@ export default function ProjectsClient({ projects }: Props) {
             }
           }}
         >
-          All
+          All Projects
           {filter === "ALL" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ backgroundColor: 'var(--accent-primary)' }} />
+            <div className="absolute bottom-0 left-0 right-0" style={{
+              height: '2px',
+              backgroundColor: 'var(--accent-primary)'
+            }} />
           )}
         </button>
         <button
           onClick={() => setFilter("CODING")}
-          className="text-sm pb-3 transition-all relative group"
+          className="transition-all relative"
           style={{
-            color: filter === "CODING" ? 'var(--text-primary)' : 'var(--text-secondary)'
+            color: filter === "CODING" ? 'var(--text-primary)' : 'var(--text-secondary)',
+            fontSize: '0.9375rem',
+            fontWeight: 500,
+            paddingBottom: '0.75rem',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer'
           }}
           onMouseEnter={(e) => {
             if (filter !== "CODING") {
@@ -77,14 +99,23 @@ export default function ProjectsClient({ projects }: Props) {
         >
           Development
           {filter === "CODING" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ backgroundColor: 'var(--accent-primary)' }} />
+            <div className="absolute bottom-0 left-0 right-0" style={{
+              height: '2px',
+              backgroundColor: 'var(--accent-primary)'
+            }} />
           )}
         </button>
         <button
           onClick={() => setFilter("CASE_STUDY")}
-          className="text-sm pb-3 transition-all relative group"
+          className="transition-all relative"
           style={{
-            color: filter === "CASE_STUDY" ? 'var(--text-primary)' : 'var(--text-secondary)'
+            color: filter === "CASE_STUDY" ? 'var(--text-primary)' : 'var(--text-secondary)',
+            fontSize: '0.9375rem',
+            fontWeight: 500,
+            paddingBottom: '0.75rem',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer'
           }}
           onMouseEnter={(e) => {
             if (filter !== "CASE_STUDY") {
@@ -99,13 +130,20 @@ export default function ProjectsClient({ projects }: Props) {
         >
           Design
           {filter === "CASE_STUDY" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ backgroundColor: 'var(--accent-primary)' }} />
+            <div className="absolute bottom-0 left-0 right-0" style={{
+              height: '2px',
+              backgroundColor: 'var(--accent-primary)'
+            }} />
           )}
         </button>
       </div>
 
+      {/* Projects Grid */}
       {filteredProjects.length === 0 ? (
-        <div className="text-center py-20" style={{ color: 'var(--text-muted)' }}>
+        <div className="text-center" style={{
+          padding: '6rem 0',
+          color: 'var(--text-muted)'
+        }}>
           <p>No projects found in this category.</p>
         </div>
       ) : (

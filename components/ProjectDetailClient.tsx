@@ -27,48 +27,83 @@ type Props = {
 
 export default function ProjectDetailClient({ project }: Props) {
   return (
-    <div className="min-h-screen" style={{ paddingTop: '5rem', paddingBottom: '4rem' }}>
-      <div className="container max-w-4xl">
+    <div className="min-h-screen">
+      <div className="container" style={{
+        paddingTop: '4.5rem',
+        paddingBottom: '4rem',
+        maxWidth: '56rem'
+      }}>
         {/* Back button */}
         <Link
           href="/projects"
-          className="inline-flex items-center gap-2 text-sm link-text mb-8 group"
+          className="inline-flex items-center group"
+          style={{
+            gap: '0.5rem',
+            fontSize: '0.875rem',
+            color: 'var(--text-secondary)',
+            marginBottom: '2rem',
+            transition: 'color 0.2s'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-primary)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
         >
-          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="transition-transform group-hover:-translate-x-1" style={{ width: '0.875rem', height: '0.875rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Back to Projects
         </Link>
 
         {/* Project header */}
-        <div className="mb-12">
-          <div className="flex items-center gap-4 mb-4">
-            <span className="text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+        <div style={{ marginBottom: '3rem' }}>
+          <div className="flex items-center" style={{ gap: '0.75rem', marginBottom: '1rem' }}>
+            <span style={{
+              fontSize: '0.75rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              color: 'var(--text-muted)',
+              fontWeight: 500
+            }}>
               {project.type === "CODING" ? "Development" : "Design Case Study"}
             </span>
             {project.featured && (
               <>
                 <span style={{ color: 'var(--text-muted)' }}>•</span>
-                <span className="text-xs font-medium" style={{ color: 'var(--accent-primary)' }}>
+                <span style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 500,
+                  color: 'var(--accent-primary)'
+                }}>
                   Featured
                 </span>
               </>
             )}
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
+          <h1 style={{
+            fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+            marginBottom: '1rem',
+            lineHeight: 1.2,
+            letterSpacing: '-0.02em'
+          }}>
             {project.name}
           </h1>
 
-          <p className="text-xl leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+          <p style={{
+            fontSize: '1.0625rem',
+            lineHeight: 1.6,
+            color: 'var(--text-secondary)',
+            marginBottom: '1.5rem'
+          }}>
             {project.description}
           </p>
 
           {/* Tags */}
           {project.tags && project.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-8">
+            <div className="flex flex-wrap" style={{ gap: '0.5rem', marginBottom: '1.5rem', opacity: 0.7 }}>
               {project.tags.map((tag, idx) => (
-                <Tag key={idx} size="md">
+                <Tag key={idx} size="sm">
                   {tag}
                 </Tag>
               ))}
@@ -76,7 +111,7 @@ export default function ProjectDetailClient({ project }: Props) {
           )}
 
           {/* Links */}
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap" style={{ gap: '1rem' }}>
             {project.type === "CODING" && project.githubUrl && (
               <a
                 href={project.githubUrl}
@@ -121,7 +156,13 @@ export default function ProjectDetailClient({ project }: Props) {
 
         {/* Project image */}
         {project.imageUrl && (
-          <div className="mb-16 rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--background-secondary)' }}>
+          <div style={{
+            marginBottom: '3rem',
+            borderRadius: '0.75rem',
+            overflow: 'hidden',
+            backgroundColor: 'var(--background-secondary)',
+            border: '1px solid var(--border)'
+          }}>
             <div className="w-full aspect-[16/9] relative">
               <Image
                 src={project.imageUrl}
@@ -135,16 +176,29 @@ export default function ProjectDetailClient({ project }: Props) {
         )}
 
         {/* Project details */}
-        <div className="space-y-12">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
           <section>
-            <h2 className="text-2xl font-semibold mb-6" style={{ color: 'var(--text-primary)' }}>
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+              marginBottom: '1rem'
+            }}>
               Overview
             </h2>
-            <div className="space-y-4">
-              <p className="leading-relaxed text-lg" style={{ color: 'var(--text-secondary)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <p style={{
+                fontSize: '1.0625rem',
+                lineHeight: 1.7,
+                color: 'var(--text-secondary)'
+              }}>
                 {project.description}
               </p>
-              <p className="leading-relaxed text-lg" style={{ color: 'var(--text-secondary)' }}>
+              <p style={{
+                fontSize: '1.0625rem',
+                lineHeight: 1.7,
+                color: 'var(--text-secondary)'
+              }}>
                 This project showcases my skills in {project.tags?.join(", ")}.
                 {project.type === "CODING"
                   ? " The application was built with modern web technologies and follows best practices for performance, accessibility, and user experience."
@@ -155,12 +209,17 @@ export default function ProjectDetailClient({ project }: Props) {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-6" style={{ color: 'var(--text-primary)' }}>
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+              marginBottom: '1rem'
+            }}>
               Technologies & Skills
             </h2>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap" style={{ gap: '0.5rem', opacity: 0.7 }}>
               {project.tags?.map((tag, idx) => (
-                <Tag key={idx} size="lg">
+                <Tag key={idx} size="sm">
                   {tag}
                 </Tag>
               ))}
@@ -168,20 +227,45 @@ export default function ProjectDetailClient({ project }: Props) {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-6" style={{ color: 'var(--text-primary)' }}>
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: 'var(--text-primary)',
+              marginBottom: '1rem'
+            }}>
               Project Timeline
             </h2>
-            <div className="flex flex-wrap items-center gap-6" style={{ color: 'var(--text-secondary)' }}>
+            <div className="flex flex-wrap items-center" style={{ gap: '2rem' }}>
               <div>
-                <p className="text-sm mb-2" style={{ color: 'var(--text-muted)' }}>Start Date</p>
-                <p className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--text-muted)',
+                  marginBottom: '0.5rem'
+                }}>
+                  Start Date
+                </p>
+                <p style={{
+                  fontSize: '1.0625rem',
+                  fontWeight: 500,
+                  color: 'var(--text-primary)'
+                }}>
                   {new Date(project.startDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 </p>
               </div>
-              <span style={{ color: 'var(--text-muted)' }}>→</span>
+              <span style={{ color: 'var(--text-muted)', fontSize: '1.5rem' }}>→</span>
               <div>
-                <p className="text-sm mb-2" style={{ color: 'var(--text-muted)' }}>End Date</p>
-                <p className="text-lg font-medium" style={{ color: 'var(--text-primary)' }}>
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--text-muted)',
+                  marginBottom: '0.5rem'
+                }}>
+                  End Date
+                </p>
+                <p style={{
+                  fontSize: '1.0625rem',
+                  fontWeight: 500,
+                  color: 'var(--text-primary)'
+                }}>
                   {project.endDate
                     ? new Date(project.endDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                     : "Ongoing"
@@ -193,12 +277,24 @@ export default function ProjectDetailClient({ project }: Props) {
         </div>
 
         {/* Back button at bottom */}
-        <div className="mt-16 pt-16" style={{ borderTop: '1px solid var(--border)' }}>
+        <div style={{
+          marginTop: '3rem',
+          paddingTop: '2rem',
+          borderTop: '1px solid var(--border)'
+        }}>
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 text-sm link-text group"
+            className="inline-flex items-center group"
+            style={{
+              gap: '0.5rem',
+              fontSize: '0.875rem',
+              color: 'var(--text-secondary)',
+              transition: 'color 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-primary)'}
+            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
           >
-            <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="transition-transform group-hover:-translate-x-1" style={{ width: '0.875rem', height: '0.875rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back to Projects
