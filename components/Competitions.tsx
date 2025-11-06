@@ -1,11 +1,20 @@
 // components/Competitions.tsx
 import { mockCompetitions } from "@/lib/mockData";
-import CompetitionCard from "./CompetitionCard";
+import CompetitionListItem from "./CompetitionListItem";
 
 export default async function CompetitionsSection() {
   // TODO: Switch back to getCompetitions() after database is synced
   // const competitions = await getCompetitions();
-  const competitions = mockCompetitions;
+
+  // Sort competitions: featured first, then by date descending
+  const competitions = [...mockCompetitions].sort((a, b) => {
+    // Featured items come first
+    if (a.featured && !b.featured) return -1;
+    if (!a.featured && b.featured) return 1;
+
+    // Then sort by date descending
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
 
   return (
     <section id="competitions" className="section" style={{ borderTop: '1px solid var(--border)' }}>
@@ -23,7 +32,7 @@ export default async function CompetitionsSection() {
         ) : (
           <div className="space-y-6">
             {competitions.map((competition) => (
-              <CompetitionCard key={competition.id} {...competition} />
+              <CompetitionListItem key={competition.id} {...competition} />
             ))}
           </div>
         )}
