@@ -1,13 +1,13 @@
 // components/Services.tsx
 export default function Services() {
   return (
-    <section className="section" style={{ borderTop: '1px solid var(--border)' }}>
-      <div className="container">
-        <p className="text-xs uppercase tracking-wider mb-12" style={{ color: 'var(--text-muted)' }}>
+    <section className="services-section">
+      <div className="container services-container">
+        <p className="text-xs uppercase tracking-wider services-heading">
           What I Do
         </p>
 
-        <div className="grid-3">
+        <div className="services-grid">
           <div className="space-y-4">
             <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
               Web Development

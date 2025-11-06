@@ -3,7 +3,12 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="section" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center' }}>
+    <section style={{
+      height: 'calc(100vh - 4rem)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
       <div className="container">
         <div className="max-w-4xl">
           <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>

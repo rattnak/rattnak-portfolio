@@ -22,17 +22,17 @@ export default function Navbar() {
         opacity: 0.98
       }}
     >
-      <div className="container">
-        <div className="flex items-center justify-between h-16">
+      <div className="navbar-container">
+        <div className="flex items-center justify-between navbar-inner">
           <Link
             href="/"
-            className="text-sm font-semibold px-3 py-2 rounded-lg transition-all hover:bg-[var(--background-secondary)]"
+            className="text-sm font-semibold rounded-lg transition-all hover:bg-[var(--background-secondary)] navbar-logo"
             style={{ color: 'var(--text-primary)' }}
           >
             CM
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center navbar-links">
             <Link href="/" className="text-sm link-text">
               Home
             </Link>
@@ -51,7 +51,7 @@ export default function Navbar() {
             <ThemeToggle />
           </nav>
 
-          <div className="md:hidden flex items-center gap-3">
+          <div className="md:hidden flex items-center navbar-mobile">
             <ThemeToggle />
             <button
               onClick={() => setOpen(!open)}
@@ -75,21 +75,21 @@ export default function Navbar() {
             opacity: 0.98
           }}
         >
-          <div className="container py-4">
-            <nav className="flex flex-col gap-4">
-              <Link href="/" onClick={() => setOpen(false)} className="text-sm py-2 link-text">
+          <div className="navbar-mobile-menu">
+            <nav className="flex flex-col navbar-mobile-links">
+              <Link href="/" onClick={() => setOpen(false)} className="text-sm link-text">
                 Home
               </Link>
-              <Link href="/projects" onClick={() => setOpen(false)} className="text-sm py-2 link-text">
+              <Link href="/projects" onClick={() => setOpen(false)} className="text-sm link-text">
                 Projects
               </Link>
-              <Link href="/achievements" onClick={() => setOpen(false)} className="text-sm py-2 link-text">
+              <Link href="/achievements" onClick={() => setOpen(false)} className="text-sm link-text">
                 Achievements
               </Link>
-              <Link href="/blog" onClick={() => setOpen(false)} className="text-sm py-2 link-text">
+              <Link href="/blog" onClick={() => setOpen(false)} className="text-sm link-text">
                 Writing
               </Link>
-              <Link href="/contact" onClick={() => setOpen(false)} className="text-sm py-2 link-text">
+              <Link href="/contact" onClick={() => setOpen(false)} className="text-sm link-text">
                 Contact
               </Link>
             </nav>
