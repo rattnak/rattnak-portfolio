@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { ClerkProvider } from '@clerk/nextjs';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,31 +18,33 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <head>
-        {/* Prevent flash of wrong theme */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  const theme = localStorage.getItem('theme') || 
-                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-                  document.documentElement.classList.toggle('dark', theme === 'dark');
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
-      <body>
-        <ThemeProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={inter.variable} suppressHydrationWarning>
+        <head>
+          {/* Prevent flash of wrong theme */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  try {
+                    const theme = localStorage.getItem('theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                    document.documentElement.classList.toggle('dark', theme === 'dark');
+                  } catch (e) {}
+                })();
+              `,
+            }}
+          />
+        </head>
+        <body>
+          <ThemeProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
 
@@ -50,25 +53,26 @@ function Footer() {
 
   return (
     <footer className="border-t" style={{ borderColor: 'var(--border)' }}>
-      <div className="container section">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-          {/* Left side - Info */}
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                Chanrattnak Mong
-              </h3>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Software Engineer & Product Engineer
+      <div className="container">
+        <div className="section">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+            {/* Left side - Info */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  Chanrattnak Mong
+                </h3>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  Software Engineer & Product Engineer
+                </p>
+              </div>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                © {currentYear} Chanrattnak Mong. All rights reserved.
               </p>
             </div>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              © {currentYear} Chanrattnak Mong. All rights reserved.
-            </p>
-          </div>
 
-          {/* Right side - Social Links */}
-          <div className="flex gap-3">
+            {/* Right side - Social Links */}
+            <div className="flex gap-3">
             <a
               href="https://github.com/rattnak"
               target="_blank"
@@ -103,6 +107,7 @@ function Footer() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </a>
+            </div>
           </div>
         </div>
       </div>
