@@ -3,7 +3,14 @@ export default function Services() {
   return (
     <section className="services-section">
       <div className="container services-container">
-        <p className="text-xs uppercase tracking-wider services-heading">
+        <p style={{
+          fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          color: 'var(--text-muted)',
+          marginBottom: 'clamp(2rem, 4vw, 3rem)',
+          fontWeight: 500
+        }}>
           What I Do
         </p>
 
