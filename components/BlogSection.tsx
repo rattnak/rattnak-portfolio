@@ -10,14 +10,29 @@ export default async function BlogSection() {
   return (
     <section id="blog" className="section" style={{ borderTop: '1px solid var(--border)' }}>
       <div className="container">
-        <div className="flex items-center justify-between mb-12">
-          <h2 className="text-xs tracking-widest uppercase" style={{ color: 'var(--text-muted)' }}>
-            Writing
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 'clamp(2rem, 4vw, 3rem)'
+        }}>
+          <h2 style={{
+            fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'var(--text-muted)',
+            fontWeight: 500
+          }}>
+            Blog
           </h2>
           {posts.length > 0 && (
             <Link
               href="/blog"
-              className="text-sm link-text inline-flex items-center gap-1 group"
+              className="link-text inline-flex items-center group"
+              style={{
+                fontSize: 'clamp(0.8125rem, 1.5vw, 0.875rem)',
+                gap: '0.25rem'
+              }}
             >
               View All
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,11 +43,20 @@ export default async function BlogSection() {
         </div>
 
         {posts.length === 0 ? (
-          <div className="text-center py-20" style={{ color: 'var(--text-muted)' }}>
+          <div style={{
+            textAlign: 'center',
+            padding: 'clamp(4rem, 8vw, 6rem) 0',
+            color: 'var(--text-muted)',
+            fontSize: 'clamp(0.875rem, 2vw, 1rem)'
+          }}>
             <p>No blog posts published yet. Check back soon!</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem'
+          }}>
             {posts.map((post) => (
               <BlogCard key={post.id} {...post} />
             ))}
