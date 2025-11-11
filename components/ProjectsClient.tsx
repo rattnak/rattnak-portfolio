@@ -5,20 +5,30 @@ import ProjectCard from "./ProjectCard";
 
 type ProjectType = "CODING" | "CASE_STUDY";
 
+type Tag = {
+  id: number;
+  name: string;
+  slug: string;
+  type: 'TECHNICAL' | 'NON_TECHNICAL';
+  color: string | null;
+};
+
 type Project = {
   id: number;
   name: string;
+  excerpt: string | null;
   description: string;
-  url: string;
+  url: string | null;
   type: ProjectType;
-  tags: string[];
+  tags: string[]; // Legacy
+  tagList: Tag[]; // New: resolved tags from junction table
   imageUrl: string | null;
   githubUrl: string | null;
   liveUrl: string | null;
   featured: boolean;
-  startDate: Date;
-  endDate: Date | null;
-  createdAt: Date;
+  startDate: Date | string;
+  endDate: Date | string | null;
+  createdAt: Date | string;
 };
 
 type Props = {
@@ -149,7 +159,12 @@ export default function ProjectsClient({ projects }: Props) {
       ) : (
         <div className="grid-3">
           {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} {...project} />
+            <ProjectCard
+              key={project.id}
+              {...project}
+              tags={project.tagList ? project.tagList.map(tag => tag.name) : []}
+              tagList={project.tagList}
+            />
           ))}
         </div>
       )}
