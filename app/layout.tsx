@@ -55,11 +55,22 @@ function Footer() {
     <footer className="border-t" style={{ borderColor: 'var(--border)' }}>
       <div className="container">
         <div className="section">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1.5rem',
+            flexWrap: 'wrap'
+          }}>
             {/* Left side - Info */}
-            <div className="space-y-4">
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem'
+            }}>
               <div>
-                <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
                   Chanrattnak Mong
                 </h3>
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -72,7 +83,11 @@ function Footer() {
             </div>
 
             {/* Right side - Social Links */}
-            <div className="flex gap-3">
+            <div style={{
+              display: 'flex',
+              gap: '0.75rem',
+              flexShrink: 0
+            }}>
             <a
               href="https://github.com/rattnak"
               target="_blank"
