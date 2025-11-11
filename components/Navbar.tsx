@@ -43,7 +43,7 @@ export default function Navbar() {
               Achievements
             </Link>
             <Link href="/blog" className="text-sm link-text">
-              Writing
+              Blog
             </Link>
             <Link href="/contact" className="text-sm link-text">
               Contact
@@ -87,7 +87,7 @@ export default function Navbar() {
                 Achievements
               </Link>
               <Link href="/blog" onClick={() => setOpen(false)} className="text-sm link-text">
-                Writing
+                Blog
               </Link>
               <Link href="/contact" onClick={() => setOpen(false)} className="text-sm link-text">
                 Contact
