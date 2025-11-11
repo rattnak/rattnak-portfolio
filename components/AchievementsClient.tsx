@@ -1,7 +1,7 @@
 // components/AchievementsClient.tsx
 "use client";
 import { useState } from "react";
-import CompetitionCard from "./CompetitionCard";
+import CompetitionCard from "./AchievementCard";
 
 type Competition = {
   id: number;
