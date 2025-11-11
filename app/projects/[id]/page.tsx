@@ -1,5 +1,5 @@
 // app/projects/[id]/page.tsx
-import { getAllProjects, getProjectById } from "@/lib/database";
+import { getAllProjects, getProjectWithTags } from "@/lib/database";
 import { notFound } from "next/navigation";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 
@@ -18,7 +18,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const project = await getProjectById(parseInt(id));
+  const project = await getProjectWithTags(parseInt(id));
 
   if (!project) {
     return {
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function ProjectDetailPage({ params }: Props) {
   const { id } = await params;
-  const project = await getProjectById(parseInt(id));
+  const project = await getProjectWithTags(parseInt(id));
 
   if (!project) {
     notFound();

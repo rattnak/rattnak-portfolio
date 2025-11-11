@@ -1,30 +1,33 @@
 // app/projects/page.tsx
-import { getAllProjects } from "@/lib/database";
+import { getAllProjectsWithTags } from "@/lib/database";
 import ProjectsClient from "@/components/ProjectsClient";
 
 export const metadata = {
-  title: "Projects – Chanrattnak Mong",
+  title: "Projects - Chanrattnak Mong",
   description: "Explore my development and design projects",
 };
 
 export default async function ProjectsPage() {
-  const projects = await getAllProjects();
+  const projects = await getAllProjectsWithTags();
 
   return (
-    <div className="min-h-screen">
+    <div style={{ minHeight: 'calc(100vh - 4rem)' }}>
       <div className="container" style={{ paddingTop: '4.5rem', paddingBottom: '4rem' }}>
         {/* Header */}
-        <div style={{ marginBottom: '1rem' }}>
-          <h1 className="text-4xl md:text-5xl font-bold" style={{
+        <div style={{ marginBottom: '2.5rem' }}>
+          <h1 style={{
+            fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
+            fontWeight: 600,
             color: 'var(--text-primary)',
-            marginBottom: '0.5rem',
+            marginBottom: '0.75rem',
             letterSpacing: '-0.02em'
           }}>
             Projects
           </h1>
-          <p className="text-lg" style={{
+          <p style={{
+            fontSize: 'clamp(0.9375rem, 2vw, 1.0625rem)',
             color: 'var(--text-secondary)',
-            lineHeight: '1.5'
+            lineHeight: '1.6'
           }}>
             A collection of my development and design work.
           </p>
