@@ -1,8 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Project, ProjectType } from '@prisma/client';
+
+type Tag = {
+  id: number;
+  name: string;
+  slug: string;
+  type: 'TECHNICAL' | 'NON_TECHNICAL';
+  color: string;
+};
 
 type ProjectFormProps = {
   project?: Project;
@@ -13,13 +21,17 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [loadingTags, setLoadingTags] = useState(true);
 
   const [formData, setFormData] = useState({
     name: project?.name || '',
+    excerpt: (project as any)?.excerpt || '',
     description: project?.description || '',
+    overview: (project as any)?.overview || '',
     url: project?.url || '',
     type: (project?.type || 'CODING') as ProjectType,
-    tags: project?.tags?.join(', ') || '',
+    tagIds: (project as any)?.tagIds || [],
     imageUrl: project?.imageUrl || '',
     githubUrl: project?.githubUrl || '',
     liveUrl: project?.liveUrl || '',
@@ -27,6 +39,24 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
     startDate: project?.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
     endDate: project?.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
   });
+
+  // Fetch available tags
+  useEffect(() => {
+    async function fetchTags() {
+      try {
+        const response = await fetch('/api/admin/tags');
+        if (response.ok) {
+          const tags = await response.json();
+          setAvailableTags(tags);
+        }
+      } catch (err) {
+        console.error('Failed to fetch tags:', err);
+      } finally {
+        setLoadingTags(false);
+      }
+    }
+    fetchTags();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
