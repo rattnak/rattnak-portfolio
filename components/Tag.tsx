@@ -6,9 +6,10 @@ type TagProps = {
   children: string;
   className?: string;
   size?: "sm" | "md" | "lg";
+  color?: string | null; // NEW: color from database
 };
 
-export default function Tag({ children, className = "", size = "md" }: TagProps) {
+export default function Tag({ children, className = "", size = "md", color }: TagProps) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -27,6 +28,8 @@ export default function Tag({ children, className = "", size = "md" }: TagProps)
     return () => observer.disconnect();
   }, []);
 
+  // Always use getTagColor which has the proper color scheme from tagColors.ts
+  // The database color is just a reference, but we use the full color config
   const colors = getTagColor(children, isDark);
 
   return (
