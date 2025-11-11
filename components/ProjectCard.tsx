@@ -6,13 +6,21 @@ import Tag from "./Tag";
 
 type ProjectType = "CODING" | "CASE_STUDY";
 
+type TagType = {
+  id: number;
+  name: string;
+  color: string | null;
+};
+
 type Props = {
   id: number;
   name: string;
+  excerpt?: string | null;
   description: string;
-  url: string;
+  url: string | null;
   type: ProjectType;
   tags?: string[];
+  tagList?: TagType[]; // NEW: Full tag objects with colors
   imageUrl?: string | null;
   githubUrl?: string | null;
   liveUrl?: string | null;
@@ -24,10 +32,11 @@ type Props = {
 export default function ProjectCard({
   id,
   name,
+  excerpt,
   description,
   url,
   type,
-  tags,
+  tagList,
   imageUrl,
   githubUrl,
   liveUrl,
@@ -93,14 +102,18 @@ export default function ProjectCard({
             </h3>
           </Link>
 
-          {tags && tags.length > 0 && (
+          <p className="project-card-description">
+            {excerpt || description}
+          </p>
+
+          {tagList && tagList.length > 0 && (
             <div className="flex items-center overflow-hidden project-card-tags" style={{ marginTop: '0.75rem', marginBottom: '0.75rem', flexWrap: 'nowrap' }}>
-              {tags.slice(0, 3).map((tag, idx) => (
-                <Tag key={idx} size="sm">
-                  {tag}
+              {tagList.slice(0, 3).map((tag) => (
+                <Tag key={tag.id} size="sm">
+                  {tag.name}
                 </Tag>
               ))}
-              {tags.length > 3 && (
+              {tagList.length > 3 && (
                 <span style={{
                   fontSize: '0.75rem',
                   color: 'var(--text-muted)',
@@ -108,15 +121,11 @@ export default function ProjectCard({
                   marginLeft: '0.25rem',
                   flexShrink: 0
                 }}>
-                  +{tags.length - 3}
+                  +{tagList.length - 3}
                 </span>
               )}
             </div>
           )}
-
-          <p className="project-card-description">
-            {description}
-          </p>
 
           <div className="flex items-center project-card-links">
             {type === "CODING" && githubUrl && (
