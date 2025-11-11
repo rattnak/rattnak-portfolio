@@ -1,4 +1,5 @@
-import { auth, currentUser } from '@clerk/nextjs/server';
+shimport { auth, currentUser } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
 export async function checkAdminAccess() {
