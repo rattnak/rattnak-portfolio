@@ -1,8 +1,9 @@
 // app/contact/page.tsx
 import ContactForm from "@/components/ContactForm";
+import ImageSlider from "@/components/ImageSlider";
 
 export const metadata = {
-  title: "Contact – Chanrattnak Mong",
+  title: "Contact - Chanrattnak Mong",
   description: "Get in touch for collaboration opportunities",
 };
 
@@ -22,7 +23,7 @@ export default function ContactPage() {
             marginBottom: '0.75rem',
             letterSpacing: '-0.02em'
           }}>
-            Contact
+            Get in Touch
           </h1>
           <p style={{
             fontSize: 'clamp(0.9375rem, 2vw, 1.0625rem)',
@@ -40,27 +41,20 @@ export default function ContactPage() {
             <ContactForm />
           </div>
 
-          {/* Image Placeholder - Right Side */}
-          <div
-            className="hidden md:flex items-center justify-center"
-            style={{
-              height: '100%',
-              minHeight: '300px',
-              backgroundColor: 'var(--background-secondary)',
-              borderRadius: '0.75rem',
-              border: '2px dashed var(--border)',
-              padding: '2rem'
-            }}
-          >
-            <div style={{
-              color: 'var(--text-muted)',
-              fontSize: '0.875rem',
-              textAlign: 'center'
-            }}>
-              <p style={{ marginBottom: '0.5rem' }}>Image Placeholder</p>
-              <p style={{ fontSize: '0.75rem', opacity: 0.7 }}>Add your friendly picture here</p>
-            </div>
-          </div>
+          {/* Image Slider - Right Side */}
+          <ImageSlider
+            images={[
+              "/img/snowflake-founder.JPEG",
+              "/img/seed-panelist.jpeg",
+              "/img/seed-speech.JPEG",
+              "/img/techpreneur-speech.jpg",
+              "/img/huawei-speech.jpeg",
+              "/img/seed-dubai.jpeg",
+              "/img/dubai.jpeg"
+            ]}
+            interval={4000}
+          />
+
         </div>
       </div>
     </div>
