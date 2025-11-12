@@ -44,10 +44,10 @@ export default function ContactPage() {
           {/* Image Slider - Right Side */}
           <ImageSlider
             images={[
-              "/img/snowflake-founder.JPEG",
+              "/img/snowflake-founder.jpeg",
               "/img/seed-panelist.jpeg",
-              "/img/seed-speech.JPEG",
-              "/img/techpreneur-speech.jpg",
+              "/img/seed-speech.jpeg",
+              "/img/techpreneur-speech.JPG",
               "/img/huawei-speech.jpeg",
               "/img/seed-dubai.jpeg",
               "/img/dubai.jpeg"
