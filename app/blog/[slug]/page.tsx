@@ -22,7 +22,14 @@ export default async function BlogDetailPage({ params }: Props) {
   const blog = await getBlogPostBySlug(slug);
   if (!blog) notFound();
 
-  const publishedString: string = blog.publishedAt ?? "";
+  const formattedDate =
+    typeof blog.publishedAt === "string" && blog.publishedAt
+      ? new Date(blog.publishedAt).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : "Unpublished";
 
   return (
     <div className="min-h-screen">
@@ -88,19 +95,7 @@ export default async function BlogDetailPage({ params }: Props) {
               marginBottom: "1.5rem",
             }}
           >
-            {/* ✅ Fixed line */}
-            {publishedString ? (
-              <span>
-                {new Date(publishedString).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
-            ) : (
-              <span>Unpublished</span>
-            )}
-
+            <span>{formattedDate}</span>
             <span>•</span>
             <span>{blog.readTime ?? "—"} min read</span>
           </div>
