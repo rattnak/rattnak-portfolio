@@ -1,4 +1,4 @@
-folders=("app" "src" "components" "lib" "styles")
+folders=("app" "src" "components" "lib" "styles" "public")
 
 for folder in "${folders[@]}"; do
   if [ -d "$folder" ]; then

@@ -17,7 +17,7 @@ async function main() {
       {
         name: 'Portfolio Website',
         description: 'Personal portfolio built with Next.js, Prisma, and Tailwind CSS showcasing my work',
-        url: 'https://github.com/yourusername/portfolio',
+        url: 'https://github.com/rattnak/',
         type: 'CODING',
         tags: ['Next.js', 'TypeScript', 'Prisma', 'Tailwind CSS'],
         imageUrl: '/img/projects/portfolio.png',
