@@ -22,7 +22,7 @@ export default async function BlogDetailPage({ params }: Props) {
   const blog = await getBlogPostBySlug(slug);
   if (!blog) notFound();
 
-  const publishedString = blog.publishedAt ?? undefined;
+  const publishedString: string = blog.publishedAt ?? "";
 
   return (
     <div className="min-h-screen">
@@ -88,10 +88,10 @@ export default async function BlogDetailPage({ params }: Props) {
               marginBottom: "1.5rem",
             }}
           >
-            {/* ✅ fixed line */}
+            {/* ✅ Fixed line */}
             {publishedString ? (
               <span>
-                {new Date(publishedString as string).toLocaleDateString("en-US", {
+                {new Date(publishedString).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
