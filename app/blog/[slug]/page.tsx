@@ -3,48 +3,32 @@ import { getAllBlogSlugs, getBlogPostBySlug } from "@/lib/database";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const slugs = await getAllBlogSlugs();
-  return slugs.map((slug) => ({
-    slug: slug,
-  }));
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const blog = await getBlogPostBySlug(slug);
-
-  if (!blog) {
-    return { title: "Blog Post Not Found" };
-  }
-
-  return {
-    title: `${blog.title} - Chanrattnak Mong`,
-    description: blog.excerpt,
-  };
+  if (!blog) return { title: "Blog Post Not Found" };
+  return { title: `${blog.title} - Chanrattnak Mong`, description: blog.excerpt };
 }
 
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
   const blog = await getBlogPostBySlug(slug);
-
   if (!blog) notFound();
 
-  const publishedDate = blog.publishedAt ? new Date(blog.publishedAt) : null;
+  const publishedString = blog.publishedAt ?? undefined;
 
   return (
     <div className="min-h-screen">
       <div
         className="container"
-        style={{
-          paddingTop: "4.5rem",
-          paddingBottom: "4rem",
-          maxWidth: "56rem",
-        }}
+        style={{ paddingTop: "4.5rem", paddingBottom: "4rem", maxWidth: "56rem" }}
       >
         {/* Back button */}
         <Link
@@ -64,21 +48,16 @@ export default async function BlogDetailPage({ params }: Props) {
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Back to Blog
         </Link>
 
-        {/* Blog Header */}
+        {/* Blog header */}
         <div style={{ marginBottom: "3rem" }}>
           <h1
             style={{
-              fontSize: "clamp(1.75rem, 5vw, 2.5rem)",
+              fontSize: "clamp(1.75rem,5vw,2.5rem)",
               fontWeight: 700,
               color: "var(--text-primary)",
               marginBottom: "1rem",
@@ -109,10 +88,10 @@ export default async function BlogDetailPage({ params }: Props) {
               marginBottom: "1.5rem",
             }}
           >
-            {/* ✅ Fixed null handling */}
-            {publishedDate ? (
+            {/* ✅ fixed line */}
+            {publishedString ? (
               <span>
-                {publishedDate.toLocaleDateString("en-US", {
+                {new Date(publishedString as string).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -127,13 +106,10 @@ export default async function BlogDetailPage({ params }: Props) {
           </div>
 
           {blog.tags && (
-            <div
-              className="flex flex-wrap"
-              style={{ gap: "0.5rem", opacity: 0.7 }}
-            >
-              {blog.tags.map((tag, idx) => (
+            <div className="flex flex-wrap" style={{ gap: "0.5rem", opacity: 0.7 }}>
+              {blog.tags.map((tag, i) => (
                 <span
-                  key={idx}
+                  key={i}
                   style={{
                     fontSize: "0.75rem",
                     padding: "0.375rem 0.75rem",
@@ -151,7 +127,6 @@ export default async function BlogDetailPage({ params }: Props) {
           )}
         </div>
 
-        {/* Cover image */}
         {blog.coverImage && (
           <div
             style={{
@@ -170,11 +145,7 @@ export default async function BlogDetailPage({ params }: Props) {
           </div>
         )}
 
-        {/* Content */}
-        <article
-          className="prose max-w-none"
-          style={{ color: "var(--text-secondary)" }}
-        >
+        <article className="prose max-w-none" style={{ color: "var(--text-secondary)" }}>
           {blog.content ? (
             <div dangerouslySetInnerHTML={{ __html: blog.content }} />
           ) : (
