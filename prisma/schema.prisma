@@ -17,7 +17,9 @@ model Project {
   id          Int          @id @default(autoincrement())
   name        String
   description String
-  url         String
+  excerpt     String?
+  overview    String?
+  url         String?
   type        ProjectType  @default(CODING)
   tags        String[]
   imageUrl    String?
