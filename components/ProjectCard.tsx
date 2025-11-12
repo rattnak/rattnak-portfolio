@@ -20,7 +20,7 @@ type Props = {
   url: string | null;
   type: ProjectType;
   tags?: string[];
-  tagList?: TagType[]; // NEW: Full tag objects with colors
+  tagList?: TagType[]; 
   imageUrl?: string | null;
   githubUrl?: string | null;
   liveUrl?: string | null;
