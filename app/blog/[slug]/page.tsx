@@ -1,3 +1,4 @@
+// app/blog/[slug]/page.tsx
 import { getAllBlogSlugs, getBlogPostBySlug } from "@/lib/database";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -32,6 +33,8 @@ export default async function BlogDetailPage({ params }: Props) {
   const blog = await getBlogPostBySlug(slug);
 
   if (!blog) notFound();
+
+  const publishedDate = blog.publishedAt ? new Date(blog.publishedAt) : null;
 
   return (
     <div className="min-h-screen">
@@ -106,10 +109,10 @@ export default async function BlogDetailPage({ params }: Props) {
               marginBottom: "1.5rem",
             }}
           >
-            {/* ✅ FIXED: Handle null publishedAt safely */}
-            {blog.publishedAt ? (
+            {/* ✅ Fixed null handling */}
+            {publishedDate ? (
               <span>
-                {new Date(blog.publishedAt).toLocaleDateString("en-US", {
+                {publishedDate.toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
