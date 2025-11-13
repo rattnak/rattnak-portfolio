@@ -8,65 +8,122 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model Project {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  url         String
+  startDate   DateTime
+  endDate     DateTime?
+  type        ProjectType  @default(CODING)
+  featured    Boolean      @default(false)
+  githubUrl   String?
+  liveUrl     String?
+  overview    String?
+  excerpt     String?
+  tagIds      Int[]
+  ProjectTag  ProjectTag[]
+
+  @@index([featured], map: "idx_project_featured")
+  @@index([type], map: "idx_project_type")
+}
+
+model BlogPost {
+  id          Int           @id @default(autoincrement())
+  title       String
+  slug        String        @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  tags        String[]
+  published   Boolean       @default(false)
+  readTime    Int?
+  publishedAt DateTime?     @default(now()) @db.Timestamptz(6)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  tagIds      Int[]
+  BlogPostTag BlogPostTag[]
+
+  @@index([published], map: "idx_blogpost_published")
+  @@index([slug], map: "idx_blogpost_slug")
+}
+
+model Achievement {
+  id             Int              @id(map: "Competition_pkey") @default(autoincrement())
+  name           String
+  type           String
+  description    String
+  content        String?
+  result         String
+  organizer      String?
+  imageUrl       String?
+  url            String?
+  tags           String[]
+  date           DateTime
+  featured       Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  tagIds         Int[]
+  AchievementTag AchievementTag[]
+
+  @@index([date], map: "idx_achievement_date")
+  @@index([featured], map: "idx_achievement_featured")
+}
+
+model AchievementTag {
+  achievementId Int
+  tagId         Int
+  Achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Tag           Tag         @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([achievementId, tagId])
+  @@index([achievementId], map: "idx_achievement_tag_achievement")
+  @@index([tagId], map: "idx_achievement_tag_tag")
+}
+
+model BlogPostTag {
+  blogPostId Int
+  tagId      Int
+  BlogPost   BlogPost @relation(fields: [blogPostId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([blogPostId, tagId])
+  @@index([blogPostId], map: "idx_blogpost_tag_blogpost")
+  @@index([tagId], map: "idx_blogpost_tag_tag")
+}
+
+model ProjectTag {
+  projectId Int
+  tagId     Int
+  Project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([projectId, tagId])
+  @@index([projectId], map: "idx_project_tag_project")
+  @@index([tagId], map: "idx_project_tag_tag")
+}
+
+model Tag {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  slug           String           @unique
+  type           TagType
+  description    String?
+  color          String?
+  createdAt      DateTime         @default(now())
+  AchievementTag AchievementTag[]
+  BlogPostTag    BlogPostTag[]
+  ProjectTag     ProjectTag[]
+
+  @@index([slug], map: "idx_tag_slug")
+  @@index([type], map: "idx_tag_type")
+}
+
 enum ProjectType {
   CODING
   CASE_STUDY
 }
 
-model Project {
-  id          Int          @id @default(autoincrement())
-  name        String
-  description String
-  excerpt     String?
-  overview    String?
-  url         String?
-  type        ProjectType  @default(CODING)
-  tags        String[]
-  imageUrl    String?
-  githubUrl   String?
-  liveUrl     String?
-  featured    Boolean      @default(false)
-  startDate   DateTime
-  endDate     DateTime?
-  createdAt   DateTime     @default(now())
-
-  @@index([featured], name: "idx_project_featured")
-  @@index([type], name: "idx_project_type")
-}
-
-model Competition {
-  id          Int       @id @default(autoincrement())
-  name        String
-  type        String
-  description String
-  content     String?
-  result      String
-  organizer   String?
-  imageUrl    String?
-  url         String?
-  tags        String[]
-  date        DateTime
-  featured    Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-
-  @@index([featured], name: "idx_competition_featured")
-  @@index([date], name: "idx_competition_date")
-}
-
-model BlogPost {
-  id          Int       @id @default(autoincrement())
-  title       String
-  slug        String    @unique
-  excerpt     String
-  content     String
-  coverImage  String?
-  tags        String[]
-  published   Boolean   @default(false)
-  readTime    Int?
-  publishedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([published], name: "idx_blogpost_published")
-  @@index([slug], name: "idx_blogpost_slug")
+enum TagType {
+  TECHNICAL
+  NON_TECHNICAL
 }
