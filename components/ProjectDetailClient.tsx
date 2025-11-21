@@ -41,12 +41,12 @@ export default function ProjectDetailClient({ project }: Props) {
   const tagsWithColors = project.tagList || [];
   return (
     <div style={{ minHeight: 'calc(100vh - 4rem)' }}>
-      {/* Sticky Back button - white background container */}
+      {/* Sticky Back button - theme-aware background */}
       <div
         style={{
           position: 'sticky',
           top: '4rem',
-          backgroundColor: '#fff', // container white
+          backgroundColor: 'var(--background)',
           zIndex: 10,
           width: '100%',
         }}
@@ -55,8 +55,8 @@ export default function ProjectDetailClient({ project }: Props) {
           className="container"
           style={{
             maxWidth: '80rem',
-            paddingTop: '1rem',
-            paddingBottom: '1rem',
+            paddingTop: 'clamp(0.75rem, 2vw, 1rem)',
+            paddingBottom: 'clamp(0.75rem, 2vw, 1rem)',
           }}
         >
           <Link
