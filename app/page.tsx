@@ -2,7 +2,7 @@
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import ProjectsSection from "@/components/Projects";
-import CompetitionsSection from "@/components/Competitions";
+import AchievementsSection from "@/components/Achievements";
 import BlogSection from "@/components/BlogSection";
 
 export default function Home() {
@@ -11,7 +11,7 @@ export default function Home() {
       <Hero />
       <Services />
       <ProjectsSection />
-      <CompetitionsSection />
+      <AchievementsSection />
       <BlogSection />
     </>
   );
