@@ -1,4 +1,4 @@
-// components/CompetitionListItem.tsx
+// components/AchievementListItem.tsx
 "use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -18,7 +18,7 @@ type Props = {
   featured?: boolean;
 };
 
-export default function CompetitionListItem({
+export default function AchievementListItem({
   id,
   name,
   type,
