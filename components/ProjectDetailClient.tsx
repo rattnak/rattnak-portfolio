@@ -39,6 +39,11 @@ type Props = {
 export default function ProjectDetailClient({ project }: Props) {
   const tagsWithColors = project.tagList || [];
 
+  // Debug: Log overview content (only in development)
+  if (process.env.NODE_ENV === 'development' && project.overview) {
+    console.log('Project overview:', project.overview.substring(0, 100));
+  }
+
   return (
     <div style={{ minHeight: 'calc(100vh - 4rem)' }}>
       {/* Sticky Back button */}

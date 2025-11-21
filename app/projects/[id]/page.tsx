@@ -3,6 +3,9 @@ import { getAllProjects, getProjectWithTags } from "@/lib/database";
 import { notFound } from "next/navigation";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 
+// Force revalidation every 60 seconds to ensure fresh data from Supabase
+export const revalidate = 60;
+
 type Props = {
   params: Promise<{
     id: string;
