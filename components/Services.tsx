@@ -1,5 +1,20 @@
 // components/Services.tsx
 export default function Services() {
+  const services = [
+    {
+      title: "Full-Stack Development",
+      description: "Building end-to-end web and mobile applications with React, React Native, and modern backend frameworks."
+    },
+    {
+      title: "Real-Time Systems",
+      description: "Architecting WebSocket infrastructure and event-driven systems for high-concurrency applications."
+    },
+    {
+      title: "Data & API Engineering",
+      description: "Designing scalable APIs, ETL pipelines, and data architectures with SQL and cloud platforms."
+    }
+  ];
+
   return (
     <section className="services-section">
       <div className="container services-container">
@@ -15,32 +30,16 @@ export default function Services() {
         </p>
 
         <div className="services-grid">
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Web Development
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-              Building modern, performant web applications with clean, maintainable code.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Product Engineering
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-              Designing scalable systems and APIs with focus on user experience.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-              UI/UX Design
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-              Crafting intuitive interfaces that balance aesthetics with functionality.
-            </p>
-          </div>
+          {services.map((service) => (
+            <div key={service.title} className="space-y-4">
+              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {service.title}
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                {service.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
