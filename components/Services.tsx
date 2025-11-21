@@ -1,20 +1,19 @@
 // components/Services.tsx
 export default function Services() {
   const services = [
-    {
-      title: "Full-Stack Development",
-      description: "Building end-to-end web and mobile applications with React, React Native, and modern backend frameworks."
-    },
-    {
-      title: "Real-Time Systems",
-      description: "Architecting WebSocket infrastructure and event-driven systems for high-concurrency applications."
-    },
-    {
-      title: "Data & API Engineering",
-      description: "Designing scalable APIs, ETL pipelines, and data architectures with SQL and cloud platforms."
-    }
-  ];
-
+  {
+    title: "Full-Stack Development",
+    description: "Building end-to-end web and mobile applications with React, React Native, and modern backend frameworks like NestJS and Rails."
+  },
+  {
+    title: "Product Engineering",
+    description: "Owning the full product lifecycle from user research to production, balancing technical decisions with user needs."
+  },
+  {
+    title: "Real-Time Systems",
+    description: "Architecting WebSocket infrastructure and event-driven systems for high-concurrency, low-latency applications."
+  }
+];
   return (
     <section className="services-section">
       <div className="container services-container">
