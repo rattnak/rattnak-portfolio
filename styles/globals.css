@@ -409,15 +409,17 @@ a:focus-visible {
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .grid-3 {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
   }
 }
 
 @media (min-width: 1024px) {
   .grid-3 {
     grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
   }
 }
 
@@ -514,21 +516,15 @@ a:focus-visible {
   background: var(--background);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
-  padding: 0.875rem;
+  padding: 1rem;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-base);
 }
 
 @media (min-width: 768px) {
   .card {
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .card {
     padding: 1.25rem;
+    border-radius: 0.75rem;
   }
 }
 
