@@ -139,7 +139,7 @@ export default function ProjectCard({
                 onClick={(e) => e.stopPropagation()}
                 className="project-card-link"
               >
-                Live →
+                Link →
               </a>
             )}
             {type === "CASE_STUDY" && url && (
