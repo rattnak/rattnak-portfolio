@@ -135,6 +135,14 @@ export default function ProjectDetailClient({ project }: Props) {
                 View on GitHub
               </a>
             )}
+            {project.liveUrl && (
+              <a href={project.liveUrl} target="_blank" rel="noreferrer" className="btn btn-primary group">
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Relevant Link
+              </a>
+            )}
           </div>
 
           <p className="project-detail-description" style={{ marginBottom: '1.5rem' }}>
@@ -143,14 +151,6 @@ export default function ProjectDetailClient({ project }: Props) {
 
           {/* Links */}
           <div className="flex flex-wrap" style={{ gap: '1rem' }}>
-            {project.liveUrl && (
-              <a href={project.liveUrl} target="_blank" rel="noreferrer" className="btn btn-primary group">
-                <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-                View Live Demo
-              </a>
-            )}
             {project.type === "CASE_STUDY" && project.url && (
               <a href={project.url} target="_blank" rel="noreferrer" className="btn btn-primary group">
                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
