@@ -46,114 +46,33 @@ export default function ProjectsClient({ projects }: Props) {
   return (
     <>
       {/* Filter Tabs */}
-      <div style={{
-        display: 'flex',
-        gap: '2rem',
-        marginBottom: '1rem',
-        borderBottom: '1px solid var(--border)',
-        paddingBottom: '0'
-      }}>
+      <div className="filter-tabs-container">
         <button
           onClick={() => setFilter("ALL")}
-          className="transition-all relative"
-          style={{
-            color: filter === "ALL" ? 'var(--text-primary)' : 'var(--text-secondary)',
-            fontSize: '0.9375rem',
-            fontWeight: 500,
-            paddingBottom: '0.75rem',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-          onMouseEnter={(e) => {
-            if (filter !== "ALL") {
-              e.currentTarget.style.color = 'var(--text-primary)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (filter !== "ALL") {
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }
-          }}
+          className={`filter-tab ${filter === "ALL" ? "active" : ""}`}
         >
           All Projects
-          {filter === "ALL" && (
-            <div className="absolute bottom-0 left-0 right-0" style={{
-              height: '2px',
-              backgroundColor: 'var(--accent-primary)'
-            }} />
-          )}
+          {filter === "ALL" && <div className="filter-tab-indicator" />}
         </button>
         <button
           onClick={() => setFilter("CODING")}
-          className="transition-all relative"
-          style={{
-            color: filter === "CODING" ? 'var(--text-primary)' : 'var(--text-secondary)',
-            fontSize: '0.9375rem',
-            fontWeight: 500,
-            paddingBottom: '0.75rem',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-          onMouseEnter={(e) => {
-            if (filter !== "CODING") {
-              e.currentTarget.style.color = 'var(--text-primary)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (filter !== "CODING") {
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }
-          }}
+          className={`filter-tab ${filter === "CODING" ? "active" : ""}`}
         >
           Development
-          {filter === "CODING" && (
-            <div className="absolute bottom-0 left-0 right-0" style={{
-              height: '2px',
-              backgroundColor: 'var(--accent-primary)'
-            }} />
-          )}
+          {filter === "CODING" && <div className="filter-tab-indicator" />}
         </button>
         <button
           onClick={() => setFilter("CASE_STUDY")}
-          className="transition-all relative"
-          style={{
-            color: filter === "CASE_STUDY" ? 'var(--text-primary)' : 'var(--text-secondary)',
-            fontSize: '0.9375rem',
-            fontWeight: 500,
-            paddingBottom: '0.75rem',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-          onMouseEnter={(e) => {
-            if (filter !== "CASE_STUDY") {
-              e.currentTarget.style.color = 'var(--text-primary)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (filter !== "CASE_STUDY") {
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }
-          }}
+          className={`filter-tab ${filter === "CASE_STUDY" ? "active" : ""}`}
         >
           Design
-          {filter === "CASE_STUDY" && (
-            <div className="absolute bottom-0 left-0 right-0" style={{
-              height: '2px',
-              backgroundColor: 'var(--accent-primary)'
-            }} />
-          )}
+          {filter === "CASE_STUDY" && <div className="filter-tab-indicator" />}
         </button>
       </div>
 
       {/* Projects Grid */}
       {filteredProjects.length === 0 ? (
-        <div className="text-center" style={{
-          padding: '6rem 0',
-          color: 'var(--text-muted)'
-        }}>
+        <div className="empty-state">
           <p>No projects found in this category.</p>
         </div>
       ) : (
