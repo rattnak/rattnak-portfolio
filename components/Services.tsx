@@ -17,24 +17,17 @@ export default function Services() {
   return (
     <section className="services-section">
       <div className="container services-container">
-        <p style={{
-          fontSize: 'clamp(0.875rem, 2vw, 1rem)',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          color: 'var(--text-muted)',
-          marginBottom: 'clamp(2rem, 4vw, 3rem)',
-          fontWeight: 500
-        }}>
+        <p className="services-section-title">
           What I Do
         </p>
 
         <div className="services-grid">
           {services.map((service) => (
             <div key={service.title} className="space-y-4">
-              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="service-item-title">
                 {service.title}
-              </h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+              </h2>
+              <p className="service-item-description">
                 {service.description}
               </p>
             </div>
