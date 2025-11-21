@@ -22,8 +22,8 @@ type Project = {
   overview?: string | null;
   url: string | null;
   type: ProjectType;
-  tags?: string[]; // Legacy
-  tagList?: TagType[]; // New: resolved tags from junction table
+  tags?: string[]; 
+  tagList?: TagType[]; 
   imageUrl?: string | null;
   githubUrl?: string | null;
   liveUrl?: string | null;
@@ -37,11 +37,11 @@ type Props = {
 };
 
 export default function ProjectDetailClient({ project }: Props) {
-  // Use tagList for tags with colors
   const tagsWithColors = project.tagList || [];
+
   return (
     <div style={{ minHeight: 'calc(100vh - 4rem)' }}>
-      {/* Sticky Back button - theme-aware background */}
+      {/* Sticky Back button */}
       <div
         style={{
           position: 'sticky',
@@ -68,8 +68,6 @@ export default function ProjectDetailClient({ project }: Props) {
               color: 'var(--text-secondary)',
               transition: 'color 0.2s',
               textDecoration: 'none',
-              background: 'transparent',
-              border: 'none',
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.color = 'var(--accent-primary)')
@@ -97,33 +95,17 @@ export default function ProjectDetailClient({ project }: Props) {
         </div>
       </div>
 
-
-      <div className="container" style={{
-        paddingTop: '0',
-        paddingBottom: '4rem',
-        maxWidth: '80rem'
-      }}>
-
+      <div className="container" style={{ paddingTop: '0', paddingBottom: '4rem', maxWidth: '80rem' }}>
         {/* Project header */}
         <div style={{ marginBottom: '3rem' }}>
           <div className="flex items-center" style={{ gap: '0.75rem', marginBottom: '1rem' }}>
-            <span style={{
-              fontSize: '0.75rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              color: 'var(--text-muted)',
-              fontWeight: 500
-            }}>
+            <span className="project-detail-meta-label">
               {project.type === "CODING" ? "Development" : "Design Case Study"}
             </span>
             {project.featured && (
               <>
                 <span style={{ color: 'var(--text-muted)' }}>•</span>
-                <span style={{
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  color: 'var(--accent-primary)'
-                }}>
+                <span className="project-detail-meta-label" style={{ color: 'var(--accent-primary)' }}>
                   Featured
                 </span>
               </>
@@ -131,14 +113,7 @@ export default function ProjectDetailClient({ project }: Props) {
           </div>
 
           <div className="flex items-start justify-between" style={{ gap: '1rem', marginBottom: '1rem' }}>
-            <h1 style={{
-              fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              lineHeight: 1.2,
-              letterSpacing: '-0.02em',
-              flex: 1
-            }}>
+            <h1 className="project-detail-title" style={{ flex: 1 }}>
               {project.name}
             </h1>
             {project.type === "CODING" && project.githubUrl && (
@@ -157,24 +132,14 @@ export default function ProjectDetailClient({ project }: Props) {
             )}
           </div>
 
-          <p style={{
-            fontSize: '1.0625rem',
-            lineHeight: 1.6,
-            color: 'var(--text-secondary)',
-            marginBottom: '1.5rem'
-          }}>
+          <p className="project-detail-description" style={{ marginBottom: '1.5rem' }}>
             {project.description}
           </p>
 
           {/* Links */}
           <div className="flex flex-wrap" style={{ gap: '1rem' }}>
             {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-primary group"
-              >
+              <a href={project.liveUrl} target="_blank" rel="noreferrer" className="btn btn-primary group">
                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
@@ -182,12 +147,7 @@ export default function ProjectDetailClient({ project }: Props) {
               </a>
             )}
             {project.type === "CASE_STUDY" && project.url && (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-primary group"
-              >
+              <a href={project.url} target="_blank" rel="noreferrer" className="btn btn-primary group">
                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
@@ -199,101 +159,45 @@ export default function ProjectDetailClient({ project }: Props) {
 
         {/* Project image */}
         {project.imageUrl && (
-          <div style={{
-            marginBottom: '3rem',
-            borderRadius: '0.75rem',
-            overflow: 'hidden',
-            backgroundColor: 'var(--background-secondary)'
-          }}>
+          <div style={{ marginBottom: '3rem', borderRadius: '0.75rem', overflow: 'hidden', backgroundColor: 'var(--background-secondary)' }}>
             <div className="w-full aspect-[16/9] relative">
-              <Image
-                src={project.imageUrl}
-                alt={project.name}
-                fill
-                className="object-cover"
-                priority
-              />
+              <Image src={project.imageUrl} alt={project.name} fill className="object-cover" priority />
             </div>
           </div>
         )}
 
-        {/* Project details - Two column layout on large screens */}
+        {/* Project details */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr]" style={{ gap: '3rem' }}>
           {/* Left Column - Metadata */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-            {/* Timeline section */}
+            {/* Timeline */}
             <section>
-              <h2 style={{
-                fontSize: '1.125rem',
-                fontWeight: 600,
-                color: 'var(--text-primary)',
-                marginBottom: '1rem'
-              }}>
-                Timeline
-              </h2>
+              <h2 className="project-detail-section-title">Timeline</h2>
               <div className="flex items-center" style={{ gap: '1rem' }}>
                 <div>
-                  <p style={{
-                    fontSize: '0.8125rem',
-                    color: 'var(--text-muted)',
-                    marginBottom: '0.25rem'
-                  }}>
-                    Start
-                  </p>
-                  <p style={{
-                    fontSize: '0.9375rem',
-                    fontWeight: 500,
-                    color: 'var(--text-primary)'
-                  }}>
+                  <p className="project-detail-timeline-label">Start</p>
+                  <p className="project-detail-timeline-value">
                     {new Date(project.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                   </p>
                 </div>
-                <svg style={{
-                  width: '1.75rem',
-                  height: '1.75rem',
-                  color: 'var(--text-muted)',
-                  paddingTop: '0.875rem',
-                  flexShrink: 0
-                }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg style={{ width: '1.65rem', height: '1.75rem', color: 'var(--text-muted)', paddingTop: '0.875rem', flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
                 <div>
-                  <p style={{
-                    fontSize: '0.8125rem',
-                    color: 'var(--text-muted)',
-                    marginBottom: '0.25rem'
-                  }}>
-                    End
-                  </p>
-                  <p style={{
-                    fontSize: '0.9375rem',
-                    fontWeight: 500,
-                    color: 'var(--text-primary)'
-                  }}>
-                    {project.endDate
-                      ? new Date(project.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-                      : "Ongoing"
-                    }
+                  <p className="project-detail-timeline-label">End</p>
+                  <p className="project-detail-timeline-value">
+                    {project.endDate ? new Date(project.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : "Ongoing"}
                   </p>
                 </div>
               </div>
             </section>
 
-            {/* Technologies & Skills section */}
+            {/* Technologies */}
             <section>
-              <h2 style={{
-                fontSize: '1.125rem',
-                fontWeight: 600,
-                color: 'var(--text-primary)',
-                marginBottom: '1rem'
-              }}>
-                Technologies
-              </h2>
+              <h2 className="project-detail-section-title">Technologies</h2>
               <div className="flex flex-wrap" style={{ gap: '0.5rem' }}>
                 {tagsWithColors?.map((tag) => (
-                  <Tag key={tag.id} size="sm">
-                    {tag.name}
-                  </Tag>
+                  <Tag key={tag.id} size="sm">{tag.name}</Tag>
                 ))}
               </div>
             </section>
@@ -303,24 +207,12 @@ export default function ProjectDetailClient({ project }: Props) {
           <div>
             {project.overview && (
               <section>
-                <h2 style={{
-                  fontSize: '1.125rem',
-                  fontWeight: 600,
-                  color: 'var(--text-primary)',
-                  marginBottom: '1rem'
-                }}>
-                  Overview
-                </h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <p style={{
-                    fontSize: '1rem',
-                    lineHeight: 1.7,
-                    color: 'var(--text-secondary)',
-                    whiteSpace: 'pre-wrap'
-                  }}>
-                    {project.overview}
-                  </p>
-                </div>
+                <h2 className="project-detail-section-title">Overview</h2>
+                <div
+                  className="project-overview-content"
+                  style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}
+                  dangerouslySetInnerHTML={{ __html: project.overview }}
+                />
               </section>
             )}
           </div>
