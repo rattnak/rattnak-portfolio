@@ -107,7 +107,7 @@ export default function ProjectCard({
           {tagList && tagList.length > 0 && (
             <div className="flex items-center overflow-hidden project-card-tags" style={{ marginTop: '0.75rem', marginBottom: '0.75rem', flexWrap: 'nowrap' }}>
               {tagList.slice(0, 3).map((tag) => (
-                <Tag key={tag.id} size="sm">
+                <Tag key={tag.id} size="sm" color={tag.color}>
                   {tag.name}
                 </Tag>
               ))}

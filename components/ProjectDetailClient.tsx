@@ -202,7 +202,7 @@ export default function ProjectDetailClient({ project }: Props) {
               <h2 className="project-detail-section-title">Technologies</h2>
               <div className="flex flex-wrap" style={{ gap: '0.5rem' }}>
                 {tagsWithColors?.map((tag) => (
-                  <Tag key={tag.id} size="sm">{tag.name}</Tag>
+                  <Tag key={tag.id} size="sm" color={tag.color}>{tag.name}</Tag>
                 ))}
               </div>
             </section>

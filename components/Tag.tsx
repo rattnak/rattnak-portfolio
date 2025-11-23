@@ -28,9 +28,29 @@ export default function Tag({ children, className = "", size = "md", color }: Ta
     return () => observer.disconnect();
   }, []);
 
-  // Always use getTagColor which has the proper color scheme from tagColors.ts
-  // The database color is just a reference, but we use the full color config
-  const colors = getTagColor(children, isDark);
+  // Use database color if available, otherwise fallback to predefined colors
+  let colors;
+  if (color) {
+    // Use database hex color - generate light/dark variants
+    const hexColor = color.startsWith('#') ? color : `#${color}`;
+    if (isDark) {
+      colors = {
+        bg: `${hexColor}26`, // 15% opacity
+        text: hexColor,
+        border: `${hexColor}4D`, // 30% opacity
+      };
+    } else {
+      // Light mode - use a lighter background
+      colors = {
+        bg: `${hexColor}1A`, // 10% opacity
+        text: hexColor,
+        border: `${hexColor}33`, // 20% opacity
+      };
+    }
+  } else {
+    // Fallback to predefined color scheme from tagColors.ts
+    colors = getTagColor(children, isDark);
+  }
 
   return (
     <span
