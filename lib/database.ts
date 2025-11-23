@@ -291,7 +291,14 @@ async function getProjectTags(projectId: number): Promise<Tag[]> {
     return [];
   }
 
-  return data.map((item: any) => item.Tag as Tag).filter(Boolean);
+  const tags = data.map((item: any) => item.Tag as Tag).filter(Boolean);
+
+  // Debug: Log tag colors (only in development)
+  if (process.env.NODE_ENV === 'development' && tags.length > 0) {
+    console.log(`Tags for project ${projectId}:`, tags.map(t => ({ name: t.name, color: t.color })));
+  }
+
+  return tags;
 }
 
 // Helper function to get tags for an achievement (uses junction table)

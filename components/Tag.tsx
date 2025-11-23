@@ -28,6 +28,11 @@ export default function Tag({ children, className = "", size = "md", color }: Ta
     return () => observer.disconnect();
   }, []);
 
+  // Debug: Log color prop (only in development)
+  if (process.env.NODE_ENV === 'development' && color) {
+    console.log(`Tag "${children}" received color:`, color);
+  }
+
   // Use database color if available, otherwise fallback to predefined colors
   let colors;
   if (color) {
