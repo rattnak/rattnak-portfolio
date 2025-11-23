@@ -22,7 +22,6 @@ export type Project = {
   url: string | null;
   type: 'CODING' | 'CASE_STUDY';
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
-  tagIds: number[] | null; // New: array of tag IDs from Tag table
   imageUrl: string | null;
   githubUrl: string | null;
   liveUrl: string | null;
@@ -33,7 +32,7 @@ export type Project = {
 };
 
 export type ProjectWithTags = Project & {
-  tagList: Tag[]; // Resolved tag objects from tagIds
+  tagList: Tag[]; // Resolved tag objects from junction table
 };
 
 export type Achievement = {
@@ -47,7 +46,6 @@ export type Achievement = {
   imageUrl: string | null;
   url: string | null;
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
-  tagIds: number[] | null; // New: array of tag IDs from Tag table
   date: string;
   featured: boolean;
   createdAt: string;
@@ -71,7 +69,6 @@ export type BlogPost = {
   content: string;
   coverImage: string | null;
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
-  tagIds: number[] | null; // New: array of tag IDs from Tag table
   published: boolean;
   readTime: number | null;
   publishedAt: string | null;
@@ -80,7 +77,7 @@ export type BlogPost = {
 };
 
 export type BlogPostWithTags = BlogPost & {
-  tagList: Tag[]; // Resolved tag objects from tagIds
+  tagList: Tag[]; // Resolved tag objects from junction table
 };
 
 // Projects

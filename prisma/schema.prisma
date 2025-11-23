@@ -21,7 +21,8 @@ model Project {
   liveUrl     String?
   overview    String?
   excerpt     String?
-  tagIds      Int[]
+  imageUrl    String?
+  createdAt   DateTime     @default(now())
   ProjectTag  ProjectTag[]
 
   @@index([featured], map: "idx_project_featured")
@@ -41,7 +42,6 @@ model BlogPost {
   publishedAt DateTime?     @default(now()) @db.Timestamptz(6)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  tagIds      Int[]
   BlogPostTag BlogPostTag[]
 
   @@index([published], map: "idx_blogpost_published")
@@ -62,7 +62,6 @@ model Achievement {
   date           DateTime
   featured       Boolean          @default(false)
   createdAt      DateTime         @default(now())
-  tagIds         Int[]
   AchievementTag AchievementTag[]
 
   @@index([date], map: "idx_achievement_date")
