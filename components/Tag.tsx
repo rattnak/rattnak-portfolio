@@ -36,20 +36,33 @@ export default function Tag({ children, className = "", size = "md", color }: Ta
   // Use database color if available, otherwise fallback to predefined colors
   let colors;
   if (color) {
-    // Use database hex color - generate light/dark variants
+    // Use database hex color - generate light/dark variants with good contrast
     const hexColor = color.startsWith('#') ? color : `#${color}`;
+
+    // Helper function to convert hex to RGB
+    const hexToRgb = (hex: string) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    };
+
+    const rgb = hexToRgb(hexColor);
+
     if (isDark) {
       colors = {
-        bg: `${hexColor}26`, // 15% opacity
+        bg: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)` : `${hexColor}26`, // 15% opacity
         text: hexColor,
-        border: `${hexColor}4D`, // 30% opacity
+        border: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)` : `${hexColor}4D`, // 30% opacity
       };
     } else {
-      // Light mode - use a lighter background
+      // Light mode - stronger background and darker text for WCAG AA compliance
       colors = {
-        bg: `${hexColor}1A`, // 10% opacity
-        text: hexColor,
-        border: `${hexColor}33`, // 20% opacity
+        bg: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.12)` : `${hexColor}1F`, // 12% opacity
+        text: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.85)` : hexColor, // 85% opacity for better contrast
+        border: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)` : `${hexColor}40`, // 25% opacity
       };
     }
   } else {
