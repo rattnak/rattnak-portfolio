@@ -58,11 +58,11 @@ export default function Tag({ children, className = "", size = "md", color }: Ta
         border: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)` : `${hexColor}4D`, // 30% opacity
       };
     } else {
-      // Light mode - solid white background with colored text and border for maximum contrast
+      // Light mode - stronger background and darker text for WCAG AA compliance
       colors = {
-        bg: '#ffffff', // Solid white background
-        text: hexColor, // Full color for text
-        border: hexColor, // Full color for border
+        bg: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.20)` : `${hexColor}33`, // 20% opacity
+        text: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)` : hexColor, // Full opacity for maximum contrast
+        border: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35)` : `${hexColor}59`, // 35% opacity
       };
     }
   } else {
