@@ -60,9 +60,9 @@ export default function Tag({ children, className = "", size = "md", color }: Ta
     } else {
       // Light mode - stronger background and darker text for WCAG AA compliance
       colors = {
-        bg: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.12)` : `${hexColor}1F`, // 12% opacity
-        text: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.85)` : hexColor, // 85% opacity for better contrast
-        border: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)` : `${hexColor}40`, // 25% opacity
+        bg: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.20)` : `${hexColor}33`, // 20% opacity
+        text: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)` : hexColor, // Full opacity for maximum contrast
+        border: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35)` : `${hexColor}59`, // 35% opacity
       };
     }
   } else {
