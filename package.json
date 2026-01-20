@@ -11,7 +11,6 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.34.3",
     "@prisma/client": "^6.19.0",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.4.0",
@@ -29,7 +28,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "prisma": "^6.19.0",
+    "prisma": "^6.19.1",
     "tailwindcss": "^4",
     "tsx": "^4.20.6",
     "typescript": "^5"
