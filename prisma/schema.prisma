@@ -11,6 +11,10 @@ datasource db {
 model Project {
   id          Int          @id @default(autoincrement())
   name        String
+  // URL identity. Backfilled from `name` by migration; stable after
+  // that, so renaming a project does not break links that already
+  // exist. Numeric ids still resolve via a 301 to the slug URL.
+  slug        String       @unique
   description String
   url         String
   startDate   DateTime
@@ -21,11 +25,13 @@ model Project {
   liveUrl     String?
   overview    String?
   excerpt     String?
+  outcome     String? // Short delta shown in mono on the card: "2 days to 20 min"
   imageUrl    String?
   createdAt   DateTime     @default(now())
   ProjectTag  ProjectTag[]
 
   @@index([featured], map: "idx_project_featured")
+  @@index([slug], map: "idx_project_slug")
   @@index([type], map: "idx_project_type")
 }
 
@@ -51,12 +57,15 @@ model BlogPost {
 model Achievement {
   id             Int              @id(map: "Competition_pkey") @default(autoincrement())
   name           String
+  // URL identity, same contract as Project.slug.
+  slug           String           @unique
   type           String
   description    String
   content        String?
   result         String
   organizer      String?
-  url            String?
+  url            String? // Legacy: single link, kept for backward compatibility. New content should use `links`.
+  links          Json? // Up to 3 labeled links: [{ "label": "Certificate", "url": "https://..." }, ...]
   tags           String[]
   date           DateTime
   featured       Boolean          @default(false)
@@ -65,6 +74,7 @@ model Achievement {
 
   @@index([date], map: "idx_achievement_date")
   @@index([featured], map: "idx_achievement_featured")
+  @@index([slug], map: "idx_achievement_slug")
 }
 
 model AchievementTag {
@@ -141,4 +151,46 @@ enum ProjectType {
 enum TagType {
   TECHNICAL
   NON_TECHNICAL
+}
+
+// Resume tracking (Phase 1.2): no auth wall, full visibility into where
+// resume views come from. RLS: enable on both tables with no anonymous
+// policies (deny-all); server routes use SUPABASE_SERVICE_ROLE_KEY.
+model ResumeLink {
+  id        Int            @id @default(autoincrement())
+  slug      String         @unique // "linkedin", "github", "stripe-2026"
+  label     String // "LinkedIn profile", "Stripe application Aug 2026"
+  kind      ResumeLinkKind @default(CHANNEL)
+  active    Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  accesses  ResumeAccess[]
+}
+
+model ResumeAccess {
+  id         Int         @id @default(autoincrement())
+  linkId     Int?
+  link       ResumeLink? @relation(fields: [linkId], references: [id])
+  src        String? // raw ?src= value when no ResumeLink matches
+  referrer   String?
+  country    String?
+  city       String?
+  userAgent  String?
+  ipHash     String? // sha256(ip + RESUME_SALT), never the raw IP
+  emailedTo  String?
+  accessedAt DateTime    @default(now())
+
+  @@index([linkId, accessedAt])
+}
+
+enum ResumeLinkKind {
+  CHANNEL
+  APPLICATION
+}
+
+// Untangle-knot completions (Phase 2.5): anonymous solve durations.
+// RLS deny-all for anon; inserts go through the service role.
+model UntangleSolve {
+  id         Int      @id @default(autoincrement())
+  durationMs Int
+  createdAt  DateTime @default(now())
 }
