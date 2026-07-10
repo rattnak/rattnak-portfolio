@@ -1,5 +1,11 @@
 // lib/tagColors.ts - Centralized tag color configuration
-// Easy to modify - just change the colors here!
+//
+// Palette is generated: each tag family gets a distinct hue spaced by the
+// golden angle (~137.5deg) around the color wheel, so no two adjacent tags
+// in a list read as the same color. Light-mode text/background pairs are
+// verified to meet WCAG AA (>=4.5:1) programmatically, not eyeballed; dark
+// variants are derived from the same hue as translucent overlays rather
+// than hand-typed, so they can't drift out of sync with light mode.
 
 export type TagColor = {
   bg: string;
@@ -7,138 +13,102 @@ export type TagColor = {
   border: string;
 };
 
-// Predefined color palette for tags
 export const TAG_COLORS: Record<string, TagColor> = {
-  // Programming Languages
-  'JavaScript': { bg: '#FEF3C7', text: '#92400E', border: '#FCD34D' },
-  'TypeScript': { bg: '#DBEAFE', text: '#1E3A8A', border: '#93C5FD' },
-  'Python': { bg: '#DBEAFE', text: '#1E40AF', border: '#60A5FA' },
-  'Java': { bg: '#FEE2E2', text: '#991B1B', border: '#FCA5A5' },
-  'Go': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-  'Rust': { bg: '#FED7AA', text: '#9A3412', border: '#FDBA74' },
-  'C++': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-
-  // Frontend Frameworks & Libraries
-  'React': { bg: '#DBEAFE', text: '#1E40AF', border: '#60A5FA' },
-  'Next.js': { bg: '#F3F4F6', text: '#111827', border: '#9CA3AF' },
-  'Vue.js': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-  'Angular': { bg: '#FEE2E2', text: '#991B1B', border: '#FCA5A5' },
-  'Svelte': { bg: '#FED7AA', text: '#9A3412', border: '#FDBA74' },
-  'Tailwind CSS': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-  'TailwindCSS': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-
-  // Backend & Databases
-  'Node.js': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-  'Express': { bg: '#F3F4F6', text: '#374151', border: '#9CA3AF' },
-  'MongoDB': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-  'PostgreSQL': { bg: '#DBEAFE', text: '#1E40AF', border: '#60A5FA' },
-  'MySQL': { bg: '#DBEAFE', text: '#1E3A8A', border: '#93C5FD' },
-  'Firebase': { bg: '#FEF3C7', text: '#92400E', border: '#FCD34D' },
-  'Prisma': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-
-  // Cloud & DevOps
-  'AWS': { bg: '#FED7AA', text: '#9A3412', border: '#FDBA74' },
-  'Docker': { bg: '#DBEAFE', text: '#1E40AF', border: '#60A5FA' },
-  'Kubernetes': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-  'CI/CD': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-
-  // Mobile Development
-  'React Native': { bg: '#DBEAFE', text: '#1E40AF', border: '#60A5FA' },
-  'Flutter': { bg: '#DBEAFE', text: '#1E3A8A', border: '#93C5FD' },
-  'Swift': { bg: '#FED7AA', text: '#9A3412', border: '#FDBA74' },
-
-  // Design & UI/UX
-  'Figma': { bg: '#F0ABFC', text: '#701A75', border: '#E879F9' },
-  'UI/UX': { bg: '#F0ABFC', text: '#701A75', border: '#E879F9' },
-  'Prototyping': { bg: '#F0ABFC', text: '#701A75', border: '#E879F9' },
-  'Mobile Design': { bg: '#FBCFE8', text: '#831843', border: '#F9A8D4' },
-  'Mobile UI': { bg: '#FBCFE8', text: '#831843', border: '#F9A8D4' },
-  'User Research': { bg: '#E9D5FF', text: '#581C87', border: '#D8B4FE' },
-  'Animation': { bg: '#FED7AA', text: '#9A3412', border: '#FDBA74' },
-
-  // AI & Machine Learning
-  'AI': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-  'Machine Learning': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-  'TensorFlow': { bg: '#FED7AA', text: '#9A3412', border: '#FDBA74' },
-
-  // Other Technologies
-  'GraphQL': { bg: '#F0ABFC', text: '#701A75', border: '#E879F9' },
-  'REST API': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-  'WebSockets': { bg: '#DBEAFE', text: '#1E40AF', border: '#60A5FA' },
-  'Stripe': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-
-  // General Categories
-  'Algorithms': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-  'Data Structures': { bg: '#E0E7FF', text: '#3730A3', border: '#A5B4FC' },
-  'Problem Solving': { bg: '#D1FAE5', text: '#065F46', border: '#6EE7B7' },
-  'Academic Excellence': { bg: '#FEF3C7', text: '#92400E', border: '#FCD34D' },
+  'AI': { bg: '#F5EDEA', text: '#7C301D', border: '#D2A89D' },
+  'AWS': { bg: '#EAF5F0', text: '#1D7C4C', border: '#9DD2B7' },
+  'Academic Excellence': { bg: '#F3EAF5', text: '#671D7C', border: '#C79DD2' },
+  'Algorithms': { bg: '#F4F5EA', text: '#6D741B', border: '#CED29D' },
+  'Angular': { bg: '#EAF1F5', text: '#1D597C', border: '#9DBFD2' },
+  'Animation': { bg: '#F5EAEE', text: '#7C1D3D', border: '#D29DAF' },
+  'C++': { bg: '#EBF5EA', text: '#227C1D', border: '#A0D29D' },
+  'CI/CD': { bg: '#EDEAF5', text: '#341D7C', border: '#AA9DD2' },
+  'Data Structures': { bg: '#F5F0EA', text: '#7C501D', border: '#D2B99D' },
+  'Docker': { bg: '#EAF5F3', text: '#1B7464', border: '#9DD2C9' },
+  'Express': { bg: '#F5EAF4', text: '#7C1D71', border: '#D29DCC' },
+  'Figma': { bg: '#F1F5EA', text: '#4F741B', border: '#BCD29D' },
+  'Firebase': { bg: '#EAEEF5', text: '#1D397C', border: '#9DADD2' },
+  'Flutter': { bg: '#F5EAEB', text: '#7C1D1E', border: '#D29D9D' },
+  'Go': { bg: '#EAF5ED', text: '#1D7C38', border: '#9DD2AC' },
+  'GraphQL': { bg: '#F1EAF5', text: '#541D7C', border: '#BC9DD2' },
+  'Java': { bg: '#F5F4EA', text: '#74681B', border: '#D2CB9D' },
+  'JavaScript': { bg: '#EAF3F5', text: '#1D6D7C', border: '#9DCAD2' },
+  'Kubernetes': { bg: '#F5EAF0', text: '#7C1D51', border: '#D29DBA' },
+  'Machine Learning': { bg: '#EDF5EA', text: '#357C1D', border: '#ABD29D' },
+  'Mobile Design': { bg: '#EBEAF5', text: '#201D7C', border: '#9F9DD2' },
+  'Mobile UI': { bg: '#F5EEEA', text: '#7C3C1D', border: '#D2AE9D' },
+  'MongoDB': { bg: '#EAF5F1', text: '#1D7C58', border: '#9DD2BE' },
+  'MySQL': { bg: '#F4EAF5', text: '#741D7C', border: '#CD9DD2' },
+  'Next.js': { bg: '#F3F5EA', text: '#62741B', border: '#C7D29D' },
+  'Node.js': { bg: '#EAF0F5', text: '#1D4D7C', border: '#9DB8D2' },
+  'PostgreSQL': { bg: '#F5EAED', text: '#7C1D31', border: '#D29DA8' },
+  'Prisma': { bg: '#EAF5EB', text: '#1D7C25', border: '#9DD2A1' },
+  'Problem Solving': { bg: '#EEEAF5', text: '#401D7C', border: '#B19DD2' },
+  'Prototyping': { bg: '#F5F1EA', text: '#7C5C1D', border: '#D2C09D' },
+  'Python': { bg: '#EAF5F4', text: '#1B7470', border: '#9DD2D0' },
+  'REST API': { bg: '#F5EAF2', text: '#7C1D65', border: '#D29DC5' },
+  'React': { bg: '#EFF5EA', text: '#44741B', border: '#B6D29D' },
+  'React Native': { bg: '#EAECF5', text: '#1D2D7C', border: '#9DA6D2' },
+  'Rust': { bg: '#F5ECEA', text: '#7C291D', border: '#D2A39D' },
+  'Stripe': { bg: '#EAF5EF', text: '#1D7C44', border: '#9DD2B3' },
+  'Svelte': { bg: '#F2EAF5', text: '#601D7C', border: '#C29DD2' },
+  'Swift': { bg: '#F5F5EA', text: '#6B6B19', border: '#D2D29D' },
+  'Tailwind CSS': { bg: '#EAF2F5', text: '#1D617C', border: '#9DC3D2' },
+  'TailwindCSS': { bg: '#EAF2F5', text: '#1D617C', border: '#9DC3D2' },
+  'TensorFlow': { bg: '#F5EAEF', text: '#7C1D45', border: '#D29DB3' },
+  'TypeScript': { bg: '#ECF5EA', text: '#297C1D', border: '#A4D29D' },
+  'UI/UX': { bg: '#ECEAF5', text: '#2D1D7C', border: '#A69DD2' },
+  'User Research': { bg: '#F5EFEA', text: '#7C481D', border: '#D2B59D' },
+  'Vue.js': { bg: '#EAF5F2', text: '#1B745D', border: '#9DD2C5' },
+  'WebSockets': { bg: '#F5EAF5', text: '#7C1D78', border: '#D29DD0' },
 };
 
-// Dark mode color variants (automatically generated from light mode)
 export const TAG_COLORS_DARK: Record<string, TagColor> = {
-  // Programming Languages
-  'JavaScript': { bg: 'rgba(251, 191, 36, 0.15)', text: '#FCD34D', border: 'rgba(251, 191, 36, 0.3)' },
-  'TypeScript': { bg: 'rgba(59, 130, 246, 0.15)', text: '#93C5FD', border: 'rgba(59, 130, 246, 0.3)' },
-  'Python': { bg: 'rgba(96, 165, 250, 0.15)', text: '#60A5FA', border: 'rgba(96, 165, 250, 0.3)' },
-  'Java': { bg: 'rgba(239, 68, 68, 0.15)', text: '#FCA5A5', border: 'rgba(239, 68, 68, 0.3)' },
-  'Go': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-  'Rust': { bg: 'rgba(249, 115, 22, 0.15)', text: '#FDBA74', border: 'rgba(249, 115, 22, 0.3)' },
-  'C++': { bg: 'rgba(99, 102, 241, 0.15)', text: '#A5B4FC', border: 'rgba(99, 102, 241, 0.3)' },
-
-  // Frontend Frameworks & Libraries
-  'React': { bg: 'rgba(96, 165, 250, 0.15)', text: '#60A5FA', border: 'rgba(96, 165, 250, 0.3)' },
-  'Next.js': { bg: 'rgba(156, 163, 175, 0.15)', text: '#D1D5DB', border: 'rgba(156, 163, 175, 0.3)' },
-  'Vue.js': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-  'Angular': { bg: 'rgba(239, 68, 68, 0.15)', text: '#FCA5A5', border: 'rgba(239, 68, 68, 0.3)' },
-  'Svelte': { bg: 'rgba(249, 115, 22, 0.15)', text: '#FDBA74', border: 'rgba(249, 115, 22, 0.3)' },
-  'Tailwind CSS': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-  'TailwindCSS': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-
-  // Backend & Databases
-  'Node.js': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-  'Express': { bg: 'rgba(156, 163, 175, 0.15)', text: '#D1D5DB', border: 'rgba(156, 163, 175, 0.3)' },
-  'MongoDB': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-  'PostgreSQL': { bg: 'rgba(96, 165, 250, 0.15)', text: '#60A5FA', border: 'rgba(96, 165, 250, 0.3)' },
-  'MySQL': { bg: 'rgba(147, 197, 253, 0.15)', text: '#93C5FD', border: 'rgba(147, 197, 253, 0.3)' },
-  'Firebase': { bg: 'rgba(251, 191, 36, 0.15)', text: '#FCD34D', border: 'rgba(251, 191, 36, 0.3)' },
-  'Prisma': { bg: 'rgba(99, 102, 241, 0.15)', text: '#A5B4FC', border: 'rgba(99, 102, 241, 0.3)' },
-
-  // Cloud & DevOps
-  'AWS': { bg: 'rgba(249, 115, 22, 0.15)', text: '#FDBA74', border: 'rgba(249, 115, 22, 0.3)' },
-  'Docker': { bg: 'rgba(96, 165, 250, 0.15)', text: '#60A5FA', border: 'rgba(96, 165, 250, 0.3)' },
-  'Kubernetes': { bg: 'rgba(99, 102, 241, 0.15)', text: '#A5B4FC', border: 'rgba(99, 102, 241, 0.3)' },
-  'CI/CD': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-
-  // Mobile Development
-  'React Native': { bg: 'rgba(96, 165, 250, 0.15)', text: '#60A5FA', border: 'rgba(96, 165, 250, 0.3)' },
-  'Flutter': { bg: 'rgba(147, 197, 253, 0.15)', text: '#93C5FD', border: 'rgba(147, 197, 253, 0.3)' },
-  'Swift': { bg: 'rgba(249, 115, 22, 0.15)', text: '#FDBA74', border: 'rgba(249, 115, 22, 0.3)' },
-
-  // Design & UI/UX
-  'Figma': { bg: 'rgba(232, 121, 249, 0.15)', text: '#E879F9', border: 'rgba(232, 121, 249, 0.3)' },
-  'UI/UX': { bg: 'rgba(232, 121, 249, 0.15)', text: '#E879F9', border: 'rgba(232, 121, 249, 0.3)' },
-  'Prototyping': { bg: 'rgba(232, 121, 249, 0.15)', text: '#E879F9', border: 'rgba(232, 121, 249, 0.3)' },
-  'Mobile Design': { bg: 'rgba(249, 168, 212, 0.15)', text: '#F9A8D4', border: 'rgba(249, 168, 212, 0.3)' },
-  'Mobile UI': { bg: 'rgba(249, 168, 212, 0.15)', text: '#F9A8D4', border: 'rgba(249, 168, 212, 0.3)' },
-  'User Research': { bg: 'rgba(216, 180, 254, 0.15)', text: '#D8B4FE', border: 'rgba(216, 180, 254, 0.3)' },
-  'Animation': { bg: 'rgba(249, 115, 22, 0.15)', text: '#FDBA74', border: 'rgba(249, 115, 22, 0.3)' },
-
-  // AI & Machine Learning
-  'AI': { bg: 'rgba(99, 102, 241, 0.15)', text: '#A5B4FC', border: 'rgba(99, 102, 241, 0.3)' },
-  'Machine Learning': { bg: 'rgba(99, 102, 241, 0.15)', text: '#A5B4FC', border: 'rgba(99, 102, 241, 0.3)' },
-  'TensorFlow': { bg: 'rgba(249, 115, 22, 0.15)', text: '#FDBA74', border: 'rgba(249, 115, 22, 0.3)' },
-
-  // Other Technologies
-  'GraphQL': { bg: 'rgba(232, 121, 249, 0.15)', text: '#E879F9', border: 'rgba(232, 121, 249, 0.3)' },
-  'REST API': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-  'WebSockets': { bg: 'rgba(96, 165, 250, 0.15)', text: '#60A5FA', border: 'rgba(96, 165, 250, 0.3)' },
-  'Stripe': { bg: 'rgba(99, 102, 241, 0.15)', text: '#A5B4FC', border: 'rgba(99, 102, 241, 0.3)' },
-
-  // General Categories
-  'Algorithms': { bg: 'rgba(99, 102, 241, 0.15)', text: '#A5B4FC', border: 'rgba(99, 102, 241, 0.3)' },
-  'Data Structures': { bg: 'rgba(99, 102, 241, 0.15)', text: '#A5B4FC', border: 'rgba(99, 102, 241, 0.3)' },
-  'Problem Solving': { bg: 'rgba(16, 185, 129, 0.15)', text: '#6EE7B7', border: 'rgba(16, 185, 129, 0.3)' },
-  'Academic Excellence': { bg: 'rgba(251, 191, 36, 0.15)', text: '#FCD34D', border: 'rgba(251, 191, 36, 0.3)' },
+  'AI': { bg: 'rgba(228, 157, 139, 0.15)', text: 'rgb(228, 157, 139)', border: 'rgba(228, 157, 139, 0.35)' },
+  'AWS': { bg: 'rgba(139, 228, 183, 0.15)', text: 'rgb(139, 228, 183)', border: 'rgba(139, 228, 183, 0.35)' },
+  'Academic Excellence': { bg: 'rgba(209, 139, 228, 0.15)', text: 'rgb(209, 139, 228)', border: 'rgba(209, 139, 228, 0.35)' },
+  'Algorithms': { bg: 'rgba(221, 228, 139, 0.15)', text: 'rgb(221, 228, 139)', border: 'rgba(221, 228, 139, 0.35)' },
+  'Angular': { bg: 'rgba(139, 195, 228, 0.15)', text: 'rgb(139, 195, 228)', border: 'rgba(139, 195, 228, 0.35)' },
+  'Animation': { bg: 'rgba(228, 139, 170, 0.15)', text: 'rgb(228, 139, 170)', border: 'rgba(228, 139, 170, 0.35)' },
+  'C++': { bg: 'rgba(144, 228, 139, 0.15)', text: 'rgb(144, 228, 139)', border: 'rgba(144, 228, 139, 0.35)' },
+  'CI/CD': { bg: 'rgba(161, 139, 228, 0.15)', text: 'rgb(161, 139, 228)', border: 'rgba(161, 139, 228, 0.35)' },
+  'Data Structures': { bg: 'rgba(228, 187, 139, 0.15)', text: 'rgb(228, 187, 139)', border: 'rgba(228, 187, 139, 0.35)' },
+  'Docker': { bg: 'rgba(139, 228, 212, 0.15)', text: 'rgb(139, 228, 212)', border: 'rgba(139, 228, 212, 0.35)' },
+  'Express': { bg: 'rgba(228, 139, 217, 0.15)', text: 'rgb(228, 139, 217)', border: 'rgba(228, 139, 217, 0.35)' },
+  'Figma': { bg: 'rgba(192, 228, 139, 0.15)', text: 'rgb(192, 228, 139)', border: 'rgba(192, 228, 139, 0.35)' },
+  'Firebase': { bg: 'rgba(139, 166, 228, 0.15)', text: 'rgb(139, 166, 228)', border: 'rgba(139, 166, 228, 0.35)' },
+  'Flutter': { bg: 'rgba(228, 139, 140, 0.15)', text: 'rgb(228, 139, 140)', border: 'rgba(228, 139, 140, 0.35)' },
+  'Go': { bg: 'rgba(139, 228, 165, 0.15)', text: 'rgb(139, 228, 165)', border: 'rgba(139, 228, 165, 0.35)' },
+  'GraphQL': { bg: 'rgba(190, 139, 228, 0.15)', text: 'rgb(190, 139, 228)', border: 'rgba(190, 139, 228, 0.35)' },
+  'Java': { bg: 'rgba(228, 216, 139, 0.15)', text: 'rgb(228, 216, 139)', border: 'rgba(228, 216, 139, 0.35)' },
+  'JavaScript': { bg: 'rgba(139, 214, 228, 0.15)', text: 'rgb(139, 214, 228)', border: 'rgba(139, 214, 228, 0.35)' },
+  'Kubernetes': { bg: 'rgba(228, 139, 188, 0.15)', text: 'rgb(228, 139, 188)', border: 'rgba(228, 139, 188, 0.35)' },
+  'Machine Learning': { bg: 'rgba(162, 228, 139, 0.15)', text: 'rgb(162, 228, 139)', border: 'rgba(162, 228, 139, 0.35)' },
+  'Mobile Design': { bg: 'rgba(143, 139, 228, 0.15)', text: 'rgb(143, 139, 228)', border: 'rgba(143, 139, 228, 0.35)' },
+  'Mobile UI': { bg: 'rgba(228, 168, 139, 0.15)', text: 'rgb(228, 168, 139)', border: 'rgba(228, 168, 139, 0.35)' },
+  'MongoDB': { bg: 'rgba(139, 228, 194, 0.15)', text: 'rgb(139, 228, 194)', border: 'rgba(139, 228, 194, 0.35)' },
+  'MySQL': { bg: 'rgba(220, 139, 228, 0.15)', text: 'rgb(220, 139, 228)', border: 'rgba(220, 139, 228, 0.35)' },
+  'Next.js': { bg: 'rgba(210, 228, 139, 0.15)', text: 'rgb(210, 228, 139)', border: 'rgba(210, 228, 139, 0.35)' },
+  'Node.js': { bg: 'rgba(139, 184, 228, 0.15)', text: 'rgb(139, 184, 228)', border: 'rgba(139, 184, 228, 0.35)' },
+  'PostgreSQL': { bg: 'rgba(228, 139, 158, 0.15)', text: 'rgb(228, 139, 158)', border: 'rgba(228, 139, 158, 0.35)' },
+  'Prisma': { bg: 'rgba(139, 228, 146, 0.15)', text: 'rgb(139, 228, 146)', border: 'rgba(139, 228, 146, 0.35)' },
+  'Problem Solving': { bg: 'rgba(172, 139, 228, 0.15)', text: 'rgb(172, 139, 228)', border: 'rgba(172, 139, 228, 0.35)' },
+  'Prototyping': { bg: 'rgba(228, 198, 139, 0.15)', text: 'rgb(228, 198, 139)', border: 'rgba(228, 198, 139, 0.35)' },
+  'Python': { bg: 'rgba(139, 228, 224, 0.15)', text: 'rgb(139, 228, 224)', border: 'rgba(139, 228, 224, 0.35)' },
+  'REST API': { bg: 'rgba(228, 139, 206, 0.15)', text: 'rgb(228, 139, 206)', border: 'rgba(228, 139, 206, 0.35)' },
+  'React': { bg: 'rgba(180, 228, 139, 0.15)', text: 'rgb(180, 228, 139)', border: 'rgba(180, 228, 139, 0.35)' },
+  'React Native': { bg: 'rgba(139, 154, 228, 0.15)', text: 'rgb(139, 154, 228)', border: 'rgba(139, 154, 228, 0.35)' },
+  'Rust': { bg: 'rgba(228, 150, 139, 0.15)', text: 'rgb(228, 150, 139)', border: 'rgba(228, 150, 139, 0.35)' },
+  'Stripe': { bg: 'rgba(139, 228, 176, 0.15)', text: 'rgb(139, 228, 176)', border: 'rgba(139, 228, 176, 0.35)' },
+  'Svelte': { bg: 'rgba(202, 139, 228, 0.15)', text: 'rgb(202, 139, 228)', border: 'rgba(202, 139, 228, 0.35)' },
+  'Swift': { bg: 'rgba(228, 228, 139, 0.15)', text: 'rgb(228, 228, 139)', border: 'rgba(228, 228, 139, 0.35)' },
+  'Tailwind CSS': { bg: 'rgba(139, 202, 228, 0.15)', text: 'rgb(139, 202, 228)', border: 'rgba(139, 202, 228, 0.35)' },
+  'TailwindCSS': { bg: 'rgba(139, 202, 228, 0.15)', text: 'rgb(139, 202, 228)', border: 'rgba(139, 202, 228, 0.35)' },
+  'TensorFlow': { bg: 'rgba(228, 139, 176, 0.15)', text: 'rgb(228, 139, 176)', border: 'rgba(228, 139, 176, 0.35)' },
+  'TypeScript': { bg: 'rgba(151, 228, 139, 0.15)', text: 'rgb(151, 228, 139)', border: 'rgba(151, 228, 139, 0.35)' },
+  'UI/UX': { bg: 'rgba(154, 139, 228, 0.15)', text: 'rgb(154, 139, 228)', border: 'rgba(154, 139, 228, 0.35)' },
+  'User Research': { bg: 'rgba(228, 180, 139, 0.15)', text: 'rgb(228, 180, 139)', border: 'rgba(228, 180, 139, 0.35)' },
+  'Vue.js': { bg: 'rgba(139, 228, 206, 0.15)', text: 'rgb(139, 228, 206)', border: 'rgba(139, 228, 206, 0.35)' },
+  'WebSockets': { bg: 'rgba(228, 139, 224, 0.15)', text: 'rgb(228, 139, 224)', border: 'rgba(228, 139, 224, 0.35)' },
 };
 
 // Default colors for tags not in the predefined list
@@ -151,7 +121,7 @@ export const DEFAULT_TAG_COLOR: TagColor = {
 export const DEFAULT_TAG_COLOR_DARK: TagColor = {
   bg: 'rgba(156, 163, 175, 0.15)',
   text: '#9CA3AF',
-  border: 'rgba(156, 163, 175, 0.3)',
+  border: 'rgba(156, 163, 175, 0.35)',
 };
 
 /**

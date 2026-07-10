@@ -16,9 +16,11 @@ export type Tag = {
 export type Project = {
   id: number;
   name: string;
+  slug: string; // URL identity for /projects/[slug]; unique, stable across renames
   excerpt: string | null; // Short summary for project cards (~150 chars)
   description: string; // Full description shown under project name on detail page
   overview: string | null; // Detailed overview section on detail page
+  outcome: string | null; // Short delta rendered in mono on the card: "2 days to 20 min"
   url: string | null;
   type: 'CODING' | 'CASE_STUDY';
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
@@ -35,20 +37,45 @@ export type ProjectWithTags = Project & {
   tagList: Tag[]; // Resolved tag objects from junction table
 };
 
+export type AchievementLink = {
+  label: string;
+  url: string;
+};
+
 export type Achievement = {
   id: number;
   name: string;
+  slug: string; // URL identity for /achievements/[slug]; unique, stable across renames
   type: string;
   description: string;
   content: string | null;
   result: string;
   organizer: string | null;
-  url: string | null;
+  url: string | null; // Legacy: single link, kept for backward compatibility.
+  links: AchievementLink[] | null; // Up to 3 labeled links; see getAchievementLinks.
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
   date: string;
   featured: boolean;
   createdAt: string;
 };
+
+const MAX_ACHIEVEMENT_LINKS = 3;
+
+// Normalizes an achievement's links for rendering: prefers the new
+// `links` column (capped at 3, entries missing a url or label dropped),
+// falls back to the legacy single `url` column so older content that
+// hasn't been migrated to `links` still shows its one link.
+export function getAchievementLinks(achievement: { url?: string | null; links?: AchievementLink[] | null }): AchievementLink[] {
+  if (Array.isArray(achievement.links) && achievement.links.length > 0) {
+    return achievement.links
+      .filter((l): l is AchievementLink => Boolean(l && typeof l === "object" && l.url && l.label))
+      .slice(0, MAX_ACHIEVEMENT_LINKS);
+  }
+  if (achievement.url) {
+    return [{ label: "View Details", url: achievement.url }];
+  }
+  return [];
+}
 
 // Extracts the first image path from an achievement's markdown content
 // (either a ![]() image or the first line of a ```slideshow block), for use
@@ -502,6 +529,47 @@ export async function getProjectWithTags(id: number): Promise<ProjectWithTags | 
 }
 
 
+// Slug is the URL identity for /projects/[slug]. The id lookup above is
+// kept for the numeric legacy route, which resolves an id only to 301
+// to the slug URL.
+export async function getProjectBySlug(slug: string): Promise<ProjectWithTags | null> {
+  const { data, error } = await supabase
+    .from('Project')
+    .select('*')
+    // maybeSingle, not single: an unknown slug is an ordinary 404, not
+    // an error worth logging on every bad URL a crawler tries.
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching project by slug:', error);
+    return null;
+  }
+  if (!data) return null;
+
+  const project = data as Project;
+  const tagList = await getProjectTags(project.id);
+  return { ...project, tagList };
+}
+
+export async function getAchievementBySlug(slug: string): Promise<AchievementWithTags | null> {
+  const { data, error } = await supabase
+    .from('Achievement')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching achievement by slug:', error);
+    return null;
+  }
+  if (!data) return null;
+
+  const achievement = data as Achievement;
+  const tagList = await getAchievementTags(achievement.id);
+  return { ...achievement, tagList };
+}
+
 export async function getAllProjectsWithTags(): Promise<ProjectWithTags[]> {
   const projects = await getAllProjects();
   const projectsWithTags = await Promise.all(
@@ -537,6 +605,139 @@ export async function getAllAchievementsWithTags(): Promise<AchievementWithTags[
 
 // Legacy function for backward compatibility
 export const getAllCompetitionsWithTags = getAllAchievementsWithTags;
+
+// ================================
+// Unified work items: projects, curated open source, and achievements
+// merged into the one home-page card grid.
+// ================================
+
+export type WorkCategory = 'develop' | 'design' | 'opensource' | 'leadership';
+
+// One place naming each work category, shared by the filter rail and by
+// the breadcrumb trail on detail pages so the two cannot drift. Shaped
+// as a Crumb ({ label, href }) so a breadcrumb can spread it directly.
+// The href deep-links into the filter: /#work-develop selects the
+// development chip (see WorkGridClient's hash sync).
+export const WORK_CATEGORY_META: Record<WorkCategory, { label: string; href: string }> = {
+  develop: { label: "Development", href: "/#work-develop" },
+  design: { label: "Design", href: "/#work-design" },
+  opensource: { label: "Open Source", href: "/#work-opensource" },
+  leadership: { label: "Leadership", href: "/#work-leadership" },
+};
+
+export type WorkItem = {
+  key: string;
+  title: string;
+  pitch: string;
+  outcome: string | null; // Mono result line: a project delta, an achievement result, merged PR count
+  categories: WorkCategory[];
+  cover: string | null;
+  coverFallback: string; // typographic cover text when there is no image
+  href: string | null;
+  external: boolean;
+  featured: boolean;
+  dateLabel: string; // rendered uppercase in mono: "Nov 2023", "Aug 2024 - Present"
+  sortDate: string;
+};
+
+function formatMonthYear(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+function formatDateRange(start: string, end: string | null): string {
+  const from = formatMonthYear(start);
+  if (!end) return `${from} - Present`;
+  const to = formatMonthYear(end);
+  return from === to ? from : `${from} - ${to}`;
+}
+
+// Cover fallback: a short result ("Top 3") works as a typographic cover;
+// anything longer falls back to the item's initials.
+function coverFallbackText(preferred: string | null, name: string): string {
+  if (preferred && preferred.length <= 16) return preferred;
+  return name
+    .split(/\s+/)
+    .filter((word) => /^[a-z0-9]/i.test(word))
+    .slice(0, 3)
+    .map((word) => word[0])
+    .join('')
+    .toUpperCase();
+}
+
+export async function getWorkItems(): Promise<WorkItem[]> {
+  const [projectsRes, achievements, ossGroups] = await Promise.all([
+    // Lean fetch: the grid doesn't render tech tags, so skip the
+    // per-project tag queries getAllProjects would run.
+    supabase
+      .from('Project')
+      .select('*')
+      .order('featured', { ascending: false })
+      .order('startDate', { ascending: false }),
+    getAllAchievements(),
+    getOpenSourceContributionsGroupedByProject(),
+  ]);
+
+  if (projectsRes.error) {
+    console.error('Error fetching projects for work grid:', projectsRes.error);
+  }
+  const projects = projectsRes.error ? [] : (projectsRes.data as Project[]);
+
+  const projectItems: WorkItem[] = projects.map((p) => ({
+    key: `project-${p.id}`,
+    title: p.name,
+    pitch: p.excerpt ?? p.description,
+    outcome: p.outcome,
+    categories: [p.type === 'CASE_STUDY' ? 'design' : 'develop'],
+    cover: p.imageUrl ?? getFirstImageFromContent(p.overview),
+    coverFallback: coverFallbackText(null, p.name),
+    href: `/projects/${p.slug}`,
+    external: false,
+    featured: p.featured,
+    dateLabel: formatDateRange(p.startDate, p.endDate),
+    sortDate: p.startDate,
+  }));
+
+  const achievementItems: WorkItem[] = achievements.map((a) => {
+    const externalUrl = getAchievementLinks(a)[0]?.url ?? null;
+    return {
+      key: `achievement-${a.id}`,
+      title: a.name,
+      pitch: a.description,
+      outcome: a.result,
+      categories: ['leadership'],
+      cover: getFirstImageFromContent(a.content),
+      coverFallback: coverFallbackText(a.result, a.name),
+      href: a.content ? `/achievements/${a.slug}` : externalUrl,
+      external: !a.content && Boolean(externalUrl),
+      featured: a.featured,
+      dateLabel: formatMonthYear(a.date),
+      sortDate: a.date,
+    };
+  });
+
+  const ossItems: WorkItem[] = ossGroups
+    .filter((g) => g.featured)
+    .map((g) => ({
+      key: `oss-${g.slug}`,
+      title: g.projectName,
+      pitch: g.contributions[0]?.description ?? '',
+      outcome: g.mergedCount > 0 ? `${g.mergedCount} merged` : null,
+      categories: ['opensource'],
+      cover: null,
+      coverFallback:
+        g.mergedCount > 0 ? `${g.mergedCount} merged` : coverFallbackText(null, g.projectName),
+      href: `/open-source/${g.slug}`,
+      external: false,
+      featured: g.featured,
+      dateLabel: formatMonthYear(g.latestDate),
+      sortDate: g.latestDate,
+    }));
+
+  return [...projectItems, ...ossItems, ...achievementItems].sort((a, b) => {
+    if (a.featured !== b.featured) return a.featured ? -1 : 1;
+    return new Date(b.sortDate).getTime() - new Date(a.sortDate).getTime();
+  });
+}
 
 export async function getBlogPostWithTags(slug: string): Promise<BlogPostWithTags | null> {
   const blogPost = await getBlogPostBySlug(slug);
