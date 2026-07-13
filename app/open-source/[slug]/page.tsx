@@ -1,5 +1,6 @@
 // app/open-source/[slug]/page.tsx
 import { getOpenSourceContributionsGroupedByProject, getOpenSourceProjectGroupBySlug } from "@/lib/database";
+import { getRepoInfo, formatStars } from "@/lib/github";
 import { notFound } from "next/navigation";
 import OpenSourceProjectDetailClient from "@/components/OpenSourceProjectDetailClient";
 
@@ -36,5 +37,9 @@ export default async function OpenSourceProjectDetailPage({ params }: Props) {
     notFound();
   }
 
-  return <OpenSourceProjectDetailClient group={group} />;
+  // Stars/context fetched at build (cached daily); omitted on failure.
+  const info = await getRepoInfo(group.repoUrl);
+  const repoInfo = info ? { stars: formatStars(info.stars), description: info.description } : null;
+
+  return <OpenSourceProjectDetailClient group={group} repoInfo={repoInfo} />;
 }

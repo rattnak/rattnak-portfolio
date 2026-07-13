@@ -31,9 +31,10 @@ export async function POST(request: NextRequest) {
         revalidatePath('/projects');
         revalidatePath('/'); // Home page if it shows projects
 
-        // If a specific project was updated, revalidate its detail page
-        if (record?.id) {
-          revalidatePath(`/projects/${record.id}`);
+        // If a specific project was updated, revalidate its detail page.
+        // Keyed by slug now that slugs address the route.
+        if (record?.slug) {
+          revalidatePath(`/projects/${record.slug}`);
         }
         break;
 
@@ -42,8 +43,8 @@ export async function POST(request: NextRequest) {
         revalidatePath('/achievements');
         revalidatePath('/'); // Home page if it shows achievements
 
-        if (record?.id) {
-          revalidatePath(`/achievements/${record.id}`);
+        if (record?.slug) {
+          revalidatePath(`/achievements/${record.slug}`);
         }
         break;
 

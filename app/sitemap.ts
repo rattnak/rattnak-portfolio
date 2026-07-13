@@ -16,13 +16,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getOpenSourceContributionsGroupedByProject(),
   ]);
 
+  // Canonical destinations only: /contact 301s to /about#contact, so
+  // listing it here would advertise a redirect instead of a real page.
   const staticRoutes: MetadataRoute.Sitemap = [
     "",
-    "/projects",
-    "/achievements",
-    "/open-source",
+    "/about",
     "/blog",
-    "/contact",
+    "/colophon",
   ].map((path) => ({
     url: `${BASE_URL}${path}`,
     changeFrequency: "monthly",
@@ -32,12 +32,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticRoutes,
     ...projects.map((p) => ({
-      url: `${BASE_URL}/projects/${p.id}`,
+      url: `${BASE_URL}/projects/${p.slug}`,
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
     ...achievements.map((a) => ({
-      url: `${BASE_URL}/achievements/${a.id}`,
+      url: `${BASE_URL}/achievements/${a.slug}`,
       changeFrequency: "yearly" as const,
       priority: 0.5,
     })),
