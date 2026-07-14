@@ -7,6 +7,8 @@ export const metadata = {
   description: "Explore my development and design projects",
 };
 
+export const revalidate = 3600;
+
 export default async function ProjectsPage() {
   const projects = await getAllProjectsWithTags();
 

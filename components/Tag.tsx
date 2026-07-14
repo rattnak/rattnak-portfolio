@@ -77,7 +77,7 @@ export default function Tag({ children, className = "", size = "md", color }: Ta
         backgroundColor: colors.bg,
         color: colors.text,
         border: `1px solid ${colors.border}`,
-        borderRadius: '0.25rem',
+        borderRadius: '9999px',
         fontWeight: 500,
         lineHeight: 1,
       }}

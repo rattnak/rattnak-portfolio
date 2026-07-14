@@ -80,6 +80,19 @@ export type BlogPostWithTags = BlogPost & {
   tagList: Tag[]; // Resolved tag objects from junction table
 };
 
+export type OpenSourceContribution = {
+  id: number;
+  projectName: string;
+  organization: string | null;
+  description: string;
+  prUrl: string | null;
+  repoUrl: string | null;
+  merged: boolean;
+  featured: boolean;
+  date: string;
+  createdAt: string;
+};
+
 // Projects
 export async function getAllProjects(): Promise<ProjectWithTags[]> {
   const { data, error } = await supabase
@@ -229,6 +242,100 @@ export async function getAllBlogSlugs() {
   }
 
   return data.map(post => post.slug);
+}
+
+// Open Source Contributions
+export async function getAllOpenSourceContributions(): Promise<OpenSourceContribution[]> {
+  const { data, error } = await supabase
+    .from('OpenSourceContribution')
+    .select('*')
+    .order('featured', { ascending: false })
+    .order('date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching open source contributions:', error);
+    return [];
+  }
+
+  return data as OpenSourceContribution[];
+}
+
+export async function getFeaturedOpenSourceContributions(): Promise<OpenSourceContribution[]> {
+  const { data, error } = await supabase
+    .from('OpenSourceContribution')
+    .select('*')
+    .eq('featured', true)
+    .order('date', { ascending: false })
+    .limit(3);
+
+  if (error) {
+    console.error('Error fetching featured open source contributions:', error);
+    return [];
+  }
+
+  return data as OpenSourceContribution[];
+}
+
+export function projectNameToSlug(projectName: string): string {
+  return projectName
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export type OpenSourceProjectGroup = {
+  projectName: string;
+  slug: string;
+  organization: string | null;
+  repoUrl: string | null;
+  mergedCount: number;
+  totalCount: number;
+  latestDate: string;
+  featured: boolean;
+  contributions: OpenSourceContribution[];
+};
+
+export async function getOpenSourceContributionsGroupedByProject(): Promise<OpenSourceProjectGroup[]> {
+  const contributions = await getAllOpenSourceContributions();
+
+  const groups = new Map<string, OpenSourceProjectGroup>();
+
+  for (const c of contributions) {
+    const slug = projectNameToSlug(c.projectName);
+    const existing = groups.get(slug);
+
+    if (!existing) {
+      groups.set(slug, {
+        projectName: c.projectName,
+        slug,
+        organization: c.organization,
+        repoUrl: c.repoUrl,
+        mergedCount: c.merged ? 1 : 0,
+        totalCount: 1,
+        latestDate: c.date,
+        featured: c.featured,
+        contributions: [c],
+      });
+    } else {
+      existing.mergedCount += c.merged ? 1 : 0;
+      existing.totalCount += 1;
+      existing.featured = existing.featured || c.featured;
+      if (new Date(c.date) > new Date(existing.latestDate)) {
+        existing.latestDate = c.date;
+      }
+      existing.contributions.push(c);
+    }
+  }
+
+  return Array.from(groups.values()).sort(
+    (a, b) => new Date(b.latestDate).getTime() - new Date(a.latestDate).getTime()
+  );
+}
+
+export async function getOpenSourceProjectGroupBySlug(slug: string): Promise<OpenSourceProjectGroup | null> {
+  const groups = await getOpenSourceContributionsGroupedByProject();
+  return groups.find((g) => g.slug === slug) ?? null;
 }
 
 // Tags

@@ -7,6 +7,8 @@ export const metadata = {
   description: "Awards, competitions, and recognition",
 };
 
+export const revalidate = 3600;
+
 export default async function AchievementsPage() {
   // Competitions are already sorted in getAllCompetitions (featured first, then by date descending)
   const achievements = await getAllCompetitions();

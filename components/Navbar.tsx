@@ -15,11 +15,10 @@ export default function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-40 backdrop-blur-lg"
+      className="sticky top-0 z-40 backdrop-blur-xl"
       style={{
-        backgroundColor: 'var(--background)',
-        borderBottom: '1px solid var(--border)',
-        opacity: 0.98
+        backgroundColor: 'color-mix(in srgb, var(--background) 80%, transparent)',
+        borderBottom: '1px solid var(--border)'
       }}
     >
       <div className="navbar-container">
@@ -38,6 +37,9 @@ export default function Navbar() {
             </Link>
             <Link href="/projects" className="text-sm link-text">
               Projects
+            </Link>
+            <Link href="/open-source" className="text-sm link-text">
+              Open Source
             </Link>
             <Link href="/achievements" className="text-sm link-text">
               Achievements
@@ -82,6 +84,9 @@ export default function Navbar() {
               </Link>
               <Link href="/projects" onClick={() => setOpen(false)} className="text-sm link-text">
                 Projects
+              </Link>
+              <Link href="/open-source" onClick={() => setOpen(false)} className="text-sm link-text">
+                Open Source
               </Link>
               <Link href="/achievements" onClick={() => setOpen(false)} className="text-sm link-text">
                 Achievements

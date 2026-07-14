@@ -117,6 +117,22 @@ model Tag {
   @@index([type], map: "idx_tag_type")
 }
 
+model OpenSourceContribution {
+  id           Int      @id @default(autoincrement())
+  projectName  String
+  organization String?
+  description  String
+  prUrl        String?
+  repoUrl      String?
+  merged       Boolean  @default(false)
+  featured     Boolean  @default(false)
+  date         DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([date], map: "idx_oss_date")
+  @@index([featured], map: "idx_oss_featured")
+}
+
 enum ProjectType {
   CODING
   CASE_STUDY

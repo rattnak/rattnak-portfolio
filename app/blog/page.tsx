@@ -7,6 +7,8 @@ export const metadata = {
   description: "Thoughts on software, design, and technology",
 };
 
+export const revalidate = 3600;
+
 export default async function BlogPage() {
   const publishedPosts = await getAllPublishedBlogPosts();
 

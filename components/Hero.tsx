@@ -4,23 +4,47 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <section style={{
+      position: 'relative',
       height: 'calc(100vh - 4rem)',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      overflow: 'hidden'
     }}>
-      <div className="container">
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '-20%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '60rem',
+          height: '32rem',
+          background: 'radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          filter: 'blur(20px)'
+        }}
+      />
+
+      <div className="container" style={{ position: 'relative' }}>
         <div className="max-w-4xl">
-          <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-            Software Engineer & Product Engineer
+          <p
+            className="text-sm mb-4"
+            style={{
+              color: 'var(--accent-primary)',
+              fontWeight: 500,
+              letterSpacing: '0.02em'
+            }}
+          >
+            Full-Stack Software Engineer
           </p>
 
           <h1
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6"
             style={{
               color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-              lineHeight: '1.1'
+              letterSpacing: '-0.03em',
+              lineHeight: '1.05'
             }}
           >
             Chanrattnak Mong
@@ -33,8 +57,10 @@ export default function Hero() {
               lineHeight: '1.6'
             }}
           >
-            Building elegant digital experiences through thoughtful design and clean code.
-            Focused on creating products that are both beautiful and functional.
+            I build full-stack products end to end &mdash; from Postgres schemas and
+            real-time backends to the React interfaces on top. Recent work spans
+            a fintech payments app with live bank integrations and event-driven,
+            high-concurrency systems.
           </p>
 
           <div className="flex flex-wrap gap-4">
