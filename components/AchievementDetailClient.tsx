@@ -127,11 +127,11 @@ export default function AchievementDetailClient({ achievement }: Props) {
           </h1>
 
           <div className="flex flex-wrap items-center" style={{ gap: '1rem', marginBottom: '1rem' }}>
-            <div className="flex items-center" style={{ gap: '0.5rem' }}>
-              <svg style={{ width: '1.25rem', height: '1.25rem', color: '#f59e0b' }} fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex items-start" style={{ gap: '0.5rem' }}>
+              <svg style={{ width: '1.25rem', height: '1.25rem', color: '#f59e0b', flexShrink: 0, marginTop: '0.125rem' }} fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '1.0625rem' }}>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '1.0625rem', lineHeight: 1.4 }}>
                 {achievement.result}
               </span>
             </div>
@@ -263,11 +263,12 @@ export default function AchievementDetailClient({ achievement }: Props) {
                   }}>
                     Result
                   </p>
-                  <div className="flex items-center" style={{ gap: '0.5rem' }}>
-                    <svg style={{ width: '1.125rem', height: '1.125rem', color: '#f59e0b' }} fill="currentColor" viewBox="0 0 20 20">
+                  <div className="flex items-start" style={{ gap: '0.5rem' }}>
+                    <svg style={{ width: '1.125rem', height: '1.125rem', color: '#f59e0b', flexShrink: 0, marginTop: '0.125rem' }} fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                     <p style={{
+                      lineHeight: 1.4,
                       fontSize: '0.9375rem',
                       fontWeight: 500,
                       color: 'var(--text-primary)'
