@@ -32,7 +32,7 @@ export default function AchievementDetailClient({ achievement }: Props) {
         style={{
           position: 'sticky',
           top: '4rem',
-          backgroundColor: '#fff', 
+          backgroundColor: 'var(--background)',
           zIndex: 10,
           width: '100%',
         }}
