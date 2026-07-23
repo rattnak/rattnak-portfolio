@@ -6,10 +6,16 @@ type TagProps = {
   children: string;
   className?: string;
   size?: "sm" | "md" | "lg";
-  color?: string | null; // NEW: color from database
+  /** @deprecated Database-supplied colors are no longer used: every tag
+      looks up its color by name from the shared, WCAG-AA-verified
+      palette in lib/tagColors.ts instead, so contrast is guaranteed in
+      both themes rather than computed ad hoc from an arbitrary hex
+      value. Kept as a no-op prop so existing call sites don't need to
+      change. */
+  color?: string | null;
 };
 
-export default function Tag({ children, className = "", size = "md", color }: TagProps) {
+export default function Tag({ children, className = "", size = "md" }: TagProps) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -28,47 +34,7 @@ export default function Tag({ children, className = "", size = "md", color }: Ta
     return () => observer.disconnect();
   }, []);
 
-  // Debug: Log color prop (only in development)
-  if (process.env.NODE_ENV === 'development' && color) {
-    console.log(`Tag "${children}" received color:`, color);
-  }
-
-  // Use database color if available, otherwise fallback to predefined colors
-  let colors;
-  if (color) {
-    // Use database hex color - generate light/dark variants with good contrast
-    const hexColor = color.startsWith('#') ? color : `#${color}`;
-
-    // Helper function to convert hex to RGB
-    const hexToRgb = (hex: string) => {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null;
-    };
-
-    const rgb = hexToRgb(hexColor);
-
-    if (isDark) {
-      colors = {
-        bg: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)` : `${hexColor}26`, // 15% opacity
-        text: hexColor,
-        border: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)` : `${hexColor}4D`, // 30% opacity
-      };
-    } else {
-      // Light mode - stronger background and darker text for WCAG AA compliance
-      colors = {
-        bg: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.20)` : `${hexColor}33`, // 20% opacity
-        text: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)` : hexColor, // Full opacity for maximum contrast
-        border: rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35)` : `${hexColor}59`, // 35% opacity
-      };
-    }
-  } else {
-    // Fallback to predefined color scheme from tagColors.ts
-    colors = getTagColor(children, isDark);
-  }
+  const colors = getTagColor(children, isDark);
 
   return (
     <span

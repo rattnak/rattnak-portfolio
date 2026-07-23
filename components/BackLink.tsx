@@ -29,6 +29,9 @@ export default function BackLink({ href, label, sticky = false }: Props) {
     return <div className="back-link-wrap">{link}</div>;
   }
 
+  // .back-link-sticky-inner carries the "container" class, so its width
+  // always matches the page content below it (1100px, same as every
+  // other page) rather than a per-page override that can drift.
   return (
     <div className="back-link-sticky">
       <div className="container back-link-sticky-inner">{link}</div>

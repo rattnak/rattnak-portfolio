@@ -119,7 +119,7 @@ export default function ImageSlider({ images, interval = 3000 }: ImageSliderProp
           justifyContent: 'center',
           cursor: 'pointer',
           color: 'white',
-          fontSize: '1.5rem',
+          fontSize: 'var(--text-xl)',
           zIndex: 10,
           transition: 'background-color 0.2s',
         }}
@@ -147,7 +147,7 @@ export default function ImageSlider({ images, interval = 3000 }: ImageSliderProp
           justifyContent: 'center',
           cursor: 'pointer',
           color: 'white',
-          fontSize: '1.5rem',
+          fontSize: 'var(--text-xl)',
           zIndex: 10,
           transition: 'background-color 0.2s',
         }}

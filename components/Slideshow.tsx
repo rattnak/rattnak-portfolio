@@ -2,7 +2,6 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
   images: string[];
@@ -32,24 +31,15 @@ export default function Slideshow({ images, alt }: Props) {
         className="w-full aspect-[16/9] relative"
         style={{ backgroundColor: "var(--background-tertiary)" }}
       >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={index}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="absolute inset-0"
-          >
-            <Image
-              src={images[index]}
-              alt={`${alt}, image ${index + 1} of ${images.length}`}
-              fill
-              className="object-cover"
-              priority={index === 0}
-            />
-          </motion.div>
-        </AnimatePresence>
+        <div key={index} className="absolute inset-0 slideshow-fade">
+          <Image
+            src={images[index]}
+            alt={`${alt}, image ${index + 1} of ${images.length}`}
+            fill
+            className="object-cover"
+            priority={index === 0}
+          />
+        </div>
 
         {images.length > 1 && (
           <>
