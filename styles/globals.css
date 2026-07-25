@@ -1241,6 +1241,234 @@ a:focus-visible {
   animation: scaleIn 0.3s ease-out;
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* ================================
+   BROWSER WINDOW PORTRAIT
+   ================================ */
+
+@keyframes browser-sheen {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+.browser-window {
+  position: relative;
+  width: calc(var(--orbit-size, 22rem) * 0.48);
+  animation: float 6s ease-in-out infinite;
+}
+
+.browser-window::before {
+  content: '';
+  position: absolute;
+  inset: -1.5rem;
+  border-radius: 1.5rem;
+  background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%);
+  filter: blur(16px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.browser-chrome {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.7rem;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-secondary);
+  border-bottom: none;
+  border-radius: 0.9rem 0.9rem 0 0;
+}
+
+.browser-dots {
+  display: flex;
+  gap: 0.32rem;
+  flex-shrink: 0;
+}
+
+.browser-dots span {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  display: block;
+}
+
+.browser-address {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  background: var(--background);
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.browser-ai-badge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent-primary), #ff7ad9);
+  padding: 0.25rem 0.45rem;
+  border-radius: 999px;
+}
+
+.browser-viewport {
+  position: relative;
+  aspect-ratio: 4 / 3.3;
+  overflow: hidden;
+  border-radius: 0 0 0.9rem 0.9rem;
+  border: 1px solid var(--border-secondary);
+  border-top: none;
+  box-shadow: 0 24px 50px -20px rgba(0,0,0,0.4);
+}
+
+.browser-viewport img {
+  filter: saturate(1.05) contrast(1.02);
+}
+
+.browser-viewport-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 35%);
+  animation: browser-sheen 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ================================
+   ORBITING SOCIAL ICONS (atom style)
+   Uses offset-path so icons travel a true ellipse
+   without any shape distortion.
+   ================================ */
+
+@keyframes orbit-travel {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+.orbit-wrapper {
+  --orbit-size: clamp(19rem, 48vw, 34rem);
+  position: relative;
+  width: var(--orbit-size);
+  height: var(--orbit-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.orbit-nucleus {
+  position: relative;
+  z-index: 3;
+}
+
+.orbit-plane {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orbit-plane-1 { transform: rotate(-22deg); }
+.orbit-plane-2 { transform: rotate(35deg); }
+.orbit-plane-3 { transform: rotate(95deg); }
+
+.orbit-path-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 98%;
+  height: 58%;
+  margin-top: -29%;
+  margin-left: -49%;
+  border-radius: 50%;
+  opacity: 0.55;
+  background: conic-gradient(
+    from 0deg,
+    var(--accent-primary),
+    #ff7ad9,
+    #7affe0,
+    var(--accent-primary)
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+}
+
+.orbit-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: -1.25rem;
+  margin-left: -1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-secondary);
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-md);
+  pointer-events: auto;
+  offset-path: ellipse(49% 29% at 50% 50%);
+  offset-rotate: 0deg;
+  animation: orbit-travel linear infinite;
+  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+  z-index: 4;
+}
+
+.orbit-plane-1 .orbit-icon { animation-duration: 9s; animation-delay: 0s; }
+.orbit-plane-2 .orbit-icon { animation-duration: 9s; animation-delay: -3s; }
+.orbit-plane-3 .orbit-icon { animation-duration: 9s; animation-delay: -6s; }
+
+.orbit-icon > svg {
+  transform: rotate(var(--icon-counter-rotate, 0deg));
+}
+
+.orbit-plane-1 .orbit-icon > svg { transform: rotate(22deg); }
+.orbit-plane-2 .orbit-icon > svg { transform: rotate(-35deg); }
+.orbit-plane-3 .orbit-icon > svg { transform: rotate(-95deg); }
+
+.orbit-icon:hover,
+.orbit-icon:focus-visible {
+  color: #fff;
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  z-index: 6;
+}
+
+.orbit-wrapper:hover .orbit-icon,
+.orbit-wrapper:focus-within .orbit-icon {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-icon {
+    animation: none;
+  }
+}
+
 /* ================================
    SKELETON LOADING
    ================================ */
