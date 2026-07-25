@@ -97,7 +97,7 @@ export default async function BlogDetailPage({ params }: Props) {
           >
             <span>{formattedDate}</span>
             <span>•</span>
-            <span>{blog.readTime ?? "—"} min read</span>
+            <span>{blog.readTime ?? "N/A"} min read</span>
           </div>
 
           {blog.tags && (
