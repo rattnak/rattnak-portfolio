@@ -6,6 +6,7 @@ export default function ContactForm() {
     name: "",
     email: "",
     message: "",
+    website: "", // honeypot: hidden from real users, bots fill it
   });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -25,16 +26,23 @@ export default function ContactForm() {
       });
 
       if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error("rate-limited");
+        }
         throw new Error("Failed to send message");
       }
 
       setStatus("success");
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: "", email: "", message: "", website: "" });
 
       setTimeout(() => setStatus("idle"), 5000);
     } catch (error) {
       setStatus("error");
-      setErrorMessage("Failed to send message. Please try again or contact me directly via email.");
+      setErrorMessage(
+        error instanceof Error && error.message === "rate-limited"
+          ? "Too many messages in a short time. Please wait a while and try again."
+          : "Failed to send message. Please try again or reach me on LinkedIn."
+      );
       console.error("Error sending message:", error);
     }
   };
@@ -51,11 +59,26 @@ export default function ContactForm() {
       onSubmit={handleSubmit}
       className="contact-form"
     >
+      {/* Honeypot: visually hidden and removed from the tab order and
+          accessibility tree; the API rejects submissions that fill it. */}
+      <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}>
+        <label htmlFor="website">Website</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          value={formData.website}
+          onChange={handleChange}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         <label
           htmlFor="name"
           style={{
-            fontSize: '0.875rem',
+            fontSize: 'var(--text-ui)',
             fontWeight: 500,
             color: 'var(--text-primary)'
           }}
@@ -73,7 +96,7 @@ export default function ContactForm() {
           style={{
             width: '100%',
             padding: '0.75rem 1rem',
-            fontSize: '0.9375rem',
+            fontSize: 'var(--text-ui)',
             borderRadius: '0.5rem',
             backgroundColor: 'var(--background)',
             border: '1px solid var(--border)',
@@ -88,7 +111,7 @@ export default function ContactForm() {
         <label
           htmlFor="email"
           style={{
-            fontSize: '0.875rem',
+            fontSize: 'var(--text-ui)',
             fontWeight: 500,
             color: 'var(--text-primary)'
           }}
@@ -106,7 +129,7 @@ export default function ContactForm() {
           style={{
             width: '100%',
             padding: '0.75rem 1rem',
-            fontSize: '0.9375rem',
+            fontSize: 'var(--text-ui)',
             borderRadius: '0.5rem',
             backgroundColor: 'var(--background)',
             border: '1px solid var(--border)',
@@ -121,7 +144,7 @@ export default function ContactForm() {
         <label
           htmlFor="message"
           style={{
-            fontSize: '0.875rem',
+            fontSize: 'var(--text-ui)',
             fontWeight: 500,
             color: 'var(--text-primary)'
           }}
@@ -135,61 +158,73 @@ export default function ContactForm() {
           onChange={handleChange}
           required
           rows={5}
-          className="focus:outline-none focus:ring-2 transition-all resize-none"
+          // Vertically resizable by drag (it was resize-none). Horizontal
+          // resize stays off: widening it would break out of the form
+          // column. minHeight keeps the handle from collapsing the field
+          // to nothing, maxHeight stops it growing past the viewport.
+          className="focus:outline-none focus:ring-2 transition-all"
           style={{
             width: '100%',
             padding: '0.75rem 1rem',
-            fontSize: '0.9375rem',
+            fontSize: 'var(--text-ui)',
             borderRadius: '0.5rem',
             backgroundColor: 'var(--background)',
             border: '1px solid var(--border)',
             color: 'var(--text-primary)',
             lineHeight: '1.6',
+            resize: 'vertical',
+            minHeight: '6rem',
+            maxHeight: '70vh',
             '--tw-ring-color': 'var(--accent-primary)',
           } as React.CSSProperties}
           placeholder="Tell me about your project or collaboration idea..."
         />
       </div>
 
-      {status === "success" && (
-        <div style={{
-          padding: '1rem',
-          borderRadius: '0.5rem',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          border: '1px solid rgba(59, 130, 246, 0.2)'
-        }}>
-          <p style={{
-            fontSize: '0.875rem',
-            fontWeight: 500,
-            color: 'var(--accent-primary)',
-            margin: 0
+      {/* Status region: announced politely by screen readers on submit
+          outcome without stealing focus. */}
+      <div role="status" aria-live="polite">
+        {status === "success" && (
+          <div style={{
+            padding: '1rem',
+            borderRadius: '0.5rem',
+            backgroundColor: 'var(--accent-glow)',
+            border: '1px solid var(--accent-primary)'
           }}>
-            Thank you! Your message has been sent successfully. I'll get back to you soon.
-          </p>
-        </div>
-      )}
+            <p style={{
+              fontSize: 'var(--text-ui)',
+              fontWeight: 500,
+              color: 'var(--accent-primary)',
+              margin: 0
+            }}>
+              Thank you! Your message has been sent successfully. I'll get back to you soon.
+            </p>
+          </div>
+        )}
 
-      {status === "error" && (
-        <div style={{
-          padding: '1rem',
-          borderRadius: '0.5rem',
-          backgroundColor: 'rgba(239, 68, 68, 0.1)',
-          border: '1px solid rgba(239, 68, 68, 0.2)'
-        }}>
-          <p style={{
-            fontSize: '0.875rem',
-            fontWeight: 500,
-            color: '#ef4444',
-            margin: 0
+        {status === "error" && (
+          <div id="contact-form-error" style={{
+            padding: '1rem',
+            borderRadius: '0.5rem',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid var(--error)'
           }}>
-            {errorMessage}
-          </p>
-        </div>
-      )}
+            <p style={{
+              fontSize: 'var(--text-ui)',
+              fontWeight: 500,
+              color: 'var(--error)',
+              margin: 0
+            }}>
+              {errorMessage}
+            </p>
+          </div>
+        )}
+      </div>
 
       <div style={{ marginTop: '0.5rem' }}>
         <button
           type="submit"
+          aria-describedby={status === "error" ? "contact-form-error" : undefined}
           disabled={status === "submitting"}
           className="btn btn-primary group"
           style={{

@@ -1,7 +1,6 @@
 // components/NavbarClient.tsx
 "use client";
 import Link from "next/link";
-import { useState } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamically import ThemeToggle with no SSR to avoid hydration issues
@@ -10,8 +9,33 @@ const ThemeToggle = dynamic(() => import("./ThemeToggle").then(mod => ({ default
   loading: () => <div className="w-9 h-9" />,
 });
 
+const CommandPalette = dynamic(() => import("./CommandPalette"), {
+  ssr: false,
+  loading: () => <div className="w-9 h-9" />,
+});
+
+// Contact is not a nav link: About absorbed the old /contact route, so
+// a separate entry pointed at a section of a page already in this list.
+//
+// The navbar carries no contact affordance at all (2026-08-11). It held
+// GitHub, LinkedIn, and an email popover; all three are gone. The navbar
+// navigates this site, and every one of those has a better home: the
+// social links in the footer, the address in the footer and the command
+// palette's copy-email action, the form on /about#contact.
+const NAV_LINKS = (showBlog: boolean) => [
+  { href: "/#work", label: "Work" },
+  { href: "/about", label: "About" },
+  ...(showBlog ? [{ href: "/blog", label: "Blog" }] : []),
+];
+
+// One inline row at every width (2026-08-12). The links used to collapse
+// into a slide-in drawer below 768px, which put a "Menu" control on
+// screen for two or three links, and appeared under browser zoom on
+// desktop as well. Removing it took the portal, the open/mounted state,
+// the body-scroll lock, and the Escape handler with it, so this is now a
+// client component only because ThemeToggle and CommandPalette are.
 export default function NavbarClient({ showBlog }: { showBlog: boolean }) {
-  const [open, setOpen] = useState(false);
+  const links = NAV_LINKS(showBlog);
 
   return (
     <header
@@ -31,80 +55,19 @@ export default function NavbarClient({ showBlog }: { showBlog: boolean }) {
             CM
           </Link>
 
-          <nav className="hidden md:flex items-center navbar-links">
-            <Link href="/" className="text-sm link-text">
-              Home
-            </Link>
-            <Link href="/projects" className="text-sm link-text">
-              Projects
-            </Link>
-            <Link href="/open-source" className="text-sm link-text">
-              Open Source
-            </Link>
-            <Link href="/achievements" className="text-sm link-text">
-              Achievements
-            </Link>
-            {showBlog && (
-              <Link href="/blog" className="text-sm link-text">
-                Blog
+          <nav className="flex items-center navbar-links">
+            {/* Right before Work, same small trigger design as every
+                other breakpoint. */}
+            <CommandPalette />
+            {links.map((link) => (
+              <Link key={link.href} href={link.href} className="text-sm link-text">
+                {link.label}
               </Link>
-            )}
-            <Link href="/contact" className="text-sm link-text">
-              Contact
-            </Link>
+            ))}
             <ThemeToggle />
           </nav>
-
-          <div className="md:hidden flex items-center navbar-mobile">
-            <ThemeToggle />
-            <button
-              onClick={() => setOpen(!open)}
-              className="text-sm transition-colors"
-              style={{ color: 'var(--text-secondary)' }}
-              aria-label="Toggle menu"
-            >
-              {open ? "Close" : "Menu"}
-            </button>
-          </div>
         </div>
       </div>
-
-      {/* Mobile menu */}
-      {open && (
-        <div
-          className="md:hidden"
-          style={{
-            borderTop: '1px solid var(--border)',
-            backgroundColor: 'var(--background)',
-            opacity: 0.98
-          }}
-        >
-          <div className="navbar-mobile-menu">
-            <nav className="flex flex-col navbar-mobile-links">
-              <Link href="/" onClick={() => setOpen(false)} className="text-sm link-text">
-                Home
-              </Link>
-              <Link href="/projects" onClick={() => setOpen(false)} className="text-sm link-text">
-                Projects
-              </Link>
-              <Link href="/open-source" onClick={() => setOpen(false)} className="text-sm link-text">
-                Open Source
-              </Link>
-              <Link href="/achievements" onClick={() => setOpen(false)} className="text-sm link-text">
-                Achievements
-              </Link>
-              {showBlog && (
-                <Link href="/blog" onClick={() => setOpen(false)} className="text-sm link-text">
-                  Blog
-                </Link>
-              )}
-              <Link href="/contact" onClick={() => setOpen(false)} className="text-sm link-text">
-                Contact
-              </Link>
-            </nav>
-          </div>
-        </div>
-      )}
     </header>
   );
 }
