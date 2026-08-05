@@ -12,28 +12,15 @@ export default async function BlogSection() {
   }
 
   return (
-    <section id="blog" className="section" style={{ borderTop: '1px solid var(--border)' }}>
+    <section id="blog" className="section">
       <div className="container">
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 'clamp(2rem, 4vw, 3rem)'
-        }}>
-          <h2 style={{
-            fontSize: 'clamp(0.875rem, 2vw, 1rem)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            color: 'var(--text-muted)',
-            fontWeight: 500
-          }}>
-            Blog
-          </h2>
+        <div className="ledger-rule">
+          <span className="instrument-label ledger-rule-label">blog</span>
           <Link
             href="/blog"
             className="link-text inline-flex items-center group"
             style={{
-              fontSize: 'clamp(0.8125rem, 1.5vw, 0.875rem)',
+              fontSize: 'var(--text-ui)',
               gap: '0.25rem'
             }}
           >

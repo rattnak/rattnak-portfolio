@@ -21,7 +21,7 @@ export default async function BlogPage() {
         {/* Header */}
         <div style={{ marginBottom: '2.5rem' }}>
           <h1 style={{
-            fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
+            fontSize: 'var(--text-3xl)',
             fontWeight: 600,
             color: 'var(--text-primary)',
             marginBottom: '0.75rem',
@@ -30,7 +30,7 @@ export default async function BlogPage() {
             Blog
           </h1>
           <p style={{
-            fontSize: 'clamp(0.9375rem, 2vw, 1.0625rem)',
+            fontSize: 'var(--text-md)',
             color: 'var(--text-secondary)',
             lineHeight: '1.6'
           }}>

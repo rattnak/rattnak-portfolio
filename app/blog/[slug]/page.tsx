@@ -43,7 +43,7 @@ export default async function BlogDetailPage({ params }: Props) {
         <div style={{ marginBottom: "3rem" }}>
           <h1
             style={{
-              fontSize: "clamp(1.75rem,5vw,2.5rem)",
+              fontSize: "var(--text-3xl)",
               fontWeight: 700,
               color: "var(--text-primary)",
               marginBottom: "1rem",
@@ -56,7 +56,7 @@ export default async function BlogDetailPage({ params }: Props) {
 
           <p
             style={{
-              fontSize: "1.0625rem",
+              fontSize: "var(--text-md)",
               lineHeight: 1.6,
               color: "var(--text-secondary)",
               marginBottom: "1rem",
@@ -69,7 +69,7 @@ export default async function BlogDetailPage({ params }: Props) {
             className="flex items-center flex-wrap"
             style={{
               gap: "1rem",
-              fontSize: "0.875rem",
+              fontSize: "var(--text-ui)",
               color: "var(--text-muted)",
               marginBottom: "1.5rem",
             }}
@@ -85,7 +85,7 @@ export default async function BlogDetailPage({ params }: Props) {
                 <span
                   key={i}
                   style={{
-                    fontSize: "0.75rem",
+                    fontSize: "var(--text-xs)",
                     padding: "0.375rem 0.75rem",
                     borderRadius: "0.25rem",
                     backgroundColor: "var(--background-secondary)",
