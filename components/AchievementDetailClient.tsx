@@ -405,6 +405,33 @@ export default function AchievementDetailClient({ achievement }: Props) {
                           {...props}
                         />
                       ),
+                      // ```slideshow fenced code block: one image path per line,
+                      // renders as an interactive Slideshow instead of a code block.
+                      code: ({node, className, children, ...props}) => {
+                        if (className === 'language-slideshow') {
+                          const images = String(children)
+                            .split('\n')
+                            .map((line) => line.trim())
+                            .filter(Boolean);
+                          return <Slideshow images={images} alt={achievement.name} />;
+                        }
+                        return <code className={className} {...props}>{children}</code>;
+                      },
+                      // Unwrap the <pre> that ReactMarkdown puts around fenced code blocks
+                      // when it's our slideshow block, since Slideshow isn't code text.
+                      pre: ({node, children, ...props}) => {
+                        const child = node?.children?.[0];
+                        const isSlideshow =
+                          child &&
+                          'tagName' in child &&
+                          child.tagName === 'code' &&
+                          Array.isArray((child as any).properties?.className) &&
+                          (child as any).properties.className.includes('language-slideshow');
+                        if (isSlideshow) {
+                          return <>{children}</>;
+                        }
+                        return <pre {...props}>{children}</pre>;
+                      },
                     }}
                   >
                     {achievement.content}
