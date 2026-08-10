@@ -34,7 +34,7 @@ export default function Hero() {
       <div className="container" style={{ position: 'relative' }}>
         <div
           className="flex flex-col-reverse lg:flex-row"
-          style={{ gap: '3rem', alignItems: 'center', justifyContent: 'center' }}
+          style={{ gap: 'clamp(1.5rem, 4vw, 3rem)', alignItems: 'center', justifyContent: 'center' }}
         >
           <div className="max-w-4xl text-center lg:text-left">
             <p

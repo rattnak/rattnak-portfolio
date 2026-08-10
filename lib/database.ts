@@ -233,6 +233,20 @@ export async function getAllPublishedBlogPosts() {
   return data as BlogPost[];
 }
 
+export async function hasPublishedBlogPosts(): Promise<boolean> {
+  const { count, error } = await supabase
+    .from('BlogPost')
+    .select('*', { count: 'exact', head: true })
+    .eq('published', true);
+
+  if (error) {
+    console.error('Error checking blog posts:', error);
+    return false;
+  }
+
+  return (count ?? 0) > 0;
+}
+
 export async function getBlogPostBySlug(slug: string) {
   const { data, error } = await supabase
     .from('BlogPost')

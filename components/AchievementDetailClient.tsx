@@ -1,10 +1,10 @@
 // components/AchievementDetailClient.tsx
 "use client";
-import Link from "next/link";
 import Tag from "./Tag";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Slideshow from "./Slideshow";
+import BackLink from "./BackLink";
 
 type Achievement = {
   id: number;
@@ -27,60 +27,7 @@ type Props = {
 export default function AchievementDetailClient({ achievement }: Props) {
   return (
     <div style={{ minHeight: 'calc(100vh - 4rem)' }}>
-      <div
-        style={{
-          position: 'sticky',
-          top: '4rem',
-          backgroundColor: 'var(--background)',
-          zIndex: 10,
-          width: '100%',
-        }}
-      >
-        <div
-          className="container"
-          style={{
-            maxWidth: '80rem',
-            paddingTop: '1rem',
-            paddingBottom: '1rem',
-          }}
-        >
-          <Link
-            href="/achievements"
-            className="inline-flex items-center group"
-            style={{
-              gap: '0.5rem',
-              fontSize: '0.875rem',
-              color: 'var(--text-secondary)',
-              transition: 'color 0.2s',
-              textDecoration: 'none',
-              background: 'transparent',
-              border: 'none',
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.color = 'var(--accent-primary)')
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.color = 'var(--text-secondary)')
-            }
-          >
-            <svg
-              className="transition-transform group-hover:-translate-x-1"
-              style={{ width: '0.875rem', height: '0.875rem' }}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            Back to Achievements
-          </Link>
-        </div>
-      </div>
+      <BackLink href="/achievements" label="Back to Achievements" sticky />
 
       <div className="container" style={{
         paddingTop: '0',
@@ -185,12 +132,7 @@ export default function AchievementDetailClient({ achievement }: Props) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
             {/* Date section */}
             <section>
-              <h2 style={{
-                fontSize: '1.125rem',
-                fontWeight: 600,
-                color: 'var(--text-primary)',
-                marginBottom: '1rem'
-              }}>
+              <h2 className="detail-section-title">
                 Date
               </h2>
               <p style={{
@@ -208,12 +150,7 @@ export default function AchievementDetailClient({ achievement }: Props) {
 
             {/* Type & Result section */}
             <section>
-              <h2 style={{
-                fontSize: '1.125rem',
-                fontWeight: 600,
-                color: 'var(--text-primary)',
-                marginBottom: '1rem'
-              }}>
+              <h2 className="detail-section-title">
                 Achievement
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -279,12 +216,7 @@ export default function AchievementDetailClient({ achievement }: Props) {
             {/* Tags section */}
             {achievement.tags && achievement.tags.length > 0 && (
               <section>
-                <h2 style={{
-                  fontSize: '1.125rem',
-                  fontWeight: 600,
-                  color: 'var(--text-primary)',
-                  marginBottom: '1rem'
-                }}>
+                <h2 className="detail-section-title">
                   Skills
                 </h2>
                 <div className="flex flex-wrap" style={{ gap: '0.5rem' }}>
@@ -302,12 +234,7 @@ export default function AchievementDetailClient({ achievement }: Props) {
           <div>
             {achievement.content && (
               <section>
-                <h2 style={{
-                  fontSize: '1.125rem',
-                  fontWeight: 600,
-                  color: 'var(--text-primary)',
-                  marginBottom: '1rem'
-                }}>
+                <h2 className="detail-section-title">
                   Overview
                 </h2>
                 <article

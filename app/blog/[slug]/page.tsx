@@ -1,7 +1,7 @@
 // app/blog/[slug]/page.tsx
 import { getAllBlogSlugs, getBlogPostBySlug } from "@/lib/database";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import BackLink from "@/components/BackLink";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -37,28 +37,7 @@ export default async function BlogDetailPage({ params }: Props) {
         className="container"
         style={{ paddingTop: "4.5rem", paddingBottom: "4rem", maxWidth: "56rem" }}
       >
-        {/* Back button */}
-        <Link
-          href="/blog"
-          className="inline-flex items-center group transition-colors hover:text-[var(--accent-primary)]"
-          style={{
-            gap: "0.5rem",
-            fontSize: "0.875rem",
-            color: "var(--text-secondary)",
-            marginBottom: "2rem",
-          }}
-        >
-          <svg
-            className="transition-transform group-hover:-translate-x-1"
-            style={{ width: "0.875rem", height: "0.875rem" }}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Blog
-        </Link>
+        <BackLink href="/blog" label="Back to Blog" />
 
         {/* Blog header */}
         <div style={{ marginBottom: "3rem" }}>

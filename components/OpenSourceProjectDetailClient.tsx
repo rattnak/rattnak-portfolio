@@ -1,6 +1,6 @@
 // components/OpenSourceProjectDetailClient.tsx
 "use client";
-import Link from "next/link";
+import BackLink from "./BackLink";
 
 type Contribution = {
   id: number;
@@ -33,21 +33,7 @@ export default function OpenSourceProjectDetailClient({ group }: Props) {
   return (
     <div style={{ minHeight: 'calc(100vh - 4rem)' }}>
       <div className="container" style={{ paddingTop: '4.5rem', paddingBottom: '4rem', maxWidth: '56rem' }}>
-        <Link
-          href="/open-source"
-          className="inline-flex items-center group"
-          style={{
-            gap: '0.5rem',
-            fontSize: '0.875rem',
-            color: 'var(--text-secondary)',
-            marginBottom: '2rem'
-          }}
-        >
-          <svg className="transition-transform group-hover:-translate-x-1" style={{ width: '0.875rem', height: '0.875rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Open Source
-        </Link>
+        <BackLink href="/open-source" label="Back to Open Source" />
 
         {/* Header */}
         <div style={{ marginBottom: '2.5rem' }}>
@@ -126,12 +112,7 @@ export default function OpenSourceProjectDetailClient({ group }: Props) {
 
         {/* PR list */}
         <div>
-          <h2 style={{
-            fontSize: '1.125rem',
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-            marginBottom: '1rem'
-          }}>
+          <h2 className="detail-section-title">
             Pull Requests
           </h2>
 
