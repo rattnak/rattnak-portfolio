@@ -1,35 +1,64 @@
 @import "tailwindcss";
 
 /* ================================
-   STANDARD UI DESIGN SYSTEM
-   Following GitHub, Linear, Vercel
+   INSTRUMENTED DESIGN SYSTEM
+   Calm editorial surface, precise engineering instruments.
    ================================ */
 
 :root {
+  /* Layout: the sticky header's rendered height (content + 1px border),
+     shared by anything that needs to offset against it (hero min-height,
+     sticky back-link) so it can't drift out of sync across rules. */
+  --navbar-height: calc(4rem + 1px);
+
+  /* Type scale: rem-based so user font-size preferences scale the whole
+     site, fluid between mobile (min) and desktop (max) via clamp. Floors
+     follow accessibility practice: nothing below 12px, meta at 13px,
+     body text 16px+ on every device. */
+  --text-xs: 0.75rem;                                     /* 12px: fine print, card meta */
+  --text-sm: 0.8125rem;                                   /* 13px: instrument labels, eyebrows */
+  --text-ui: 0.875rem;                                    /* 14px: nav, buttons, controls */
+  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);   /* 16-17px: body */
+  --text-md: clamp(1.0625rem, 1rem + 0.3vw, 1.125rem);    /* 17-18px: lead paragraphs */
+  --text-lg: clamp(1.125rem, 1.06rem + 0.35vw, 1.25rem);  /* 18-20px: card titles, h4 */
+  --text-xl: clamp(1.25rem, 1.14rem + 0.55vw, 1.5rem);    /* 20-24px: h3, section headings */
+  --text-2xl: clamp(1.5rem, 1.32rem + 0.9vw, 1.875rem);   /* 24-30px: h2 */
+  --text-3xl: clamp(1.75rem, 1.5rem + 1.25vw, 2.25rem);   /* 28-36px: page titles */
+  --text-display: clamp(2.5rem, 1.9rem + 3vw, 4.5rem);    /* 40-72px: hero name */
+
   /* Light Mode Colors */
-  --background: #ffffff;
-  --background-secondary: #f6f7f9;
-  --background-tertiary: #eef0f3;
-  --foreground: #1f2937;
-  --text-primary: #0d0e12;
-  --text-secondary: #54575e;
-  --text-muted: #6d7078;
+  --background: #fbfaf8;      /* warm paper */
+  --background-secondary: #f2f0ec;
+  --background-tertiary: #e9e6e0;
+  --foreground: #16181c;
+  --text-primary: #16181c;
+  --text-secondary: #54575e;  /* 7.0:1 */
+  --text-muted: #6d7078;      /* >=4.5:1, small-text safe */
 
   /* Accent Colors */
-  --accent-primary: #5e5ce6;
-  --accent-primary-hover: #4b48d1;
-  --accent-secondary: #8b5cf6;
-  --accent-glow: rgba(94, 92, 230, 0.16);
+  --accent-primary: #0f7b6c;  /* deep teal, "settled ledger" */
+  --accent-primary-hover: #0c6458;
+  --accent-glow: rgba(15, 123, 108, 0.10);
+  --signal: #b45309;          /* amber, rare */
+
+  /* Work category words on cards. develop reuses the accent teal and
+     opensource the signal amber; design (plum) and leadership (rose)
+     exist only for these lowercase mono labels. All four hold >=4.5:1
+     on --background in their theme. */
+  --cat-develop: #0f7b6c;
+  --cat-design: #7d4a99;
+  --cat-leadership: #b04a72;
+  --cat-oss: #b45309;
 
   /* Borders */
-  --border: #e8e9ec;
-  --border-secondary: #d7d9de;
+  --border: #dedbd4;
+  --border-secondary: #cfccc4;
 
   /* Semantic Colors */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --info: #5e5ce6;
+  --success: #0f7b6c;
+  --warning: #b45309;
+  --error: #b3261e;
+  --info: #0f7b6c;
 
   /* Shadows */
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
@@ -45,30 +74,36 @@
 }
 
 .dark {
-  /* Dark Mode Colors — Linear/Vercel-style near-black */
-  --background: #08090b;
-  --background-secondary: #0f1113;
-  --background-tertiary: #17191c;
-  --foreground: #e8e9ec;
-  --text-primary: #f5f6f7;
+  /* Dark Mode Colors: blue-black instrument panel */
+  --background: #0a0c0e;
+  --background-secondary: #111417;
+  --background-tertiary: #191d21;
+  --foreground: #f2f3f4;
+  --text-primary: #f2f3f4;
   --text-secondary: #9aa0a6;
   --text-muted: #7c828a;
 
-  /* Accent Colors (brighter for dark mode) */
-  --accent-primary: #7c7aff;
-  --accent-primary-hover: #9391ff;
-  --accent-secondary: #a78bfa;
-  --accent-glow: rgba(124, 122, 255, 0.18);
+  /* Accent Colors */
+  --accent-primary: #3ddbb7;  /* phosphor teal */
+  --accent-primary-hover: #63e4c8;
+  --accent-glow: rgba(61, 219, 183, 0.10);
+  --signal: #f5a524;
+
+  /* Work category words, dark pairs of the light set. */
+  --cat-develop: #3ddbb7;
+  --cat-design: #c9a2e8;
+  --cat-leadership: #e895b5;
+  --cat-oss: #f5a524;
 
   /* Borders */
-  --border: #1e2024;
-  --border-secondary: #2a2d32;
+  --border: #23282d;
+  --border-secondary: #2e343a;
 
   /* Semantic Colors */
-  --success: #34d399;
-  --warning: #fbbf24;
+  --success: #3ddbb7;
+  --warning: #f5a524;
   --error: #f87171;
-  --info: #7c7aff;
+  --info: #3ddbb7;
 
   /* Shadows (deeper for dark mode) */
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.4);
@@ -89,7 +124,9 @@
 }
 
 html {
-  font-size: 16px;
+  /* 100%, not a px value: respects the user's browser font-size setting,
+     which a fixed 16px would silently override. */
+  font-size: 100%;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
@@ -97,8 +134,8 @@ html {
 body {
   font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI',
     'Roboto', 'Helvetica Neue', sans-serif;
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: var(--text-base);
+  line-height: 1.65;
   color: var(--foreground);
   background-color: var(--background);
   -webkit-font-smoothing: antialiased;
@@ -106,6 +143,21 @@ body {
   transition: background-color var(--transition-base), color var(--transition-base);
   overflow-x: hidden;
   min-height: 100vh;
+}
+
+/* Mono instrument face: used for all dates, metrics, tags, eyebrows,
+   section labels, and anything meant to read like a readout. */
+.instrument {
+  font-family: var(--font-mono), 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.instrument-label {
+  font-family: var(--font-mono), 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 /* ================================
@@ -118,31 +170,34 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.25;
   margin-bottom: 0.75rem;
   letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 h1 {
-  font-size: 2.25rem; /* 36px */
+  font-size: var(--text-display);
   font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
 h2 {
-  font-size: 1.875rem; /* 30px */
+  font-size: var(--text-2xl);
 }
 
 h3 {
-  font-size: 1.5rem; /* 24px */
+  font-size: var(--text-xl);
 }
 
 h4 {
-  font-size: 1.25rem; /* 20px */
+  font-size: var(--text-lg);
 }
 
 h5 {
-  font-size: 1.125rem; /* 18px */
+  font-size: var(--text-md);
 }
 
 h6 {
-  font-size: 1rem; /* 16px */
+  font-size: var(--text-base);
 }
 
 p {
@@ -167,12 +222,12 @@ a:hover {
   transition: all var(--transition-fast);
 }
 
-/* Back link — shared across every detail page (achievements, projects, open source, blog) */
+/* Back link: shared across every detail page (achievements, projects, open source, blog) */
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: var(--text-ui);
   color: var(--text-secondary);
   transition: color var(--transition-fast);
   text-decoration: none;
@@ -198,14 +253,16 @@ a:hover {
 
 .back-link-sticky {
   position: sticky;
-  top: 4rem;
+  top: var(--navbar-height);
   background-color: var(--background);
   z-index: 10;
   width: 100%;
 }
 
 .back-link-sticky-inner {
-  max-width: 80rem;
+  /* max-width comes from .container (1100px), the same width every
+     other page uses, so the sticky bar always lines up with the
+     content below it instead of carrying its own competing value. */
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
@@ -220,7 +277,7 @@ strong, b {
 }
 
 small {
-  font-size: 0.875rem;
+  font-size: var(--text-ui);
   color: var(--text-secondary);
 }
 
@@ -236,7 +293,7 @@ code {
 
 pre {
   font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 0.875rem;
+  font-size: var(--text-ui);
   line-height: 1.5;
   padding: 1rem;
   background: var(--background-secondary);
@@ -343,26 +400,28 @@ a:focus-visible {
    UTILITY CLASSES
    ================================ */
 
+/* --container-gutter mirrors the padding below so descendants that need
+   to break out of the container (full-bleed sticky bars, edge-to-edge
+   rules) can negate the exact gutter in force at each breakpoint. */
 .container {
+  --container-gutter: 1rem;
   width: 100%;
-  max-width: 1280px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: var(--container-gutter);
+  padding-right: var(--container-gutter);
 }
 
 @media (min-width: 640px) {
   .container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    --container-gutter: 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .container {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    --container-gutter: 2rem;
   }
 }
 
@@ -416,14 +475,14 @@ a:focus-visible {
 
 /* Section Heading Utilities */
 .section-heading {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
 .page-title {
-  font-size: clamp(2.25rem, 5vw, 3rem);
+  font-size: var(--text-3xl);
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
@@ -431,7 +490,7 @@ a:focus-visible {
 }
 
 .page-description {
-  font-size: 1.125rem;
+  font-size: var(--text-md);
   line-height: 1.7;
   color: var(--text-secondary);
 }
@@ -448,20 +507,25 @@ a:focus-visible {
   }
 }
 
+/* Breakpoints lowered from 768/1024 (2026-08-12): at 768 a ~700px
+   viewport, which is what 200% zoom on a laptop produces, fell to a
+   single column and gave one card the full page width. Two columns
+   from 560px keeps cards at a usable tile size under zoom, which is
+   the WCAG 1.4.10 reflow case, not just a phone case. */
 .grid-3 {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 560px) {
   .grid-3 {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.75rem;
+    gap: 1.5rem;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1000px) {
   .grid-3 {
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
@@ -498,7 +562,7 @@ a:focus-visible {
   gap: 0.5rem;
   padding: 0.6875rem 1.375rem;
   border-radius: 0.5rem;
-  font-size: 0.875rem;
+  font-size: var(--text-ui);
   font-weight: 500;
   transition: all var(--transition-fast);
   cursor: pointer;
@@ -562,17 +626,17 @@ a:focus-visible {
 
 .card {
   position: relative;
-  background: var(--background-secondary);
+  background: var(--background);
   border: 1px solid var(--border);
-  border-radius: 0.625rem;
+  border-radius: 0.5rem;
   padding: 1rem;
-  box-shadow: var(--shadow-xs);
-  transition: all var(--transition-base);
+  box-shadow: none;
+  transition: border-color var(--transition-base), transform var(--transition-base);
 }
 
 /* Stretched link: makes the whole card clickable via one primary link
    (usually the title) while secondary links inside the card (GitHub,
-   live site, PR, etc.) remain independently clickable, valid HTML —
+   live site, PR, etc.) remain independently clickable, valid HTML,
    no <a> nested inside another <a>. */
 .stretched-link {
   color: inherit;
@@ -601,15 +665,145 @@ a:focus-visible {
 @media (min-width: 768px) {
   .card {
     padding: 1.25rem;
-    border-radius: 0.875rem;
+    border-radius: 0.5rem;
   }
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
   border-color: var(--border-secondary);
-  transform: translateY(-1px);
-  background: var(--background);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
+}
+
+/* ================================
+   WORK CARD
+   One light card for every kind of work (projects, open source,
+   achievements): cover, title, one pitch line, lowercase category
+   words, mono date. No border box; the image is the card.
+   ================================ */
+
+.work-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  color: inherit;
+  min-width: 0;
+}
+
+.work-card:hover {
+  color: inherit;
+}
+
+.work-card-cover {
+  aspect-ratio: 3 / 2;
+  /* Ceiling for the single-column case: without it a full-width card at
+     a narrow (or zoomed) viewport gives the cover a 3:2 height of the
+     whole column, which is what made one card fill the screen. The
+     image's object-fit: cover crops instead of distorting. */
+  max-height: 15rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--background-secondary);
+  /* Anchors the featured badge, which is absolutely positioned inside
+     and clips to the rounded corner via the overflow above. */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.375rem;
+  transition: border-color var(--transition-base);
+}
+
+/* Featured badge: top-left of the cover, on its own translucent blurred
+   surface so it stays legible over a photo and over the typographic
+   fallback alike. */
+.work-card-featured {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 45%, transparent);
+  border-radius: 0.3rem;
+  background: color-mix(in srgb, var(--background) 82%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--accent-primary);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.work-card:hover .work-card-cover {
+  border-color: var(--border-secondary);
+}
+
+.work-card-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Typographic cover for items with no photo: the mono result (or the
+   item's initials) large on the secondary ground. Never a generic
+   placeholder glyph. */
+.work-card-cover-fallback {
+  font-weight: 600;
+  font-size: var(--text-xl);
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.work-card-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.work-card-pitch {
+  font-size: var(--text-ui);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.work-card-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 0.75rem;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  margin-top: 0.125rem;
+}
+
+.work-cat[data-cat="develop"] { color: var(--cat-develop); }
+.work-cat[data-cat="design"] { color: var(--cat-design); }
+.work-cat[data-cat="leadership"] { color: var(--cat-leadership); }
+.work-cat[data-cat="opensource"] { color: var(--cat-oss); }
+
+.work-card-date {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.125rem;
 }
 
 /* Project Card Responsive Spacing */
@@ -627,11 +821,6 @@ a:focus-visible {
     border-radius: 0.5rem;
     margin-bottom: 1rem;
   }
-}
-
-/* Achievement card images - always visible, matches project cards */
-.achievement-card-image {
-  display: block;
 }
 
 .project-card-content {
@@ -655,18 +844,19 @@ a:focus-visible {
 
 .project-card-meta {
   gap: 0.5rem;
-  font-size: 0.6875rem;
+  /* 12px floor: was 11px on mobile, below the fine-print minimum. */
+  font-size: var(--text-xs);
 }
 
 @media (min-width: 768px) {
   .project-card-meta {
     gap: 0.75rem;
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
   }
 }
 
 .project-card-title {
-  font-size: 1.25rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.3;
@@ -675,19 +865,22 @@ a:focus-visible {
 
 .project-card-description {
   color: var(--text-secondary);
-  line-height: 1.5;
-  font-size: 0.75rem;
+  line-height: 1.6;
+  /* 14px floor on every device: the old 12px mobile size was below
+     comfortable reading size for multi-line text. */
+  font-size: var(--text-ui);
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 @media (min-width: 768px) {
   .project-card-description {
-    font-size: 0.875rem;
     line-height: 1.7;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 }
 
@@ -717,7 +910,7 @@ a:focus-visible {
 
 .project-card-links {
   gap: 0.75rem;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   margin-top: auto;
   padding-top: 0.5rem;
 }
@@ -725,79 +918,364 @@ a:focus-visible {
 @media (min-width: 768px) {
   .project-card-links {
     gap: 1rem;
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
     padding-top: 0.75rem;
-  }
-}
-
-/* Blog Card Responsive Spacing */
-.blog-card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-@media (min-width: 768px) {
-  .blog-card-content {
-    gap: 1rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .blog-card-content {
-    gap: 0.75rem;
-  }
-}
-
-/* Competition Card Responsive Spacing */
-.competition-card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-@media (min-width: 768px) {
-  .competition-card-content {
-    gap: 1rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .competition-card-content {
-    gap: 0.75rem;
   }
 }
 
 /* Project Detail Page Styles */
 .project-detail-meta-label {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-muted);
   font-weight: 500;
 }
 
+/* ================================
+   BREADCRUMB (detail pages, plan 2.16)
+   Back control plus the trail naming the current location.
+   ================================ */
+
+.breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-bar-condensed {
+  margin-bottom: 0;
+}
+
+/* Chevron only. The trail beside it already says where Back goes, so a
+   text label would repeat it. */
+.breadcrumb-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-left: -0.25rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.breadcrumb-back:hover {
+  color: var(--accent-primary);
+  background: var(--background-secondary);
+}
+
+.breadcrumb-nav {
+  min-width: 0;
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+/* Only the last item (the page title) may shrink and ellipsize; the
+   earlier segments are the navigable ones and stay whole. */
+.breadcrumb-item:last-child {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Underlined at rest, not only on hover: these are the trail's working
+   controls (Work goes to the grid, the category deep-links into that
+   filter), and an underline is what marks them as such without relying
+   on hover, which touch devices do not have. */
+.breadcrumb-link {
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--border-secondary);
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
+}
+
+.breadcrumb-link:hover {
+  color: var(--accent-primary);
+  text-decoration-color: var(--accent-primary);
+}
+
+.breadcrumb-current {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.breadcrumb-sep {
+  flex-shrink: 0;
+  color: var(--border-secondary);
+}
+
 .project-detail-title {
-  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  /* Fluid, with a lower floor than --text-3xl: the title yields space
+     by shrinking first, so buttons can hold onto their text labels
+     longer instead of both changing at the same fixed breakpoint.
+     Floor lowered to 1.25rem (2026-08-12) so it starts shrinking sooner
+     and reaches the wrap case later. */
+  font-size: clamp(1.25rem, 1.05rem + 2.1vw, 2.25rem);
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.2;
   letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* Title and its action links always share one row: the title truncates
+   (min-width:0 + ellipsis) rather than wrapping the row or pushing the
+   actions onto their own line, at every screen width, full-size or
+   condensed. Buttons keep their text labels as long as there's room;
+   only once the row is genuinely too narrow (see the btn-icon-mobile
+   query below) do they fall back to icon-only, and even then each
+   button only loses its label if it doesn't fit. */
+.project-detail-title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+}
+
+.project-detail-title-row > h1,
+.project-detail-title-row > .project-detail-title,
+.project-detail-title-row > .project-detail-title-condensed {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+/* Full-size title wraps to at most two lines rather than truncating
+   (2026-08-12). Previously it was the only flexible thing in the row,
+   so a long name lost its ending to an ellipsis while the buttons kept
+   their full width: the page's identity yielding to secondary actions.
+   The clamp still bounds the header's height. */
+.project-detail-title-row > .project-detail-title {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
+/* The condensed pinned bar keeps one line and an ellipsis: staying slim
+   is the entire point of that state. */
+.project-detail-title-row > .project-detail-title-condensed {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-detail-actions {
+  flex-shrink: 0;
+  gap: 0.5rem;
+}
+
+/* Detail-header buttons run smaller than the site's default .btn at
+   every width (2026-08-12). They share a row with the page title, and
+   at full size they took enough of it that the title truncated to make
+   room. Scoped to this row so the hero and form buttons keep their
+   normal size. */
+.project-detail-actions .btn {
+  padding: 0.45rem 0.85rem;
+  font-size: var(--text-sm);
+  gap: 0.4rem;
+}
+
+.project-detail-actions .btn svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .project-detail-title-row {
+    gap: 1.5rem;
+  }
+}
+
+/* Last resort, narrower than before: only phones where a fluid-shrunk
+   title still can't share a line with labeled buttons fall back to
+   icon-only. Most tablet/small-desktop widths keep full button labels. */
+@media (max-width: 420px) {
+  .project-detail-actions .btn-icon-mobile {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+  }
+
+  /* Visually hidden, not display:none: the label stays in the
+     accessibility tree so the button's accessible name still comes
+     from real text, not a separate aria-label announcing on top of it. */
+  .project-detail-actions .btn-icon-mobile .btn-icon-mobile-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* Sticky project header: back-link, meta, title, actions, and skills
+   pinned as one unit below the navbar. Condenses to a slim bar once
+   scrolled (see project-detail-sticky-condensed) rather than occupying
+   a large, fixed share of the screen for the whole read. */
+.project-detail-sticky {
+  position: sticky;
+  top: var(--navbar-height);
+  z-index: 10;
+  background-color: var(--background);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition-base);
+}
+
+.project-detail-sticky-condensed {
+  border-bottom-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.project-detail-sticky-inner {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  transition: padding var(--transition-base);
+}
+
+.project-detail-sticky-condensed .project-detail-sticky-inner {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+/* Condensed state stays a single row at every width, title first: on a
+   flex row, min-width:0 is what actually lets text-overflow:ellipsis
+   truncate instead of forcing the row to overflow or wrap the action
+   buttons onto their own line. */
+.project-detail-sticky-condensed .project-detail-title-row {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.project-detail-sticky-condensed .project-detail-title-condensed {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.project-detail-title-condensed {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Condensed action icons shrink further on narrow screens so up to 3
+   buttons plus a truncated title still fit on one line. */
+@media (max-width: 480px) {
+  .project-detail-sticky-condensed .project-detail-actions .btn-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .project-detail-sticky-condensed .project-detail-actions .btn-icon svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-detail-sticky,
+  .project-detail-sticky-inner {
+    transition: none;
+  }
 }
 
 .project-detail-description {
-  font-size: 1.0625rem;
+  font-size: var(--text-md);
   line-height: 1.6;
   color: var(--text-secondary);
 }
 
-/* Detail-page subsection heading — shared across achievements, projects, and
+/* TLDR callout: visually distinct from the long-form Overview below it
+   (a bordered box, not the first paragraph of body copy), but the
+   summary text itself matches Overview's body size so it doesn't
+   compete for attention, just sits apart structurally. The "TL;DR"
+   label is a small badge notched into the top border, like a fieldset
+   legend, rather than its own line of text inside the box. */
+.project-detail-tldr {
+  position: relative;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 0.5rem;
+  background: var(--accent-glow);
+  padding: 1.5rem 1.5rem 1.25rem;
+}
+
+.project-detail-tldr-mark {
+  position: absolute;
+  top: 0;
+  left: 1.25rem;
+  transform: translateY(-50%);
+  /* Solid, not the box's translucent tint: a see-through badge
+     background wouldn't fully mask the border line it's meant to notch. */
+  background: var(--background);
+  border: 1px solid var(--accent-primary);
+  border-radius: 999px;
+  padding: 0.125rem 0.625rem;
+  color: var(--accent-primary);
+}
+
+.project-detail-tldr p {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Detail-page subsection heading: shared across achievements, projects, and
    open source detail pages (Date/Timeline/Overview/Skills/Technologies/etc). */
 .detail-section-title,
 .project-detail-section-title {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 1rem;
@@ -806,14 +1284,14 @@ a:focus-visible {
 }
 
 .project-detail-timeline-label {
-  font-size: 0.9375rem;
+  font-size: var(--text-ui);
   color: var(--text-muted);
   margin-bottom: 0.25rem;
   margin-top: 0.5rem;
 }
 
 .project-detail-timeline-value {
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-weight: 500;
   color: var(--text-primary);
 }
@@ -927,7 +1405,7 @@ a:focus-visible {
 
 .project-overview-content pre {
   font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 0.875rem;
+  font-size: var(--text-ui);
   line-height: 1.5;
   padding: 1rem;
   background: var(--background-secondary);
@@ -945,93 +1423,198 @@ a:focus-visible {
   font-style: italic;
 }
 
-/* Competition List Item (Homepage) - Mobile first responsive */
-.competition-list-item {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.competition-list-item-image {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16/9;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.competition-list-item-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-width: 0;
-}
-
-@media (min-width: 768px) {
-  .competition-list-item {
-    flex-direction: row;
-    gap: 1.5rem;
-    align-items: center;
-  }
-
-  .competition-list-item-image {
-    width: 200px;
-    height: 150px;
-    aspect-ratio: auto;
-  }
-}
-
 /* Tag Responsive Sizing */
 .tag-sm {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   padding: 0.25rem 0.5rem;
 }
 
 @media (min-width: 768px) {
   .tag-sm {
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
     padding: 0.25rem 0.5rem;
   }
 }
 
-/* Projects Filter Tabs */
-.filter-tabs-container {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 1rem;
+/* Work filter (revised 2026-08-11 from the underlined tab row).
+   Mono chips carrying each category's own accent dot and a live count.
+   Wraps rather than side-scrolling: with counts attached, a hidden
+   off-screen chip is a hidden fact, not just a hidden label. */
+/* Pins the chip rail under the sticky header while the grid scrolls.
+   top uses --navbar-height, the same token the header's own height comes
+   from, so the two can never drift apart.
+
+   The scope wrapper must not gain `overflow` or a `transform`: either
+   would silently break sticky. .section and .container are both clear
+   of those today. */
+/* Zero-height scroll targets for /#work-<category> deep links. The
+   offset clears the sticky navbar plus the pinned filter bar, so the
+   ledger rule is not hidden underneath them on arrival. */
+.work-anchor {
+  display: block;
+  height: 0;
+  scroll-margin-top: calc(var(--navbar-height) + 4.5rem);
+}
+
+.work-filter-bar {
+  position: sticky;
+  top: var(--navbar-height);
+  z-index: 20;
+  /* Fully opaque (2026-08-12). This was 88% with a blur behind it, on
+     the assumption the blur would obscure what passed under. It does
+     not: a blur softens text without hiding it, so card titles ghosted
+     through the bar. The navbar can afford translucency because it sits
+     over a page ground; a mid-page bar has cards sliding directly
+     beneath it. No backdrop-filter either, since nothing shows through
+     now and it was costing a compositing layer for no visible effect. */
+  background: var(--background);
   border-bottom: 1px solid var(--border);
-  padding-bottom: 0;
+  /* Full-bleed surface: the bar spans the container's gutters so it
+     runs edge to edge with no seam, while the chips inside stay on the
+     container's own grid, left-aligned with the card columns. Decided
+     2026-08-12 against centering: every other element in this column
+     shares that left margin, and centered chips would shift sideways
+     whenever a category appears or disappears. */
+  margin: 0 calc(var(--container-gutter, 1.5rem) * -1) 2rem;
+  padding: 0.75rem var(--container-gutter, 1.5rem);
 }
 
-.filter-tab {
-  color: var(--text-secondary);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  padding-bottom: 0.75rem;
+.work-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Responsive rail. Three behaviors, narrowest first:
+
+   <=640px  one scrollable row, chips shrunk. A wrapped two-line rail
+            plus the navbar eats a third of a phone viewport once pinned,
+            and the horizontal scroll keeps every category reachable.
+   641-900  still one scrollable row but at full chip size, since the
+            text fits comfortably even though five chips do not.
+   >900px   wraps normally; at this width all five sit on one line
+            anyway, so scrolling would only hide things. */
+@media (max-width: 900px) {
+  .work-filter {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    /* Momentum scrolling on iOS, and a hidden scrollbar in every engine
+       that supports it: the bar itself would sit under the chips and
+       read as a stray rule. The row is still keyboard and wheel
+       scrollable, and focusing an off-screen chip scrolls it into view. */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Cancels the bar's own padding so the first and last chip can sit
+       flush with the container edge while scrolled. */
+    margin-inline: calc(var(--container-gutter, 1.5rem) * -1);
+    padding-inline: var(--container-gutter, 1.5rem);
+    /* overflow-x: auto also clips vertically, which cut the top and
+       bottom off focus rings and the active chip's tinted edge. The
+       vertical padding restores that room inside the scroll box, and
+       the negative block margin keeps the bar's own height unchanged. */
+    padding-block: 0.35rem;
+    margin-block: -0.35rem;
+  }
+
+  .work-filter::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .work-filter-bar {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .work-filter-chip {
+    padding: 0.4rem 0.65rem;
+    gap: 0.4rem;
+  }
+
+  /* The count is the first thing to go when space is tight: the label
+     identifies the category, the number only quantifies it. */
+  .work-filter-count {
+    display: none;
+  }
+}
+
+/* The simplified view strips motion and layering; a pinned bar over
+   scrolling content is exactly the kind of thing it exists to remove. */
+:root[data-simplified] .work-filter-bar {
+  position: static;
   background: none;
-  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.work-filter-chip {
+  /* Per-chip accent, overridden by [data-category] below. Everything
+     inside the chip references this one variable, so a category's
+     colour flows to the dot, the label, and the border together. */
+  --chip-accent: var(--accent-primary);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  background: var(--background);
+  color: var(--text-secondary);
+  font-family: var(--font-mono), 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
   cursor: pointer;
-  transition: all var(--transition-base);
-  position: relative;
+  transition: color var(--transition-fast), border-color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
-.filter-tab:hover {
+.work-filter-chip[data-category="develop"] { --chip-accent: var(--cat-develop); }
+.work-filter-chip[data-category="design"] { --chip-accent: var(--cat-design); }
+.work-filter-chip[data-category="opensource"] { --chip-accent: var(--cat-oss); }
+.work-filter-chip[data-category="leadership"] { --chip-accent: var(--cat-leadership); }
+
+/* The dot is the category's swatch: hollow when the chip is idle, so
+   the row reads as a legend, filled when it is the active filter. */
+.work-filter-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--chip-accent);
+  background: transparent;
+  transition: background-color var(--transition-fast);
+}
+
+.work-filter-count {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--transition-fast);
+}
+
+.work-filter-chip:hover {
   color: var(--text-primary);
+  border-color: var(--chip-accent);
 }
 
-.filter-tab.active {
-  color: var(--text-primary);
+/* Active state carries its own tinted surface rather than a shared
+   accent underline: with five categories, colour is what tells you
+   which slice of the grid you are looking at. */
+.work-filter-chip.active {
+  color: var(--chip-accent);
+  border-color: var(--chip-accent);
+  background: color-mix(in srgb, var(--chip-accent) 10%, transparent);
 }
 
-.filter-tab-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--accent-primary);
+.work-filter-chip.active .work-filter-dot {
+  background: var(--chip-accent);
+}
+
+.work-filter-chip.active .work-filter-count {
+  color: var(--chip-accent);
 }
 
 .empty-state {
@@ -1042,7 +1625,7 @@ a:focus-visible {
 
 /* Project Card Components */
 .project-card-meta-type {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
@@ -1050,7 +1633,7 @@ a:focus-visible {
 }
 
 .project-card-meta-featured {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   color: var(--accent-primary);
   font-weight: 500;
   display: inline-flex;
@@ -1063,13 +1646,13 @@ a:focus-visible {
 }
 
 .project-card-meta-result {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   color: var(--accent-primary);
   font-weight: 500;
 }
 
 .project-card-tag-count {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   color: var(--text-muted);
   font-weight: 500;
   margin-left: 0.25rem;
@@ -1110,25 +1693,25 @@ a:focus-visible {
 }
 
 .tag-md {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   padding: 0.25rem 0.5rem;
 }
 
 @media (min-width: 768px) {
   .tag-md {
-    font-size: 0.875rem;
+    font-size: var(--text-ui);
     padding: 0.3125rem 0.625rem;
   }
 }
 
 .tag-lg {
-  font-size: 0.875rem;
+  font-size: var(--text-ui);
   padding: 0.3125rem 0.625rem;
 }
 
 @media (min-width: 768px) {
   .tag-lg {
-    font-size: 0.9375rem;
+    font-size: var(--text-ui);
     padding: 0.4375rem 0.875rem;
   }
 }
@@ -1207,7 +1790,8 @@ a:focus-visible {
 /* Navbar Responsive Spacing */
 .navbar-container {
   width: 100%;
-  max-width: 1280px;
+  /* Matches .container so navbar items line up with page content edges. */
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 1.25rem;
@@ -1229,44 +1813,41 @@ a:focus-visible {
 }
 
 .navbar-inner {
-  height: 4rem;
+  height: var(--navbar-height);
 }
 
 .navbar-logo {
   padding: 0.5rem 0.75rem;
 }
 
+.navbar-left {
+  gap: 0.5rem;
+}
+
+/* One inline row at every width: the drawer, its backdrop, and the
+   Menu trigger were deleted (2026-08-12). Gap tightens on narrow
+   viewports so Work, About, search, and the theme toggle all fit at
+   320px instead of collapsing behind a menu. */
 .navbar-links {
-  gap: 2rem;
+  gap: 0.875rem;
+}
+
+@media (min-width: 480px) {
+  .navbar-links {
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-links {
+    gap: 2rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .navbar-links {
     gap: 2.5rem;
   }
-}
-
-.navbar-mobile {
-  gap: 0.875rem;
-}
-
-.navbar-mobile-menu {
-  padding: 1.25rem 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .navbar-mobile-menu {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
-.navbar-mobile-links {
-  gap: 0.5rem;
-}
-
-.navbar-mobile-links a {
-  padding: 0.5rem 0;
 }
 
 /* ================================
@@ -1318,257 +1899,933 @@ a:focus-visible {
   animation: scaleIn 0.3s ease-out;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-.animate-float {
-  animation: float 5s ease-in-out infinite;
-}
-
 /* ================================
    HERO SECTION
    ================================ */
 
-@media (min-width: 640px) {
-  .hero-section {
-    min-height: calc(100vh - 4rem);
+.hero-section {
+  /* dvh accounts for mobile browser chrome (e.g. Safari's bottom URL
+     bar) so the hero doesn't overshoot the real visible viewport. */
+  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100dvh - var(--navbar-height));
+  display: flex;
+  align-items: center;
+  padding-top: clamp(1.25rem, 4vh, 3rem);
+  padding-bottom: clamp(1.25rem, 4vh, 3rem);
+}
+
+/* ================================
+   COMMAND PALETTE
+   ================================ */
+
+.command-palette-trigger {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.5rem;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.command-palette-trigger:hover {
+  color: var(--text-secondary);
+  border-color: var(--border-secondary);
+}
+
+/* Search trigger: reads as a small search field. One size at every
+   breakpoint, no separate wide-desktop version, it sits in the
+   nav-links row right before Home, not crowding the logo, so it never
+   needs to be large to justify its own space. */
+.command-palette-search-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  /* Transparent fill so it doesn't compete with the nav links for
+     attention, but a visible border at rest so the search bar itself
+     still reads clearly as its own control, not just floating text. */
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.command-palette-search-trigger:hover,
+.command-palette-search-trigger:focus-visible {
+  color: var(--text-secondary);
+  background: var(--background-secondary);
+  border-color: var(--border);
+}
+
+.command-palette-search-shortcut {
+  padding-left: 0.375rem;
+  border-left: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* No physical keyboard on narrow/touch screens: hide the ⌘K hint there
+   rather than show a shortcut that can't be used. */
+@media (max-width: 767px) {
+  .command-palette-search-shortcut {
+    display: none;
+  }
+}
+
+.command-palette-dialog {
+  padding: 0;
+  border: none;
+  border-radius: 0.75rem;
+  background: var(--background);
+  box-shadow: var(--shadow-xl);
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: min(28rem, 70vh);
+  margin: auto;
+}
+
+.command-palette-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.command-palette-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: min(28rem, 70vh);
+}
+
+.command-palette-input {
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  font-size: var(--text-md);
+  background: transparent;
+  color: var(--text-primary);
+  outline: none;
+  flex-shrink: 0;
+}
+
+.command-palette-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem;
+  overflow-y: auto;
+}
+
+.command-palette-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: var(--text-ui);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.command-palette-item-active {
+  background: var(--background-secondary);
+  color: var(--text-primary);
+}
+
+.command-palette-sublabel {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.command-palette-empty {
+  padding: 1rem;
+  font-size: var(--text-ui);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ================================
+   ARCHITECTURE DIAGRAM + DIFF BLOCKS
+   ================================ */
+
+.arch-diagram {
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: var(--background);
+}
+
+.arch-diagram g[role="button"]:focus-visible rect {
+  stroke: var(--accent-primary);
+  stroke-width: 2;
+}
+
+.arch-node-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.arch-node-sublabel,
+.arch-edge-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+
+.arch-note-panel {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: var(--text-ui);
+  color: var(--text-secondary);
+  min-height: 2.5rem;
+}
+
+/* ```diff fenced blocks: add/del lines colored via tokens. */
+.diff-block {
+  font-family: var(--font-mono), 'SF Mono', monospace;
+  font-size: var(--text-ui);
+  line-height: 1.6;
+  padding: 1rem;
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  white-space: pre;
+}
+
+.diff-line-add {
+  display: block;
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 8%, transparent);
+}
+
+.diff-line-del {
+  display: block;
+  color: var(--error);
+  background: color-mix(in srgb, var(--error) 8%, transparent);
+}
+
+/* ================================
+   SIMPLIFY THIS SITE
+   The accessibility-values-as-feature control. Kills animation, hides
+   decorative SVG in favor of the plain-text content it stands for,
+   maximizes contrast, and linearizes cards to a single column.
+   ================================ */
+
+/* Base state only. The footer, its only mount point today, styles it as
+   an instrument link alongside Colophon (see .footer-control); these
+   rules keep it legible anywhere else it might be dropped. */
+.simplify-toggle,
+.simplify-toggle-placeholder {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 1.25rem;
+}
+
+.simplify-toggle:hover {
+  color: var(--text-secondary);
+}
+
+:root[data-simplified] * ,
+:root[data-simplified] *::before,
+:root[data-simplified] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Maximize contrast: pure ink on pure paper, both themes. */
+:root[data-simplified]:not(.dark) {
+  --background: #ffffff;
+  --background-secondary: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #1a1a1a;
+  --text-muted: #333333;
+  --border: #000000;
+  --border-secondary: #000000;
+}
+
+:root[data-simplified].dark {
+  --background: #000000;
+  --background-secondary: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #f0f0f0;
+  --text-muted: #d0d0d0;
+  --border: #ffffff;
+  --border-secondary: #ffffff;
+}
+
+/* The untangle knot itself switches to its solved, static state via
+   JS (UntangleKnot.tsx watches data-simplified the same way it watches
+   prefers-reduced-motion), so there is no CSS rule hiding it here:
+   hiding the SVG without guaranteeing the text stamp is present would
+   risk exactly the blank space this control is supposed to avoid. */
+
+/* Cards linearize to a single column everywhere. */
+:root[data-simplified] .grid-2,
+:root[data-simplified] .grid-3,
+:root[data-simplified] .services-grid {
+  grid-template-columns: 1fr !important;
+}
+
+:root[data-simplified] .card:hover {
+  transform: none !important;
+}
+
+/* Simplified mode drops the category hues to plain text. */
+:root[data-simplified] .work-cat {
+  color: var(--text-secondary) !important;
+}
+
+/* ================================
+   COLOPHON
+   ================================ */
+
+.colophon-table {
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+
+.colophon-table-header,
+.colophon-table-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.4fr 1fr;
+  gap: 1rem;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.colophon-table-header {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: var(--text-xs);
+}
+
+.colophon-table-row {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 480px) {
+  .colophon-table-header,
+  .colophon-table-row {
+    grid-template-columns: 1fr;
+    gap: 0.125rem;
   }
 }
 
 /* ================================
-   BROWSER WINDOW PORTRAIT
+   OSS ACTIVITY STRIP
    ================================ */
 
-@keyframes browser-sheen {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.35; }
+.oss-activity-strip {
+  margin-top: 2.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
 }
 
-.browser-window {
-  position: relative;
-  width: calc(var(--orbit-size, 22rem) * 0.48);
-  animation: float 6s ease-in-out infinite;
-}
-
-.browser-window::before {
-  content: '';
-  position: absolute;
-  inset: -1.5rem;
-  border-radius: 1.5rem;
-  background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%);
-  filter: blur(16px);
-  pointer-events: none;
-  z-index: -1;
-}
-
-.browser-chrome {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.7rem;
-  background: var(--background-secondary);
-  border: 1px solid var(--border-secondary);
-  border-bottom: none;
-  border-radius: 0.9rem 0.9rem 0 0;
-}
-
-.browser-dots {
-  display: flex;
-  gap: 0.32rem;
-  flex-shrink: 0;
-}
-
-.browser-dots span {
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 50%;
-  display: block;
-}
-
-.browser-address {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.65rem;
+.oss-activity-title {
   color: var(--text-muted);
-  background: var(--background);
-  border-radius: 999px;
-  padding: 0.3rem 0.6rem;
-  white-space: nowrap;
+  margin-bottom: 0.75rem;
+}
+
+.oss-activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.oss-activity-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.375rem 0;
+  margin: 0;
+}
+
+.oss-activity-list li a {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.browser-ai-badge {
+.oss-activity-date {
+  color: var(--text-muted);
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: #fff;
-  background: linear-gradient(135deg, var(--accent-primary), #ff7ad9);
-  padding: 0.25rem 0.45rem;
-  border-radius: 999px;
-}
-
-.browser-viewport {
-  position: relative;
-  aspect-ratio: 4 / 3.3;
-  overflow: hidden;
-  border-radius: 0 0 0.9rem 0.9rem;
-  border: 1px solid var(--border-secondary);
-  border-top: none;
-  box-shadow: 0 24px 50px -20px rgba(0,0,0,0.4);
-}
-
-.browser-viewport img {
-  filter: saturate(1.05) contrast(1.02);
-}
-
-.browser-viewport-sheen {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 35%);
-  animation: browser-sheen 4s ease-in-out infinite;
-  pointer-events: none;
 }
 
 /* ================================
-   ORBITING SOCIAL ICONS (atom style)
-   Uses offset-path so icons travel a true ellipse
-   without any shape distortion.
+   ABOUT PAGE
    ================================ */
 
-@keyframes orbit-travel {
-  from { offset-distance: 0%; }
-  to { offset-distance: 100%; }
+.about-experience-table {
+  border-top: 1px solid var(--border);
 }
 
-.orbit-wrapper {
-  --orbit-size: clamp(14rem, 46vw, 22rem);
-  position: relative;
-  width: var(--orbit-size);
-  height: var(--orbit-size);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 100%;
+.about-experience-row {
+  display: grid;
+  grid-template-columns: 6rem 1fr auto;
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
 }
 
-@media (min-width: 640px) {
-  .orbit-wrapper {
-    --orbit-size: clamp(16rem, 40vw, 24rem);
+@media (max-width: 640px) {
+  .about-experience-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 }
 
-@media (min-width: 1024px) {
-  .orbit-wrapper {
-    --orbit-size: clamp(19rem, 34vw, 34rem);
-  }
+.about-experience-dates {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
 }
 
-.orbit-nucleus {
-  position: relative;
-  z-index: 3;
-}
-
-.orbit-plane {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.orbit-plane-1 { transform: rotate(-22deg); }
-.orbit-plane-2 { transform: rotate(35deg); }
-.orbit-plane-3 { transform: rotate(95deg); }
-
-.orbit-path-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 98%;
-  height: 58%;
-  margin-top: -29%;
-  margin-left: -49%;
-  border-radius: 50%;
-  opacity: 0.55;
-  background: conic-gradient(
-    from 0deg,
-    var(--accent-primary),
-    #ff7ad9,
-    #7affe0,
-    var(--accent-primary)
-  );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
-}
-
-.orbit-icon {
-  position: absolute;
-  top: 0;
-  left: 0;
-  /* Scale with --orbit-size so icons keep clear of the browser-window
-     mockup at small sizes instead of staying a fixed 2.5rem while the
-     orbit path shrinks around them. */
-  width: clamp(1.75rem, calc(var(--orbit-size, 22rem) * 0.115), 2.5rem);
-  height: clamp(1.75rem, calc(var(--orbit-size, 22rem) * 0.115), 2.5rem);
-  margin-top: calc(clamp(1.75rem, calc(var(--orbit-size, 22rem) * 0.115), 2.5rem) / -2);
-  margin-left: calc(clamp(1.75rem, calc(var(--orbit-size, 22rem) * 0.115), 2.5rem) / -2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--background-secondary);
-  border: 1px solid var(--border-secondary);
+.about-experience-body ul {
+  padding-left: 1.25rem;
   color: var(--text-secondary);
-  box-shadow: var(--shadow-md);
-  pointer-events: auto;
-  offset-path: ellipse(49% 29% at 50% 50%);
-  offset-rotate: 0deg;
-  animation: orbit-travel linear infinite;
-  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
-  z-index: 4;
 }
 
-.orbit-plane-1 .orbit-icon { animation-duration: 9s; animation-delay: 0s; }
-.orbit-plane-2 .orbit-icon { animation-duration: 9s; animation-delay: -3s; }
-.orbit-plane-3 .orbit-icon { animation-duration: 9s; animation-delay: -6s; }
-
-.orbit-icon > svg {
-  transform: rotate(var(--icon-counter-rotate, 0deg));
+.about-experience-body li {
+  font-size: var(--text-ui);
 }
 
-.orbit-plane-1 .orbit-icon > svg { transform: rotate(22deg); }
-.orbit-plane-2 .orbit-icon > svg { transform: rotate(-35deg); }
-.orbit-plane-3 .orbit-icon > svg { transform: rotate(-95deg); }
+.about-experience-outcome {
+  font-size: var(--text-ui);
+  color: var(--accent-primary);
+  text-align: right;
+  white-space: nowrap;
+}
 
-.orbit-icon:hover,
-.orbit-icon:focus-visible {
-  color: #fff;
+@media (max-width: 640px) {
+  .about-experience-outcome {
+    text-align: left;
+  }
+}
+
+.about-skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.about-skill-tag {
+  font-size: var(--text-sm);
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--text-secondary);
+}
+
+/* ================================
+   FOOTER (plan 2.11, revised 2026-08-11)
+   One signature band (name + thesis, social row opposite) over a
+   baseline of provenance and instrument links. One footer on every
+   page. The old six-block stack is gone: the connect heading moved to
+   About's get-in-touch section, and the boxed icon cluster became a
+   quiet inline row so the name carries the emphasis.
+   ================================ */
+
+.site-footer {
+  border-top: 1px solid var(--border);
+}
+
+/* Name and status left, social right. Wraps to a stack on narrow
+   screens, where the social row falls under the name rather than
+   squeezing beside it.
+
+   align-items: center, not flex-start: with the left column down to two
+   short lines, centering puts the icon row on the block's optical
+   midline instead of hanging it off the top. */
+.footer-signature {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.footer-signature-main {
+  max-width: 34rem;
+}
+
+/* The one large mark in the footer: her name, set at heading weight so
+   the block reads as a signature rather than a nav strip. */
+.footer-wordmark {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.footer-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin: 0.6rem 0 0 0;
+}
+
+.footer-status-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
   background: var(--accent-primary);
-  border-color: var(--accent-primary);
-  z-index: 6;
+  animation: footer-status-pulse 2s ease-in-out infinite;
 }
 
-.orbit-wrapper:hover .orbit-icon,
-.orbit-wrapper:focus-within .orbit-icon {
-  animation-play-state: paused;
+@keyframes footer-status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbit-icon {
+  .footer-status-dot {
     animation: none;
   }
+}
+
+/* Social row: borderless glyphs, no divider. An earlier build boxed each
+   icon at 2.75rem, which made three secondary links the loudest thing
+   in the footer; a later one put a left rule here, but on a flex item it
+   only spanned the icons' own height and read as a stray mark rather
+   than a column rule. With the left column down to a name and a status
+   line, whitespace separates the two groups on its own. */
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  /* Pulls the row flush with the container edge: the icons' own padding
+     would otherwise inset them from the name's left-aligned margin. */
+  margin-right: -0.5rem;
+}
+
+@media (max-width: 640px) {
+  .footer-social {
+    margin-right: 0;
+    margin-left: -0.5rem;
+  }
+}
+
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  color: var(--text-muted);
+  transition: color var(--transition-fast), background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.footer-social-link svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+}
+
+/* Optical match: the stroke glyph carries less ink than the two fill
+   marks, so it renders slightly larger to read at the same weight. */
+.footer-social-link-stroke svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.footer-social-link:hover {
+  color: var(--accent-primary);
+  background: var(--background-secondary);
+  transform: translateY(-2px);
+}
+
+.footer-social-link:active {
+  transform: translateY(0);
+}
+
+.footer-baseline-wrap {
+  border-top: 1px solid var(--border);
+}
+
+/* Fine print left, site controls right; stacks on narrow screens. */
+.footer-baseline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.footer-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+/* Colophon and simplify are instrument links, not buttons: mono, lower
+   case, with a dotted rule that solidifies and picks up the accent on
+   hover. The pill treatment they had made two optional site controls
+   compete with the real actions, and the plain underlined text before
+   that gave no hint they did anything. The leading glyph is the middle
+   ground: it marks them as controls at a glance. */
+.footer-control,
+.footer-controls .simplify-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono), 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: var(--text-xs);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--border-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.footer-control:hover,
+.footer-controls .simplify-toggle:hover {
+  color: var(--accent-primary);
+  border-bottom-color: var(--accent-primary);
+  border-bottom-style: solid;
+}
+
+/* The glyph is the interaction cue: it slides toward the accent on
+   hover, so the control animates without the label moving. */
+.footer-control-glyph {
+  color: var(--text-muted);
+  opacity: 0.75;
+  transition: color var(--transition-fast), opacity var(--transition-fast);
+}
+
+.footer-control:hover .footer-control-glyph,
+.footer-controls .simplify-toggle:hover .footer-control-glyph {
+  color: var(--accent-primary);
+  opacity: 1;
+}
+
+/* Reserve the control's height before hydration so the row doesn't
+   jump when SimplifyToggle mounts. */
+.footer-controls .simplify-toggle-placeholder {
+  display: inline-block;
+  min-height: 1.6rem;
+}
+
+.footer-provenance {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.footer-provenance a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer-provenance a:hover {
+  color: var(--accent-primary);
+}
+
+/* ================================
+   GET IN TOUCH (About page contact section)
+   Carries the line the footer used to repeat on every page.
+   ================================ */
+
+.contact-title {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.75rem 0;
+}
+
+.contact-signoff {
+  margin: 1.5rem 0 0 0;
+  font-style: italic;
+  font-size: var(--text-ui);
+  color: var(--text-muted);
+}
+
+/* ================================
+   REVEAL EMAIL (contact page)
+   The single place the address can appear, fetched on click so it is
+   never in server-rendered HTML.
+   ================================ */
+
+/* The secondary contact path, sitting under the form in the same
+   column. A hairline rule and a label separate it from the form above;
+   no box or tinted surface, because a filled panel directly under the
+   submit button competes with the primary action instead of deferring
+   to it. */
+.reveal-email {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Full-width label above the control rather than beside it: inside the
+   form's column there is not enough room to sit the two side by side
+   without the control crowding the edge. */
+.reveal-email-prompt {
+  color: var(--text-muted);
+  flex-basis: 100%;
+}
+
+/* Masked dots (or the address once revealed) with the eye toggle beside
+   them, sitting inline on one line. No box: the password convention here
+   is carried by the dots and the eye, not by a bordered field, and a
+   filled input under the form's submit button would read as another
+   form control rather than a quiet secondary path. */
+.reveal-email-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+/* Masked state. One dot per character of the real address (the count
+   comes from GET /api/reveal-email), set in the same mono face and size
+   as the revealed address so the two occupy identical width: toggling
+   swaps the glyphs without moving the eye icon beside them. No extra
+   letter-spacing, for the same reason. */
+.reveal-email-mask {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-family: var(--font-mono), 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: var(--text-ui);
+  user-select: none;
+}
+
+/* Revealed state: the address is a button, because clicking it copies.
+   position: relative anchors the Copied bubble to it. */
+.reveal-email-value {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.reveal-email-address {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-ui);
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+
+.reveal-email-value:hover .reveal-email-address {
+  color: var(--accent-primary);
+}
+
+/* "Copied" bubble, floating above the address with a small tail. Hidden
+   by opacity rather than display so it can fade rather than pop, and
+   pointer-events: none keeps it from swallowing a second click. */
+.reveal-email-bubble {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 5;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.3rem;
+  background: var(--text-primary);
+  color: var(--background);
+  font-family: var(--font-mono), 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(0.25rem);
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.reveal-email-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0.75rem;
+  border: 0.3rem solid transparent;
+  border-top-color: var(--text-primary);
+}
+
+.reveal-email-bubble.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-email-bubble {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Eye toggle: borderless inside the field, the way a password input's
+   own reveal control sits. */
+.reveal-email-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.375rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.reveal-email-toggle:hover {
+  color: var(--accent-primary);
+  background: var(--background-secondary);
+}
+
+.reveal-email-toggle:active {
+  transform: scale(0.95);
+}
+
+/* ================================
+   UNTANGLE KNOT (signature hero element)
+   ================================ */
+
+.untangle-knot {
+  position: relative;
+  width: 100%;
+  margin: 0.25rem 0 1rem;
+}
+
+/* Height comes from the svg's own height attribute (48px, matching its
+   viewBox), not CSS: the viewBox width tracks the real container width
+   via ResizeObserver so 1 unit = 1 real pixel on both axes. Overriding
+   height here without also rescaling the viewBox would stretch the
+   round knots into ellipses again. */
+
+.untangle-knot svg circle[role="slider"]:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+@keyframes untangle-path-settle {
+  from { stroke-dashoffset: 12; }
+  to { stroke-dashoffset: 0; }
+}
+
+.untangle-path-solved {
+  transition: stroke var(--transition-slow);
+}
+
+.untangle-stamp {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--accent-primary);
+}
+
+.untangle-stamp-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.untangle-replay {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.untangle-replay:hover {
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .untangle-stamp-in {
+    animation: none;
+  }
+}
+
+/* ================================
+   LEDGER RULE
+   Section-header pattern: full-width hairline top border with a
+   mono eyebrow label and the heading on the same baseline row.
+   ================================ */
+
+.ledger-rule {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ledger-rule-label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Right-side readout on a ledger rule: a live count or status in mono,
+   balancing the label on the left. */
+.ledger-rule-readout {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.ledger-rule-heading {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin: 0;
 }
 
 /* ================================
@@ -1673,6 +2930,21 @@ a:focus-visible {
 /* ================================
    SLIDESHOW (achievement detail gallery)
    ================================ */
+
+@keyframes slideshow-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slideshow-fade {
+  animation: slideshow-fade-in 0.25s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slideshow-fade {
+    animation: none;
+  }
+}
 
 .slideshow-nav {
   position: absolute;
