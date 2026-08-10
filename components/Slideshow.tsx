@@ -43,7 +43,7 @@ export default function Slideshow({ images, alt }: Props) {
           >
             <Image
               src={images[index]}
-              alt={`${alt} — image ${index + 1} of ${images.length}`}
+              alt={`${alt}, image ${index + 1} of ${images.length}`}
               fill
               className="object-cover"
               priority={index === 0}
