@@ -180,11 +180,6 @@ export default function AchievementDetailClient({ achievement }: Props) {
           )}
         </div>
 
-        {/* Achievement image(s) — renders as a slideshow when there are multiple, or a static image for just one */}
-        {achievement.imageUrls && achievement.imageUrls.length > 0 && (
-          <Slideshow images={achievement.imageUrls} alt={achievement.name} />
-        )}
-
         {/* Achievement details - Two column layout on large screens */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr]" style={{ gap: '3rem' }}>
           {/* Left Column - Metadata */}
@@ -306,6 +301,11 @@ export default function AchievementDetailClient({ achievement }: Props) {
 
           {/* Right Column - Content */}
           <div>
+            {/* Achievement image(s) — renders as a slideshow when there are multiple, or a static image for just one */}
+            {achievement.imageUrls && achievement.imageUrls.length > 0 && (
+              <Slideshow images={achievement.imageUrls} alt={achievement.name} />
+            )}
+
             {achievement.content && (
               <section>
                 <h2 style={{
