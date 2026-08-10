@@ -11,9 +11,49 @@ const inter = Inter({
   display: "swap",
 });
 
+const SITE_URL = "https://rattnak.com";
+const DESCRIPTION =
+  "Full-stack software engineer who likes making complicated things simpler. Payment systems, event-driven backends, and agentic AI across fintech, education, and cybersecurity.";
+
 export const metadata = {
-  title: "Chanrattnak Mong - Portfolio",
-  description: "Software Engineer & Product Engineer creating elegant digital experiences",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Chanrattnak Mong - Software Engineer",
+    template: "%s | Chanrattnak Mong",
+  },
+  description: DESCRIPTION,
+  openGraph: {
+    title: "Chanrattnak Mong - Software Engineer",
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: "Chanrattnak Mong",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Chanrattnak Mong - Software Engineer",
+    description: DESCRIPTION,
+    creator: "@rattnakmong",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Chanrattnak Mong",
+  url: SITE_URL,
+  jobTitle: "Full-Stack Software Engineer",
+  description: DESCRIPTION,
+  sameAs: [
+    "https://github.com/rattnak",
+    "https://linkedin.com/in/mongchanrattnak",
+    "https://x.com/rattnakmong",
+  ],
 };
 
 export const viewport: Viewport = {
@@ -38,6 +78,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 })();
               `,
             }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
           />
         </head>
         <body>
@@ -117,10 +161,10 @@ function Footer() {
               </svg>
             </a>
             <a
-              href="mailto:mongchanrattnak@gmail.com"
+              href="/contact"
               className="btn-icon"
-              aria-label="Email"
-              title="Email"
+              aria-label="Contact"
+              title="Contact"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
