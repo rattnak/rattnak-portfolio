@@ -392,6 +392,19 @@ export default function AchievementDetailClient({ achievement }: Props) {
                           transition: 'color 0.2s'
                         }} {...props} />
                       ),
+                      img: ({node, alt, ...props}) => (
+                        <img
+                          alt={alt}
+                          style={{
+                            width: '100%',
+                            borderRadius: '0.75rem',
+                            border: '1px solid var(--border)',
+                            marginTop: '0.5rem',
+                            marginBottom: '1.5rem'
+                          }}
+                          {...props}
+                        />
+                      ),
                     }}
                   >
                     {achievement.content}
