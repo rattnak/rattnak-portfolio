@@ -78,7 +78,7 @@ export default function AchievementDetailClient({ achievement }: Props) {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            Back to Achivements
+            Back to Achievements
           </Link>
         </div>
       </div>
@@ -416,30 +416,6 @@ export default function AchievementDetailClient({ achievement }: Props) {
               </section>
             )}
           </div>
-        </div>
-
-        {/* Back button at bottom */}
-        <div style={{
-          marginTop: '3rem',
-          paddingTop: '2rem'
-        }}>
-          <Link
-            href="/achievements"
-            className="inline-flex items-center group"
-            style={{
-              gap: '0.5rem',
-              fontSize: '0.875rem',
-              color: 'var(--text-secondary)',
-              transition: 'color 0.2s'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-primary)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
-          >
-            <svg className="transition-transform group-hover:-translate-x-1" style={{ width: '0.875rem', height: '0.875rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back to Achievements
-          </Link>
         </div>
       </div>
     </div>

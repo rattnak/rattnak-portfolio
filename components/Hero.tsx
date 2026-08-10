@@ -4,14 +4,18 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section style={{
-      position: 'relative',
-      minHeight: 'calc(100vh - 4rem)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden'
-    }}>
+    <section
+      className="hero-section"
+      style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        paddingTop: '2rem',
+        paddingBottom: '2rem',
+      }}
+    >
       <div
         aria-hidden="true"
         style={{
@@ -56,7 +60,7 @@ export default function Hero() {
             </h1>
 
             <p
-              className="text-lg md:text-xl max-w-2xl mb-12"
+              className="text-base md:text-xl max-w-2xl mb-12"
               style={{
                 color: 'var(--text-secondary)',
                 lineHeight: '1.6',

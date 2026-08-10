@@ -557,15 +557,9 @@ a:focus-visible {
   }
 }
 
-/* Achievement card images - hidden on mobile for consistency */
+/* Achievement card images - always visible, matches project cards */
 .achievement-card-image {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .achievement-card-image {
-    display: block;
-  }
+  display: block;
 }
 
 .project-card-content {
@@ -884,7 +878,12 @@ a:focus-visible {
 }
 
 .competition-list-item-image {
-  display: none;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .competition-list-item-content {
@@ -903,12 +902,9 @@ a:focus-visible {
   }
 
   .competition-list-item-image {
-    display: block;
     width: 200px;
     height: 150px;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    flex-shrink: 0;
+    aspect-ratio: auto;
   }
 }
 
@@ -989,6 +985,12 @@ a:focus-visible {
 
 .project-card-meta-separator {
   color: var(--text-muted);
+}
+
+.project-card-meta-result {
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+  font-weight: 500;
 }
 
 .project-card-tag-count {
@@ -1255,6 +1257,16 @@ a:focus-visible {
 }
 
 /* ================================
+   HERO SECTION
+   ================================ */
+
+@media (min-width: 640px) {
+  .hero-section {
+    min-height: calc(100vh - 4rem);
+  }
+}
+
+/* ================================
    BROWSER WINDOW PORTRAIT
    ================================ */
 
@@ -1368,7 +1380,7 @@ a:focus-visible {
 }
 
 .orbit-wrapper {
-  --orbit-size: clamp(19rem, 48vw, 34rem);
+  --orbit-size: clamp(18rem, 58vw, 34rem);
   position: relative;
   width: var(--orbit-size);
   height: var(--orbit-size);
@@ -1376,6 +1388,12 @@ a:focus-visible {
   align-items: center;
   justify-content: center;
   max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .orbit-wrapper {
+    --orbit-size: clamp(19rem, 48vw, 34rem);
+  }
 }
 
 .orbit-nucleus {
