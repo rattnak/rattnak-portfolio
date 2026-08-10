@@ -11,7 +11,7 @@ type Props = {
   description: string;
   result: string;
   organizer?: string | null;
-  imageUrl?: string | null;
+  imageUrls?: string[] | null;
   url?: string | null;
   tags?: string[];
   date: Date | string;
@@ -24,12 +24,13 @@ export default function CompetitionCard({
   type,
   description,
   result,
-  imageUrl,
+  imageUrls,
   url,
   tags,
   date,
   featured,
 }: Props) {
+  const thumbnail = imageUrls?.[0];
   return (
     <Link href={`/achievements/${id}`} className="block">
       <motion.div
@@ -39,9 +40,9 @@ export default function CompetitionCard({
         style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
       >
         <div className="project-card-image achievement-card-image">
-          {imageUrl ? (
+          {thumbnail ? (
             <img
-              src={imageUrl}
+              src={thumbnail}
               alt={name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />

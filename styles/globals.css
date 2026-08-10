@@ -1585,3 +1585,63 @@ a:focus-visible {
   right: 0;
   bottom: 0;
 }
+
+/* ================================
+   SLIDESHOW (achievement detail gallery)
+   ================================ */
+
+.slideshow-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background-color: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  z-index: 2;
+}
+
+.slideshow-nav:hover {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.slideshow-nav-prev {
+  left: 0.75rem;
+}
+
+.slideshow-nav-next {
+  right: 0.75rem;
+}
+
+.slideshow-dots {
+  position: absolute;
+  bottom: 0.875rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.slideshow-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.slideshow-dot[data-active="true"] {
+  background-color: #fff;
+  transform: scale(1.25);
+}

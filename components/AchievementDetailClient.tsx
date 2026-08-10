@@ -1,10 +1,10 @@
 // components/AchievementDetailClient.tsx
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import Tag from "./Tag";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Slideshow from "./Slideshow";
 
 type Achievement = {
   id: number;
@@ -14,7 +14,7 @@ type Achievement = {
   content?: string | null;
   result: string;
   organizer?: string | null;
-  imageUrl?: string | null;
+  imageUrls?: string[] | null;
   url?: string | null;
   tags?: string[];
   date: Date | string;
@@ -46,7 +46,7 @@ export default function AchievementDetailClient({ achievement }: Props) {
           }}
         >
           <Link
-            href="/projects"
+            href="/achievements"
             className="inline-flex items-center group"
             style={{
               gap: '0.5rem',
@@ -180,25 +180,9 @@ export default function AchievementDetailClient({ achievement }: Props) {
           )}
         </div>
 
-        {/* Achievement image */}
-        {achievement.imageUrl && (
-          <div style={{
-            marginBottom: '3rem',
-            borderRadius: '0.75rem',
-            overflow: 'hidden',
-            backgroundColor: 'var(--background-secondary)',
-            border: '1px solid var(--border)'
-          }}>
-            <div className="w-full aspect-[16/9] relative">
-              <Image
-                src={achievement.imageUrl}
-                alt={achievement.name}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
+        {/* Achievement image(s) — renders as a slideshow when there are multiple, or a static image for just one */}
+        {achievement.imageUrls && achievement.imageUrls.length > 0 && (
+          <Slideshow images={achievement.imageUrls} alt={achievement.name} />
         )}
 
         {/* Achievement details - Two column layout on large screens */}

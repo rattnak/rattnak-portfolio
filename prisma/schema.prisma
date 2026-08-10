@@ -56,7 +56,7 @@ model Achievement {
   content        String?
   result         String
   organizer      String?
-  imageUrl       String?
+  imageUrls      String[]         @default([])
   url            String?
   tags           String[]
   date           DateTime

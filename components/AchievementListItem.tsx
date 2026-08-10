@@ -11,7 +11,7 @@ type Props = {
   description: string;
   result: string;
   organizer?: string | null;
-  imageUrl?: string | null;
+  imageUrls?: string[] | null;
   url?: string | null;
   tags?: string[];
   date: Date | string;
@@ -24,12 +24,13 @@ export default function AchievementListItem({
   type,
   description,
   result,
-  imageUrl,
+  imageUrls,
   url,
   tags,
   date,
   featured,
 }: Props) {
+  const thumbnail = imageUrls?.[0];
   return (
     <Link href={`/achievements/${id}`} className="block">
       <motion.div
@@ -38,9 +39,9 @@ export default function AchievementListItem({
         className="card group cursor-pointer competition-list-item"
       >
         <div className="competition-list-item-image">
-          {imageUrl ? (
+          {thumbnail ? (
             <img
-              src={imageUrl}
+              src={thumbnail}
               alt={name}
               style={{
                 width: '100%',

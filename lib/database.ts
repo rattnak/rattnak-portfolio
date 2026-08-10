@@ -43,7 +43,7 @@ export type Achievement = {
   content: string | null;
   result: string;
   organizer: string | null;
-  imageUrl: string | null;
+  imageUrls: string[]; // All images. [0] is the card/list thumbnail; full array renders as a slideshow on the detail page.
   url: string | null;
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
   date: string;

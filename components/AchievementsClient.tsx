@@ -10,7 +10,7 @@ type Competition = {
   description: string;
   result: string;
   organizer?: string | null;
-  imageUrl?: string | null;
+  imageUrls?: string[] | null;
   url?: string | null;
   tags?: string[];
   date: Date | string;
