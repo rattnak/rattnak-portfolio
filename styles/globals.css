@@ -12,8 +12,8 @@
   --background-tertiary: #eef0f3;
   --foreground: #1f2937;
   --text-primary: #0d0e12;
-  --text-secondary: #63666d;
-  --text-muted: #96999f;
+  --text-secondary: #54575e;
+  --text-muted: #6d7078;
 
   /* Accent Colors */
   --accent-primary: #5e5ce6;
@@ -51,8 +51,8 @@
   --background-tertiary: #17191c;
   --foreground: #e8e9ec;
   --text-primary: #f5f6f7;
-  --text-secondary: #93969d;
-  --text-muted: #5c5f66;
+  --text-secondary: #9aa0a6;
+  --text-muted: #7c828a;
 
   /* Accent Colors (brighter for dark mode) */
   --accent-primary: #7c7aff;
@@ -95,8 +95,8 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Helvetica Neue', sans-serif;
   font-size: 15px;
   line-height: 1.6;
   color: var(--foreground);
@@ -675,7 +675,7 @@ a:focus-visible {
 
 .project-card-description {
   color: var(--text-secondary);
-  line-height: 1;
+  line-height: 1.5;
   font-size: 0.75rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
