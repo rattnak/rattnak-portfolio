@@ -14,7 +14,6 @@ type Achievement = {
   content?: string | null;
   result: string;
   organizer?: string | null;
-  imageUrls?: string[] | null;
   url?: string | null;
   tags?: string[];
   date: Date | string;
@@ -301,11 +300,6 @@ export default function AchievementDetailClient({ achievement }: Props) {
 
           {/* Right Column - Content */}
           <div>
-            {/* Achievement image(s) — renders as a slideshow when there are multiple, or a static image for just one */}
-            {achievement.imageUrls && achievement.imageUrls.length > 0 && (
-              <Slideshow images={achievement.imageUrls} alt={achievement.name} />
-            )}
-
             {achievement.content && (
               <section>
                 <h2 style={{

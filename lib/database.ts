@@ -43,13 +43,31 @@ export type Achievement = {
   content: string | null;
   result: string;
   organizer: string | null;
-  imageUrls: string[]; // All images. [0] is the card/list thumbnail; full array renders as a slideshow on the detail page.
   url: string | null;
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
   date: string;
   featured: boolean;
   createdAt: string;
 };
+
+// Extracts the first image path from an achievement's markdown content
+// (either a ![]() image or the first line of a ```slideshow block), for use
+// as the card/list thumbnail. Images live only in `content` now.
+export function getFirstImageFromContent(content: string | null): string | null {
+  if (!content) return null;
+
+  const slideshowMatch = content.match(/```slideshow\s*\n([^`]*)```/);
+  if (slideshowMatch) {
+    const firstLine = slideshowMatch[1]
+      .split('\n')
+      .map((line) => line.trim())
+      .find(Boolean);
+    if (firstLine) return firstLine;
+  }
+
+  const imageMatch = content.match(/!\[[^\]]*\]\(([^)]+)\)/);
+  return imageMatch ? imageMatch[1] : null;
+}
 
 // Legacy type alias for backward compatibility
 export type Competition = Achievement;

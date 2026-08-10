@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Tag from "./Tag";
+import { getFirstImageFromContent } from "@/lib/database";
 
 type Props = {
   id: number;
@@ -11,7 +12,7 @@ type Props = {
   description: string;
   result: string;
   organizer?: string | null;
-  imageUrls?: string[] | null;
+  content?: string | null;
   url?: string | null;
   tags?: string[];
   date: Date | string;
@@ -24,13 +25,13 @@ export default function CompetitionCard({
   type,
   description,
   result,
-  imageUrls,
+  content,
   url,
   tags,
   date,
   featured,
 }: Props) {
-  const thumbnail = imageUrls?.[0];
+  const thumbnail = getFirstImageFromContent(content ?? null);
   return (
     <Link href={`/achievements/${id}`} className="block">
       <motion.div
