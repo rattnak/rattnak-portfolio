@@ -1517,10 +1517,13 @@ a:focus-visible {
   position: absolute;
   top: 0;
   left: 0;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin-top: -1.25rem;
-  margin-left: -1.25rem;
+  /* Scale with --orbit-size so icons keep clear of the browser-window
+     mockup at small sizes instead of staying a fixed 2.5rem while the
+     orbit path shrinks around them. */
+  width: clamp(1.75rem, calc(var(--orbit-size, 22rem) * 0.115), 2.5rem);
+  height: clamp(1.75rem, calc(var(--orbit-size, 22rem) * 0.115), 2.5rem);
+  margin-top: calc(clamp(1.75rem, calc(var(--orbit-size, 22rem) * 0.115), 2.5rem) / -2);
+  margin-left: calc(clamp(1.75rem, calc(var(--orbit-size, 22rem) * 0.115), 2.5rem) / -2);
   display: flex;
   align-items: center;
   justify-content: center;
