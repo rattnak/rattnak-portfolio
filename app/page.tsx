@@ -1,6 +1,5 @@
 // app/page.tsx
 import Hero from "@/components/Hero";
-import Services from "@/components/Services";
 import ProjectsSection from "@/components/Projects";
 import AchievementsSection from "@/components/Achievements";
 import OpenSourceSection from "@/components/OpenSourceSection";
@@ -12,7 +11,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Services />
       <ProjectsSection />
       <OpenSourceSection />
       <AchievementsSection />

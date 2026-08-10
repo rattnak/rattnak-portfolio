@@ -123,6 +123,7 @@ model OpenSourceContribution {
   description  String
   prUrl        String?
   repoUrl      String?
+  liveUrl      String?
   merged       Boolean  @default(false)
   featured     Boolean  @default(false)
   date         DateTime

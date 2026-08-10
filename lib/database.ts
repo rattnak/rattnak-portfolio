@@ -105,6 +105,7 @@ export type OpenSourceContribution = {
   description: string;
   prUrl: string | null;
   repoUrl: string | null;
+  liveUrl: string | null; // Live/deployed site for the project (e.g. openlibrary.org), not a specific PR
   merged: boolean;
   featured: boolean;
   date: string;
@@ -307,6 +308,7 @@ export type OpenSourceProjectGroup = {
   slug: string;
   organization: string | null;
   repoUrl: string | null;
+  liveUrl: string | null;
   mergedCount: number;
   totalCount: number;
   latestDate: string;
@@ -329,6 +331,7 @@ export async function getOpenSourceContributionsGroupedByProject(): Promise<Open
         slug,
         organization: c.organization,
         repoUrl: c.repoUrl,
+        liveUrl: c.liveUrl,
         mergedCount: c.merged ? 1 : 0,
         totalCount: 1,
         latestDate: c.date,
@@ -339,6 +342,7 @@ export async function getOpenSourceContributionsGroupedByProject(): Promise<Open
       existing.mergedCount += c.merged ? 1 : 0;
       existing.totalCount += 1;
       existing.featured = existing.featured || c.featured;
+      existing.liveUrl = existing.liveUrl ?? c.liveUrl;
       if (new Date(c.date) > new Date(existing.latestDate)) {
         existing.latestDate = c.date;
       }

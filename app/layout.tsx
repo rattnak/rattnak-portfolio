@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import { Inter } from "next/font/google";
+import type { Viewport } from "next";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
@@ -13,6 +14,11 @@ const inter = Inter({
 export const metadata = {
   title: "Chanrattnak Mong - Portfolio",
   description: "Software Engineer & Product Engineer creating elegant digital experiences",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
