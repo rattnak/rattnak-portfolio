@@ -66,6 +66,10 @@ model Achievement {
   organizer      String?
   url            String? // Legacy: single link, kept for backward compatibility. New content should use `links`.
   links          Json? // Up to 3 labeled links: [{ "label": "Certificate", "url": "https://..." }, ...]
+  // Card cover, same contract as Project.imageUrl. Path convention:
+  // /achievements/<slug>/cover.<ext>. Without it the card falls back to
+  // scraping the first image out of `content`, then to typography.
+  imageUrl       String?
   tags           String[]
   date           DateTime
   featured       Boolean          @default(false)
@@ -136,6 +140,10 @@ model OpenSourceContribution {
   liveUrl      String?
   merged       Boolean  @default(false)
   featured     Boolean  @default(false)
+  // Card cover for the grouped project card. Path convention:
+  // /open-source/<slug>/cover.<ext>. Rows are grouped by projectName,
+  // so the first non-null value in a group wins.
+  imageUrl     String?
   date         DateTime
   createdAt    DateTime @default(now())
 

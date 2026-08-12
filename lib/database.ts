@@ -53,6 +53,7 @@ export type Achievement = {
   organizer: string | null;
   url: string | null; // Legacy: single link, kept for backward compatibility.
   links: AchievementLink[] | null; // Up to 3 labeled links; see getAchievementLinks.
+  imageUrl: string | null; // Card cover: /achievements/<slug>/cover.<ext>
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
   date: string;
   featured: boolean;
@@ -135,6 +136,7 @@ export type OpenSourceContribution = {
   liveUrl: string | null; // Live/deployed site for the project (e.g. openlibrary.org), not a specific PR
   merged: boolean;
   featured: boolean;
+  imageUrl: string | null; // Card cover: /open-source/<slug>/cover.<ext>
   date: string;
   createdAt: string;
 };
@@ -354,6 +356,7 @@ export type OpenSourceProjectGroup = {
   totalCount: number;
   latestDate: string;
   featured: boolean;
+  imageUrl: string | null; // First non-null cover among the group's rows
   contributions: OpenSourceContribution[];
 };
 
@@ -377,6 +380,7 @@ export async function getOpenSourceContributionsGroupedByProject(): Promise<Open
         totalCount: 1,
         latestDate: c.date,
         featured: c.featured,
+        imageUrl: c.imageUrl,
         contributions: [c],
       });
     } else {
@@ -384,6 +388,7 @@ export async function getOpenSourceContributionsGroupedByProject(): Promise<Open
       existing.totalCount += 1;
       existing.featured = existing.featured || c.featured;
       existing.liveUrl = existing.liveUrl ?? c.liveUrl;
+      existing.imageUrl = existing.imageUrl ?? c.imageUrl;
       if (new Date(c.date) > new Date(existing.latestDate)) {
         existing.latestDate = c.date;
       }
@@ -705,7 +710,9 @@ export async function getWorkItems(): Promise<WorkItem[]> {
       pitch: a.description,
       outcome: a.result,
       categories: ['leadership'],
-      cover: getFirstImageFromContent(a.content),
+      // Explicit cover first, then the first image in the body, then
+      // typography. Same precedence projects use.
+      cover: a.imageUrl ?? getFirstImageFromContent(a.content),
       coverFallback: coverFallbackText(a.result, a.name),
       href: a.content ? `/achievements/${a.slug}` : externalUrl,
       external: !a.content && Boolean(externalUrl),
@@ -723,7 +730,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
       pitch: g.contributions[0]?.description ?? '',
       outcome: g.mergedCount > 0 ? `${g.mergedCount} merged` : null,
       categories: ['opensource'],
-      cover: null,
+      cover: g.imageUrl,
       coverFallback:
         g.mergedCount > 0 ? `${g.mergedCount} merged` : coverFallbackText(null, g.projectName),
       href: `/open-source/${g.slug}`,

@@ -47,7 +47,7 @@ export default function AboutPage() {
         <div style={{ display: "flex", flexWrap: "wrap", gap: "2.5rem", marginBottom: "3rem" }}>
           <div style={{ flexShrink: 0 }}>
             <Image
-              src="/img/Chanrattnak_Mong.jpg"
+              src="/about/Chanrattnak_Mong.jpg"
               alt="Chanrattnak Mong"
               width={200}
               height={200}
@@ -153,13 +153,13 @@ export default function AboutPage() {
 
             <ImageSlider
               images={[
-                "/img/snowflake-founder.jpeg",
-                "/img/seed-panelist.jpeg",
-                "/img/seed-speech.jpeg",
-                "/img/techpreneur-speech.JPG",
-                "/img/huawei-speech.jpeg",
-                "/img/seed-dubai.jpeg",
-                "/img/dubai.jpeg",
+                "/about/snowflake-founder.jpeg",
+                "/about/seed-panelist.jpeg",
+                "/about/seed-speech.jpeg",
+                "/about/techpreneur-speech.JPG",
+                "/about/huawei-speech.jpeg",
+                "/about/seed-dubai.jpeg",
+                "/about/dubai.jpeg",
               ]}
               interval={4000}
             />
