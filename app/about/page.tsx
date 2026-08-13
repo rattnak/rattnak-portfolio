@@ -40,10 +40,6 @@ export default function AboutPage() {
   return (
     <div style={{ minHeight: "calc(100vh - 4rem)" }}>
       <div className="container page-container">
-        <div className="ledger-rule">
-          <span className="instrument-label ledger-rule-label">about</span>
-        </div>
-
         <div style={{ display: "flex", flexWrap: "wrap", gap: "2.5rem", marginBottom: "3rem" }}>
           <div style={{ flexShrink: 0 }}>
             <Image

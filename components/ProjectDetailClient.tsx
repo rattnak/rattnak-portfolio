@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Tag from "./Tag";
 import Breadcrumb from "./Breadcrumb";
-import { WORK_CATEGORY_META } from "@/lib/database";
-
-type ProjectType = "CODING" | "CASE_STUDY";
+import { WORK_CATEGORY_META, projectCategories, type ProjectType } from "@/lib/database";
 
 type TagType = {
   id: number;
@@ -23,7 +21,7 @@ type Project = {
   description: string;
   overview?: string | null;
   url: string | null;
-  type: ProjectType;
+  type: ProjectType[];
   tags?: string[];
   tagList?: TagType[];
   imageUrl?: string | null;
@@ -59,9 +57,16 @@ function ProjectActions({ project, compact = false }: { project: Project; compac
   // since visually hiding text is not the same as removing it from the
   // accessibility tree, an aria-label here would announce twice.
   const iconOnlyClass = compact ? "" : " btn-icon-mobile";
+  // A project can carry several types now, so each action asks whether its
+  // category is among them rather than comparing a single value. Going
+  // through projectCategories keeps this working on rows that predate the
+  // multi-category migration.
+  const categories = projectCategories(project.type);
+  const isCode = categories.includes("develop") || categories.includes("opensource");
+  const isDesign = categories.includes("design");
   return (
     <div className="flex flex-wrap project-detail-actions" style={{ gap: compact ? '0.5rem' : '0.75rem' }}>
-      {project.type === "CODING" && project.githubUrl && (
+      {isCode && project.githubUrl && (
         <a
           href={project.githubUrl}
           target="_blank"
@@ -87,7 +92,7 @@ function ProjectActions({ project, compact = false }: { project: Project; compac
           {!compact && <span className="btn-icon-mobile-label">Live Website</span>}
         </a>
       )}
-      {project.type === "CASE_STUDY" && project.url && (
+      {isDesign && project.url && (
         <a
           href={project.url}
           target="_blank"
@@ -110,7 +115,16 @@ export default function ProjectDetailClient({ project }: Props) {
   const endLabel = project.endDate
     ? new Date(project.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
     : "Ongoing";
-  const hasActions = (project.type === "CODING" && project.githubUrl) || project.liveUrl || (project.type === "CASE_STUDY" && project.url);
+  const categories = projectCategories(project.type);
+  // Code-shaped work shows an "-> Ongoing" end even with no endDate, since
+  // a repo keeps moving; a finished design piece does not.
+  const isOngoingKind = categories.includes("develop") || categories.includes("opensource");
+  // Mirrors the same checks inside ProjectActions: if none of these hold,
+  // the actions row would render empty.
+  const hasActions =
+    (isOngoingKind && project.githubUrl) ||
+    project.liveUrl ||
+    (categories.includes("design") && project.url);
 
   // Condensed sticky header: a sentinel sits at the header's natural
   // position; once it scrolls past the (sticky) navbar, the header
@@ -132,11 +146,14 @@ export default function ProjectDetailClient({ project }: Props) {
 
   const metaLine = (
     <div className="instrument flex items-center flex-wrap" style={{ gap: '0.5rem', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+      {/* Every category the project claims, in canonical chip order, so a
+          project that is both development and open source says so instead
+          of picking one. */}
       <span style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-        {project.type === "CODING" ? "Engineering" : "Case study"}
+        {categories.map((c) => WORK_CATEGORY_META[c].label).join(' / ')}
       </span>
       <span aria-hidden="true">&middot;</span>
-      <span>{dateLabel}{project.endDate || project.type === "CODING" ? <> &#8594; {endLabel}</> : null}</span>
+      <span>{dateLabel}{project.endDate || isOngoingKind ? <> &#8594; {endLabel}</> : null}</span>
       {project.featured && (
         <>
           <span aria-hidden="true">&middot;</span>
@@ -155,12 +172,14 @@ export default function ProjectDetailClient({ project }: Props) {
         <div className="container project-detail-sticky-inner">
           {/* Work / <category> / <title>. The middle segment matches the
               work grid's own filter word, so the trail names the same
-              slice of the grid the card came from. */}
+              slice of the grid the card came from. A trail needs a single
+              segment, so it uses the primary (first) category; the full
+              set is listed in the meta line above. */}
           <Breadcrumb
             condensed={condensed}
             trail={[
               { label: "Work", href: "/#work" },
-              WORK_CATEGORY_META[project.type === "CODING" ? "develop" : "design"],
+              WORK_CATEGORY_META[categories[0]],
               { label: project.name },
             ]}
           />

@@ -772,16 +772,23 @@ a:focus-visible {
   margin: 0;
 }
 
+/* Two lines, matching the blog card's clamp so the two card systems
+   keep the same rhythm. The card carries the short excerpt; the full
+   description is the TL;DR callout on the detail page, so nothing is
+   lost by cutting the card copy short here. */
 .work-card-pitch {
   font-size: var(--text-ui);
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  /* Reserve both lines so titles of differing length do not push the
+     category words and date rows out of alignment across the grid. */
+  min-height: calc(2 * 1.6 * var(--text-ui));
 }
 
 .work-card-cats {

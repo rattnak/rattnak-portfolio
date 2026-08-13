@@ -24,8 +24,11 @@ const CATEGORY_KEYS = Object.keys(WORK_CATEGORY_META) as WorkCategory[];
 
 // Detail pages' breadcrumbs link back to /#work-<category>, so arriving
 // with that hash should land on the grid with that filter applied.
-function categoryFromHash(): WorkCategory | null {
+// #work-all is included so the unfiltered view is just as linkable as
+// the others; anything else yields null and leaves the filter untouched.
+function filterFromHash(): Filter | null {
   const hash = window.location.hash.replace(/^#/, "");
+  if (hash === "work-all") return "ALL";
   return CATEGORY_KEYS.find((key) => hash === `work-${key}`) ?? null;
 }
 
@@ -37,13 +40,24 @@ export default function WorkGridClient({ items }: { items: WorkItem[] }) {
   // so mount alone would miss it.
   useEffect(() => {
     const sync = () => {
-      const fromHash = categoryFromHash();
+      // Only adopt a hash that names a filter. An unrelated hash (or none)
+      // leaves the current selection alone rather than resetting it.
+      const fromHash = filterFromHash();
       if (fromHash) setFilter(fromHash);
     };
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
   }, []);
+
+  // Clicking a chip records the choice in the URL so a refresh or a shared
+  // link reopens the same filter, "all" included.
+  const selectFilter = (key: Filter) => {
+    setFilter(key);
+    const url = new URL(window.location.href);
+    url.hash = key === "ALL" ? "work-all" : `work-${key}`;
+    window.history.replaceState(null, "", url);
+  };
 
   const countFor = (key: Filter) =>
     key === "ALL" ? items.length : items.filter((item) => item.categories.includes(key)).length;
@@ -83,7 +97,7 @@ export default function WorkGridClient({ items }: { items: WorkItem[] }) {
               return (
                 <button
                   key={tab.key}
-                  onClick={() => setFilter(tab.key)}
+                  onClick={() => selectFilter(tab.key)}
                   className={`work-filter-chip ${active ? "active" : ""}`}
                   data-category={tab.key}
                   aria-pressed={active}

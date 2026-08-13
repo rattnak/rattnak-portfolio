@@ -23,10 +23,6 @@ export default function ColophonPage() {
   return (
     <div style={{ minHeight: "calc(100vh - 4rem)" }}>
       <div className="container page-container" style={{ maxWidth: "42rem" }}>
-        <div className="ledger-rule">
-          <span className="instrument-label ledger-rule-label">colophon</span>
-        </div>
-
         <h1 style={{ marginBottom: "1rem" }}>How this site works</h1>
         <p style={{ color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "2.5rem" }}>
           This page exists because I like knowing how the tools I use work, and I figure some

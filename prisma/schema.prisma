@@ -19,13 +19,20 @@ model Project {
   url         String
   startDate   DateTime
   endDate     DateTime?
-  type        ProjectType  @default(CODING)
+  // Multi-valued: a project can sit under more than one filter chip,
+  // e.g. an open source tool that is also a development project.
+  // A CHECK constraint keeps this from being empty.
+  type        ProjectType[] @default([DEVELOP])
   featured    Boolean      @default(false)
   githubUrl   String?
   liveUrl     String?
   overview    String?
   excerpt     String?
   outcome     String? // Short delta shown in mono on the card: "2 days to 20 min"
+  // Organizing body behind the work, same contract as Achievement.organizer.
+  // Mainly for LEADERSHIP and OPEN_SOURCE rows, where the host org is part
+  // of the story; null for personal projects.
+  organizer   String?
   imageUrl    String?
   createdAt   DateTime     @default(now())
   ProjectTag  ProjectTag[]
@@ -151,9 +158,14 @@ model OpenSourceContribution {
   @@index([featured], map: "idx_oss_featured")
 }
 
+// Mirrors WorkCategory in lib/database.ts, which drives the home-page
+// filter rail. Keep the two in sync: a value here with no counterpart
+// there is a category no chip can select.
 enum ProjectType {
-  CODING
-  CASE_STUDY
+  DEVELOP
+  OPEN_SOURCE
+  DESIGN
+  LEADERSHIP
 }
 
 enum TagType {

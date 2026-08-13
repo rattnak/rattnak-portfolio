@@ -1,6 +1,24 @@
 // lib/database.ts
 import { supabase } from './supabase';
 
+// A failed query must never be mistaken for "there is no content".
+//
+// These functions used to log the error and return [] / null. Under ISR that
+// is the worst possible outcome: Next.js sees a successful render of an empty
+// site and caches it. When the Supabase project was paused for inactivity,
+// every query errored, every list came back empty, and the blank homepage was
+// frozen into the build. It stayed blank after the database woke up.
+//
+// Throwing instead aborts the render, so Next.js discards it and keeps
+// serving the last good page. A database outage then degrades to stale
+// content rather than to an empty site.
+//
+// The distinction this preserves: a query that succeeds and matches nothing
+// is still a legitimate empty result. Only the error branch throws.
+function failed(context: string, error: { message?: string }): never {
+  throw new Error(`Supabase query failed (${context}): ${error.message ?? 'unknown error'}`);
+}
+
 export type TagType = 'TECHNICAL' | 'NON_TECHNICAL';
 
 export type Tag = {
@@ -13,6 +31,11 @@ export type Tag = {
   createdAt: string;
 };
 
+// The Postgres ProjectType enum. Each value maps to exactly one
+// WorkCategory (see PROJECT_TYPE_TO_CATEGORY), which is what the
+// home-page filter rail selects on.
+export type ProjectType = 'DEVELOP' | 'OPEN_SOURCE' | 'DESIGN' | 'LEADERSHIP';
+
 export type Project = {
   id: number;
   name: string;
@@ -22,7 +45,11 @@ export type Project = {
   overview: string | null; // Detailed overview section on detail page
   outcome: string | null; // Short delta rendered in mono on the card: "2 days to 20 min"
   url: string | null;
-  type: 'CODING' | 'CASE_STUDY';
+  // Multi-valued: one project can appear under several filter chips.
+  // Never empty (enforced by a CHECK constraint); the first entry is the
+  // primary category, used where a single label is needed.
+  type: ProjectType[];
+  organizer: string | null; // Host org, mainly for LEADERSHIP / OPEN_SOURCE work
   tags: string[]; // Legacy: old string array (kept for backward compatibility)
   imageUrl: string | null;
   githubUrl: string | null;
@@ -149,10 +176,7 @@ export async function getAllProjects(): Promise<ProjectWithTags[]> {
     .order("featured", { ascending: false })
     .order("startDate", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching projects:", error);
-    return [];
-  }
+  if (error) failed('getAllProjects', error);
 
   const projects = data as Project[];
   const projectsWithTags = await Promise.all(
@@ -173,10 +197,7 @@ export async function getFeaturedProjects(): Promise<ProjectWithTags[]> {
     .order("startDate", { ascending: false })
     .limit(3);
 
-  if (error) {
-    console.error("Error fetching featured projects:", error);
-    return [];
-  }
+  if (error) failed('getFeaturedProjects', error);
 
   const projects = data as Project[];
   const projectsWithTags = await Promise.all(
@@ -198,10 +219,7 @@ export async function getAllAchievements() {
     .order('featured', { ascending: false })
     .order('date', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching achievements:', error);
-    return [];
-  }
+  if (error) failed('getAllAchievements', error);
 
   return data as Achievement[];
 }
@@ -216,9 +234,12 @@ export async function getAchievementById(id: number) {
     .eq('id', id)
     .single();
 
+  // .single() signals "no matching row" as PGRST116, which is an ordinary
+  // 404 for a bad id. Every other code is a real failure and must throw so
+  // the render is discarded rather than cached as a missing item.
   if (error) {
-    console.error('Error fetching achievement:', error);
-    return null;
+    if (error.code === 'PGRST116') return null;
+    failed(`getAchievementById(${id})`, error);
   }
 
   return data as Achievement;
@@ -235,10 +256,7 @@ export async function getFeaturedAchievements() {
     .order('date', { ascending: false })
     .limit(3);
 
-  if (error) {
-    console.error('Error fetching featured achievements:', error);
-    return [];
-  }
+  if (error) failed('getFeaturedAchievements', error);
 
   return data as Achievement[];
 }
@@ -254,10 +272,7 @@ export async function getAllPublishedBlogPosts() {
     .eq('published', true)
     .order('publishedAt', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching blog posts:', error);
-    return [];
-  }
+  if (error) failed('getAllPublishedBlogPosts', error);
 
   return data as BlogPost[];
 }
@@ -268,10 +283,7 @@ export async function hasPublishedBlogPosts(): Promise<boolean> {
     .select('*', { count: 'exact', head: true })
     .eq('published', true);
 
-  if (error) {
-    console.error('Error checking blog posts:', error);
-    return false;
-  }
+  if (error) failed('hasPublishedBlogPosts', error);
 
   return (count ?? 0) > 0;
 }
@@ -285,8 +297,8 @@ export async function getBlogPostBySlug(slug: string) {
     .single();
 
   if (error) {
-    console.error('Error fetching blog post:', error);
-    return null;
+    if (error.code === 'PGRST116') return null;
+    failed(`getBlogPostBySlug(${slug})`, error);
   }
 
   return data as BlogPost;
@@ -298,10 +310,7 @@ export async function getAllBlogSlugs() {
     .select('slug')
     .eq('published', true);
 
-  if (error) {
-    console.error('Error fetching blog slugs:', error);
-    return [];
-  }
+  if (error) failed('getAllBlogSlugs', error);
 
   return data.map(post => post.slug);
 }
@@ -314,10 +323,7 @@ export async function getAllOpenSourceContributions(): Promise<OpenSourceContrib
     .order('featured', { ascending: false })
     .order('date', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching open source contributions:', error);
-    return [];
-  }
+  if (error) failed('getAllOpenSourceContributions', error);
 
   return data as OpenSourceContribution[];
 }
@@ -330,10 +336,7 @@ export async function getFeaturedOpenSourceContributions(): Promise<OpenSourceCo
     .order('date', { ascending: false })
     .limit(3);
 
-  if (error) {
-    console.error('Error fetching featured open source contributions:', error);
-    return [];
-  }
+  if (error) failed('getFeaturedOpenSourceContributions', error);
 
   return data as OpenSourceContribution[];
 }
@@ -414,10 +417,7 @@ export async function getAllTags() {
     .order('type', { ascending: true })
     .order('name', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching tags:', error);
-    return [];
-  }
+  if (error) failed('getAllTags', error);
 
   return data as Tag[];
 }
@@ -429,10 +429,7 @@ export async function getTagsByType(type: TagType) {
     .eq('type', type)
     .order('name', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching tags by type:', error);
-    return [];
-  }
+  if (error) failed('getTagsByType', error);
 
   return data as Tag[];
 }
@@ -445,8 +442,8 @@ export async function getTagBySlug(slug: string) {
     .single();
 
   if (error) {
-    console.error('Error fetching tag:', error);
-    return null;
+    if (error.code === 'PGRST116') return null;
+    failed(`getTagBySlug(${slug})`, error);
   }
 
   return data as Tag;
@@ -461,10 +458,7 @@ async function getProjectTags(projectId: number): Promise<Tag[]> {
     `)
     .eq('projectId', projectId);
 
-  if (error) {
-    console.error('Error fetching project tags:', error);
-    return [];
-  }
+  if (error) failed(`getProjectTags(${projectId})`, error);
 
   const tags = data.map((item: any) => item.Tag as Tag).filter(Boolean);
 
@@ -485,10 +479,7 @@ async function getAchievementTags(achievementId: number): Promise<Tag[]> {
     `)
     .eq('achievementId', achievementId);
 
-  if (error) {
-    console.error('Error fetching achievement tags:', error);
-    return [];
-  }
+  if (error) failed(`getAchievementTags(${achievementId})`, error);
 
   return data.map((item: any) => item.Tag as Tag).filter(Boolean);
 }
@@ -505,10 +496,7 @@ async function getBlogPostTags(blogPostId: number): Promise<Tag[]> {
     `)
     .eq('blogPostId', blogPostId);
 
-  if (error) {
-    console.error('Error fetching blog post tags:', error);
-    return [];
-  }
+  if (error) failed(`getBlogPostTags(${blogPostId})`, error);
 
   return data.map((item: any) => item.Tag as Tag).filter(Boolean);
 }
@@ -524,8 +512,8 @@ export async function getProjectWithTags(id: number): Promise<ProjectWithTags | 
     .single();
 
   if (error) {
-    console.error('Error fetching project:', error);
-    return null;
+    if (error.code === 'PGRST116') return null;
+    failed(`getProjectWithTags(${id})`, error);
   }
   if (!data) return null;
 
@@ -546,10 +534,9 @@ export async function getProjectBySlug(slug: string): Promise<ProjectWithTags | 
     .eq('slug', slug)
     .maybeSingle();
 
-  if (error) {
-    console.error('Error fetching project by slug:', error);
-    return null;
-  }
+  // maybeSingle already reports "no such slug" as data === null with no
+  // error, so anything landing here is a real failure, not a 404.
+  if (error) failed(`getProjectBySlug(${slug})`, error);
   if (!data) return null;
 
   const project = data as Project;
@@ -564,10 +551,7 @@ export async function getAchievementBySlug(slug: string): Promise<AchievementWit
     .eq('slug', slug)
     .maybeSingle();
 
-  if (error) {
-    console.error('Error fetching achievement by slug:', error);
-    return null;
-  }
+  if (error) failed(`getAchievementBySlug(${slug})`, error);
   if (!data) return null;
 
   const achievement = data as Achievement;
@@ -629,6 +613,36 @@ export const WORK_CATEGORY_META: Record<WorkCategory, { label: string; href: str
   opensource: { label: "Open Source", href: "/#work-opensource" },
   leadership: { label: "Leadership", href: "/#work-leadership" },
 };
+
+// Project.type stores the DB enum; the grid filters on WorkCategory. This
+// is the only place the two vocabularies meet.
+export const PROJECT_TYPE_TO_CATEGORY: Record<ProjectType, WorkCategory> = {
+  DEVELOP: 'develop',
+  OPEN_SOURCE: 'opensource',
+  DESIGN: 'design',
+  LEADERSHIP: 'leadership',
+};
+
+// A project's categories, deduped and in the canonical chip order so two
+// rows listing the same pair render their badges identically. Falls back
+// to 'develop' if a row somehow arrives with an empty array, so the item
+// still appears under a chip instead of vanishing from the grid.
+export function projectCategories(
+  type: ProjectType[] | ProjectType | null | undefined
+): WorkCategory[] {
+  // Tolerates a bare scalar as well as an array: rows written before the
+  // multi-category migration still arrive as a single value, and the old
+  // CODING / CASE_STUDY spellings are mapped to their renamed equivalents
+  // so an unmigrated database still renders instead of throwing.
+  const legacy: Record<string, WorkCategory> = { CODING: 'develop', CASE_STUDY: 'design' };
+  const values = type == null ? [] : Array.isArray(type) ? type : [type];
+  const order = Object.keys(WORK_CATEGORY_META) as WorkCategory[];
+  const mapped = new Set(
+    values.map((t) => PROJECT_TYPE_TO_CATEGORY[t] ?? legacy[t as string]).filter(Boolean)
+  );
+  const ordered = order.filter((c) => mapped.has(c));
+  return ordered.length > 0 ? ordered : ['develop'];
+}
 
 export type WorkItem = {
   key: string;
@@ -692,7 +706,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
     title: p.name,
     pitch: p.excerpt ?? p.description,
     outcome: p.outcome,
-    categories: [p.type === 'CASE_STUDY' ? 'design' : 'develop'],
+    categories: projectCategories(p.type),
     cover: p.imageUrl ?? getFirstImageFromContent(p.overview),
     coverFallback: coverFallbackText(null, p.name),
     href: `/projects/${p.slug}`,
