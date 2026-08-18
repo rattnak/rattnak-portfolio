@@ -1,6 +1,7 @@
 // components/OpenSourceProjectDetailClient.tsx
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Tag from "./Tag";
 import Breadcrumb from "./Breadcrumb";
 import { WORK_CATEGORY_META } from "@/lib/database";
 
@@ -20,6 +21,10 @@ type ProjectGroup = {
   // Labeled links, absorbed from the old liveUrl column. Rendered in the
   // amber signal; the repo link above stays teal.
   links: { label: string; url: string }[] | null;
+  // Union of the group's per-PR skills, assembled in getOpenSource-
+  // ContributionsGroupedByProject. Open source had no skills at all before
+  // the Work migration added the column.
+  skills: string[];
   mergedCount: number;
   totalCount: number;
   contributions: Contribution[];
@@ -149,6 +154,25 @@ export default function OpenSourceProjectDetailClient({ group, repoInfo }: Props
       <div ref={sentinelRef} style={{ height: 0 }} />
 
       <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+        {/* Same Tag component and palette the project and achievement pages
+            use, so a skill is the same colour everywhere it appears. */}
+        {group.skills.length > 0 && (
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.5rem',
+              marginBottom: '1.5rem',
+            }}
+          >
+            {group.skills.map((skill) => (
+              <Tag key={skill} size="sm">
+                {skill}
+              </Tag>
+            ))}
+          </div>
+        )}
+
         {repoInfo && (
           <p
             className="instrument"

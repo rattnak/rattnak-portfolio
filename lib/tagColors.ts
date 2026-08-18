@@ -61,6 +61,7 @@ export const TAG_COLORS: Record<string, TagColor> = {
   'React Native': { bg: '#EAECF5', text: '#1D2D7C', border: '#9DA6D2' },
   'Rust': { bg: '#F5ECEA', text: '#7C291D', border: '#D2A39D' },
   'Security': { bg: '#F5F4EA', text: '#78711C', border: '#D2CE9D' },
+  'SEO': { bg: '#F5EAEF', text: '#7C1D4C', border: '#D29DB7' },
   'Snowflake': { bg: '#EAF3F5', text: '#1D677C', border: '#9DC7D2' },
   'SQL': { bg: '#F1EAF5', text: '#591D7C', border: '#BF9DD2' },
   'Stripe': { bg: '#EAF5EF', text: '#1D7C44', border: '#9DD2B3' },
@@ -69,10 +70,12 @@ export const TAG_COLORS: Record<string, TagColor> = {
   'Tailwind CSS': { bg: '#EAF2F5', text: '#1D617C', border: '#9DC3D2' },
   'TailwindCSS': { bg: '#EAF2F5', text: '#1D617C', border: '#9DC3D2' },
   'TensorFlow': { bg: '#F5EAEF', text: '#7C1D45', border: '#D29DB3' },
+  'Testing': { bg: '#ECF5EA', text: '#307C1D', border: '#A8D29D' },
   'TypeScript': { bg: '#ECF5EA', text: '#297C1D', border: '#A4D29D' },
   'UI/UX': { bg: '#ECEAF5', text: '#2D1D7C', border: '#A69DD2' },
   'User Research': { bg: '#F5EFEA', text: '#7C481D', border: '#D2B59D' },
   'Vue.js': { bg: '#EAF5F2', text: '#1B745D', border: '#9DD2C5' },
+  'Web Scraping': { bg: '#EBEAF5', text: '#261D7C', border: '#A29DD2' },
   'WebSockets': { bg: '#F5EAF5', text: '#7C1D78', border: '#D29DD0' },
 };
 
@@ -124,6 +127,7 @@ export const TAG_COLORS_DARK: Record<string, TagColor> = {
   'React Native': { bg: 'rgba(139, 154, 228, 0.15)', text: 'rgb(139, 154, 228)', border: 'rgba(139, 154, 228, 0.35)' },
   'Rust': { bg: 'rgba(228, 150, 139, 0.15)', text: 'rgb(228, 150, 139)', border: 'rgba(228, 150, 139, 0.35)' },
   'Security': { bg: 'rgba(228, 221, 139, 0.15)', text: 'rgb(228, 221, 139)', border: 'rgba(228, 221, 139, 0.35)' },
+  'SEO': { bg: 'rgba(228, 139, 183, 0.15)', text: 'rgb(228, 139, 183)', border: 'rgba(228, 139, 183, 0.35)' },
   'Snowflake': { bg: 'rgba(139, 209, 228, 0.15)', text: 'rgb(139, 209, 228)', border: 'rgba(139, 209, 228, 0.35)' },
   'SQL': { bg: 'rgba(195, 139, 228, 0.15)', text: 'rgb(195, 139, 228)', border: 'rgba(195, 139, 228, 0.35)' },
   'Stripe': { bg: 'rgba(139, 228, 176, 0.15)', text: 'rgb(139, 228, 176)', border: 'rgba(139, 228, 176, 0.35)' },
@@ -132,10 +136,12 @@ export const TAG_COLORS_DARK: Record<string, TagColor> = {
   'Tailwind CSS': { bg: 'rgba(139, 202, 228, 0.15)', text: 'rgb(139, 202, 228)', border: 'rgba(139, 202, 228, 0.35)' },
   'TailwindCSS': { bg: 'rgba(139, 202, 228, 0.15)', text: 'rgb(139, 202, 228)', border: 'rgba(139, 202, 228, 0.35)' },
   'TensorFlow': { bg: 'rgba(228, 139, 176, 0.15)', text: 'rgb(228, 139, 176)', border: 'rgba(228, 139, 176, 0.35)' },
+  'Testing': { bg: 'rgba(157, 228, 139, 0.15)', text: 'rgb(157, 228, 139)', border: 'rgba(157, 228, 139, 0.35)' },
   'TypeScript': { bg: 'rgba(151, 228, 139, 0.15)', text: 'rgb(151, 228, 139)', border: 'rgba(151, 228, 139, 0.35)' },
   'UI/UX': { bg: 'rgba(154, 139, 228, 0.15)', text: 'rgb(154, 139, 228)', border: 'rgba(154, 139, 228, 0.35)' },
   'User Research': { bg: 'rgba(228, 180, 139, 0.15)', text: 'rgb(228, 180, 139)', border: 'rgba(228, 180, 139, 0.35)' },
   'Vue.js': { bg: 'rgba(139, 228, 206, 0.15)', text: 'rgb(139, 228, 206)', border: 'rgba(139, 228, 206, 0.35)' },
+  'Web Scraping': { bg: 'rgba(147, 139, 228, 0.15)', text: 'rgb(147, 139, 228)', border: 'rgba(147, 139, 228, 0.35)' },
   'WebSockets': { bg: 'rgba(228, 139, 224, 0.15)', text: 'rgb(228, 139, 224)', border: 'rgba(228, 139, 224, 0.35)' },
 };
 
