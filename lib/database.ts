@@ -820,8 +820,13 @@ export async function getWorkItems(): Promise<WorkItem[]> {
     };
   });
 
+  // Every open source group appears, the same as every project and
+  // achievement does. This used to filter on g.featured, which made open
+  // source the only category that needed a flag to show up at all: when no
+  // contribution carried it, the whole category vanished from the grid with
+  // nothing to indicate why. `featured` still controls ordering below, so a
+  // flagged group sorts to the top rather than being the only one visible.
   const ossItems: WorkItem[] = ossGroups
-    .filter((g) => g.featured)
     .map((g) => ({
       key: `oss-${g.slug}`,
       title: g.projectName,
