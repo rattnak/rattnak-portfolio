@@ -2,7 +2,7 @@
 // Slug-addressed detail route. Legacy numeric ids (/achievements/5) are
 // caught by this same route and 301'd to the canonical slug URL; see
 // slugForLegacyId below.
-import { getAchievementBySlug, getAchievementWithTags, getAllAchievements } from "@/lib/database";
+import { getWorkAchievementBySlug, getWorkSlugs, slugForLegacyAchievementId } from "@/lib/database";
 import { notFound, permanentRedirect } from "next/navigation";
 import AchievementDetailClient from "@/components/AchievementDetailClient";
 
@@ -11,23 +11,20 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const achievements = await getAllAchievements();
-  return achievements.map((achievement) => ({
-    slug: achievement.slug,
-  }));
+  const slugs = await getWorkSlugs('achievement');
+  return slugs.map((slug) => ({ slug }));
 }
 
 // Real slugs always contain a letter, so a digits-only segment is
 // unambiguously a legacy id link.
 async function slugForLegacyId(slug: string): Promise<string | null> {
   if (!/^\d+$/.test(slug)) return null;
-  const achievement = await getAchievementWithTags(parseInt(slug, 10));
-  return achievement?.slug ?? null;
+  return slugForLegacyAchievementId(parseInt(slug, 10));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const achievement = await getAchievementBySlug(slug);
+  const achievement = await getWorkAchievementBySlug(slug);
 
   if (!achievement) {
     return {
@@ -43,7 +40,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function AchievementDetailPage({ params }: Props) {
   const { slug } = await params;
-  const achievement = await getAchievementBySlug(slug);
+  const achievement = await getWorkAchievementBySlug(slug);
 
   if (!achievement) {
     const canonical = await slugForLegacyId(slug);

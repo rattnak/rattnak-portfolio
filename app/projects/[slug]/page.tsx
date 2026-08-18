@@ -2,7 +2,7 @@
 // Slug-addressed detail route. Legacy numeric ids (/projects/5) are
 // caught by this same route and 301'd to the canonical slug URL; see
 // slugForLegacyId below.
-import { getAllProjects, getProjectBySlug, getProjectWithTags } from "@/lib/database";
+import { getWorkProjectBySlug, getWorkSlugs, slugForLegacyProjectId } from "@/lib/database";
 import { notFound, permanentRedirect } from "next/navigation";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 
@@ -16,10 +16,8 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const projects = await getAllProjects();
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
+  const slugs = await getWorkSlugs('project');
+  return slugs.map((slug) => ({ slug }));
 }
 
 // A bare number in the slug position is a legacy /projects/<id> link
@@ -29,13 +27,12 @@ export async function generateStaticParams() {
 // digits-only segment is unambiguous.
 async function slugForLegacyId(slug: string): Promise<string | null> {
   if (!/^\d+$/.test(slug)) return null;
-  const project = await getProjectWithTags(parseInt(slug, 10));
-  return project?.slug ?? null;
+  return slugForLegacyProjectId(parseInt(slug, 10));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const project = await getProjectBySlug(slug);
+  const project = await getWorkProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -51,7 +48,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function ProjectDetailPage({ params }: Props) {
   const { slug } = await params;
-  const project = await getProjectBySlug(slug);
+  const project = await getWorkProjectBySlug(slug);
 
   if (!project) {
     const canonical = await slugForLegacyId(slug);

@@ -863,3 +863,195 @@ export async function getAllBlogPostsWithTags(): Promise<BlogPostWithTags[]> {
   );
   return blogPostsWithTags;
 }
+
+// ================================
+// Work-backed detail fetchers
+//
+// Work is the single source for detail pages now. These return the legacy
+// Project / Achievement shapes so ProjectDetailClient and
+// AchievementDetailClient need no changes: the row is adapted here rather
+// than the components being rewritten against a new type, which keeps this
+// step to one file.
+//
+// Skills are a plain String[] on the row, so the tagList the components
+// expect is synthesized. Only `name` is ever read from a Tag (Tag.tsx looks
+// up its colour by name), so the other fields are filled with inert values.
+// ================================
+
+function skillsAsTagList(skills: string[] | null | undefined): Tag[] {
+  return (skills ?? []).map((name, i) => ({
+    id: -(i + 1), // negative: these are synthetic, not rows in Tag
+    name,
+    slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+    type: 'TECHNICAL' as TagType,
+    description: null,
+    color: null,
+    createdAt: '',
+  }));
+}
+
+const WORK_DETAIL_COLUMNS =
+  'id,slug,name,categories,skills,kind,cardBlurb,tldr,content,outcome,organizer,startDate,endDate,githubUrl,links,imageUrl,featured,createdAt,legacy_project_id';
+
+type WorkDetailRow = {
+  id: number;
+  slug: string;
+  name: string;
+  categories: string[];
+  skills: string[] | null;
+  kind: string | null;
+  cardBlurb: string | null;
+  tldr: string;
+  content: string | null;
+  outcome: string | null;
+  organizer: string | null;
+  startDate: string;
+  endDate: string | null;
+  githubUrl: string | null;
+  links: WorkLink[] | null;
+  imageUrl: string | null;
+  featured: boolean;
+  createdAt: string;
+  legacy_project_id: number | null;
+};
+
+// The DB enum spelling, mapped back to the legacy ProjectType union the
+// detail component still types its `type` prop against.
+const WORK_CATEGORY_TO_PROJECT_TYPE: Record<string, ProjectType> = {
+  DEVELOP: 'DEVELOP',
+  OPEN_SOURCE: 'OPEN_SOURCE',
+  DESIGN: 'DESIGN',
+  LEADERSHIP: 'LEADERSHIP',
+};
+
+export async function getWorkProjectBySlug(slug: string): Promise<ProjectWithTags | null> {
+  const { data, error } = await supabase
+    .from('Work')
+    .select(WORK_DETAIL_COLUMNS)
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error) failed(`getWorkProjectBySlug(${slug})`, error);
+  if (!data) return null;
+
+  const w = data as WorkDetailRow;
+  // Achievements live in Work too; this route only serves the project half.
+  if (w.legacy_project_id === null) return null;
+
+  const types = (w.categories ?? [])
+    .map((c) => WORK_CATEGORY_TO_PROJECT_TYPE[c])
+    .filter(Boolean) as ProjectType[];
+
+  return {
+    id: w.id,
+    name: w.name,
+    slug: w.slug,
+    excerpt: w.cardBlurb,
+    description: w.tldr,
+    overview: w.content,
+    outcome: w.outcome,
+    // `url` folded into links during the migration; the first entry stands in
+    // for the single legacy field the component still reads.
+    url: w.links?.[0]?.url ?? null,
+    type: types.length > 0 ? types : ['DEVELOP'],
+    organizer: w.organizer,
+    tags: w.skills ?? [],
+    imageUrl: w.imageUrl,
+    githubUrl: w.githubUrl,
+    liveUrl: w.links?.find((l) => /live|site|demo/i.test(l.label))?.url ?? null,
+    featured: w.featured,
+    startDate: w.startDate,
+    endDate: w.endDate,
+    createdAt: w.createdAt,
+    tagList: skillsAsTagList(w.skills),
+  };
+}
+
+export async function getWorkAchievementBySlug(slug: string): Promise<AchievementWithTags | null> {
+  const { data, error } = await supabase
+    .from('Work')
+    .select(WORK_DETAIL_COLUMNS)
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error) failed(`getWorkAchievementBySlug(${slug})`, error);
+  if (!data) return null;
+
+  const w = data as WorkDetailRow;
+  if (w.legacy_project_id !== null) return null;
+
+  return {
+    id: w.id,
+    name: w.name,
+    slug: w.slug,
+    type: w.kind ?? '',
+    description: w.tldr,
+    content: w.content,
+    result: w.outcome ?? '',
+    organizer: w.organizer,
+    url: null, // folded into links; getAchievementLinks reads `links` first
+    links: w.links ?? null,
+    imageUrl: w.imageUrl,
+    tags: w.skills ?? [],
+    date: w.startDate,
+    featured: w.featured,
+    createdAt: w.createdAt,
+    tagList: skillsAsTagList(w.skills),
+  };
+}
+
+// Slugs for generateStaticParams, split by which route family serves them.
+export async function getWorkSlugs(kind: 'project' | 'achievement'): Promise<string[]> {
+  const query = supabase.from('Work').select('slug,legacy_project_id');
+  const { data, error } = kind === 'project'
+    ? await query.not('legacy_project_id', 'is', null)
+    : await query.is('legacy_project_id', null);
+
+  if (error) failed(`getWorkSlugs(${kind})`, error);
+  return (data as { slug: string }[]).map((r) => r.slug);
+}
+
+// Legacy /projects/<id> and /achievements/<id> links, resolved to a slug.
+//
+// Projects carry their original id in Work.legacy_project_id, so those
+// resolve from Work directly. Achievements do not: Work.id is a fresh
+// sequence, not the old Achievement.id (Work.id 16 is Achievement.id 4), so
+// that lookup still needs the Achievement table. It is the one remaining
+// reader of it, and the reason the table cannot be dropped until these old
+// links are considered dead.
+export async function slugForLegacyProjectId(id: number): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('Work')
+    .select('slug')
+    .eq('legacy_project_id', id)
+    .maybeSingle();
+
+  if (error) failed(`slugForLegacyProjectId(${id})`, error);
+  return (data as { slug: string } | null)?.slug ?? null;
+}
+
+export async function slugForLegacyAchievementId(id: number): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('Achievement')
+    .select('slug')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) failed(`slugForLegacyAchievementId(${id})`, error);
+  return (data as { slug: string } | null)?.slug ?? null;
+}
+
+// Every Work row, for the sitemap and the search index. Both used to read
+// Project and Achievement separately, which meant a row that existed only in
+// Work (the design case studies) was absent from both.
+export async function getAllWorkRows(): Promise<
+  { slug: string; name: string; legacy_project_id: number | null }[]
+> {
+  const { data, error } = await supabase
+    .from('Work')
+    .select('slug,name,legacy_project_id')
+    .order('startDate', { ascending: false });
+
+  if (error) failed('getAllWorkRows', error);
+  return data as { slug: string; name: string; legacy_project_id: number | null }[];
+}

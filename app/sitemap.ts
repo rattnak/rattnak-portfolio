@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import {
-  getAllProjects,
-  getAllAchievements,
+  getAllWorkRows,
   getAllPublishedBlogPosts,
   getOpenSourceContributionsGroupedByProject,
 } from "@/lib/database";
@@ -9,12 +8,16 @@ import {
 const BASE_URL = "https://rattnak.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, achievements, posts, ossGroups] = await Promise.all([
-    getAllProjects(),
-    getAllAchievements(),
+  const [workRows, posts, ossGroups] = await Promise.all([
+    getAllWorkRows(),
     getAllPublishedBlogPosts(),
     getOpenSourceContributionsGroupedByProject(),
   ]);
+
+  // legacy_project_id still decides the URL prefix, exactly as the grid and
+  // the detail routes do, until /work/[slug] replaces both families.
+  const projects = workRows.filter((w) => w.legacy_project_id !== null);
+  const achievements = workRows.filter((w) => w.legacy_project_id === null);
 
   // Canonical destinations only: /contact 301s to /about#contact, so
   // listing it here would advertise a redirect instead of a real page.

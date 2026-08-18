@@ -3,7 +3,7 @@
 // project, fetched lazily on first palette open rather than bundled
 // into every page load. Revalidated hourly like the rest of the site.
 import { NextResponse } from "next/server";
-import { getAllProjects } from "@/lib/database";
+import { getAllWorkRows } from "@/lib/database";
 
 export const revalidate = 3600;
 
@@ -23,12 +23,14 @@ const PAGES: SearchItem[] = [
 ];
 
 export async function GET() {
-  const projects = await getAllProjects();
-  const projectItems: SearchItem[] = projects.map((p) => ({
-    id: `project-${p.id}`,
-    label: p.name,
-    sublabel: "Project",
-    href: `/projects/${p.slug}`,
+  // Every work item, not just the ones that came from Project: the design
+  // case studies live only in Work and were missing from search entirely.
+  const rows = await getAllWorkRows();
+  const projectItems: SearchItem[] = rows.map((w) => ({
+    id: `work-${w.slug}`,
+    label: w.name,
+    sublabel: w.legacy_project_id !== null ? "Project" : "Achievement",
+    href: w.legacy_project_id !== null ? `/projects/${w.slug}` : `/achievements/${w.slug}`,
     kind: "project",
   }));
 
