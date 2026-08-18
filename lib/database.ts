@@ -751,77 +751,72 @@ function extractJoinedSkills(row: unknown): string[] {
     .sort();
 }
 
+// The Work row as the grid reads it. Work merged Project and Achievement,
+// so this is one query where there used to be two plus a tag join per row.
+type WorkRow = {
+  slug: string;
+  name: string;
+  categories: string[];
+  skills: string[] | null;
+  cardBlurb: string | null;
+  tldr: string;
+  content: string | null;
+  outcome: string | null;
+  imageUrl: string | null;
+  links: WorkLink[] | null;
+  featured: boolean;
+  startDate: string;
+  endDate: string | null;
+  legacy_project_id: number | null;
+};
+
 export async function getWorkItems(): Promise<WorkItem[]> {
-  const [projectsRes, achievements, ossGroups, workRes] = await Promise.all([
-    // The grid renders skill chips now, so projects come back with their
-    // tag rows joined rather than the lean select this used to run.
+  const [workRes, ossGroups] = await Promise.all([
     supabase
-      .from('Project')
-      .select('*, ProjectTag(Tag(name))')
+      .from('Work')
+      .select('slug,name,categories,skills,cardBlurb,tldr,content,outcome,imageUrl,links,featured,startDate,endDate,legacy_project_id')
       .order('featured', { ascending: false })
       .order('startDate', { ascending: false }),
-    getAllAchievements(),
     getOpenSourceContributionsGroupedByProject(),
-    // Categories live on Work now (see docs/WORK_TABLE_MIGRATION.md step 7).
-    // The rest of the grid still reads Project and Achievement, so this is a
-    // narrow join on slug rather than the full step 8 cutover.
-    supabase.from('Work').select('slug, categories, cardBlurb'),
   ]);
 
-  if (projectsRes.error) {
-    console.error('Error fetching projects for work grid:', projectsRes.error);
-  }
-  const projects = projectsRes.error ? [] : (projectsRes.data as Project[]);
+  if (workRes.error) failed('getWorkItems', workRes.error);
+  const rows = workRes.data as WorkRow[];
 
-  // A failed Work read must not silently flatten every row back to one
-  // category, so it falls back per row to the old behavior below.
-  if (workRes.error) {
-    console.error('Error fetching Work categories for grid:', workRes.error);
-  }
-  const workRows = workRes.error
-    ? []
-    : (workRes.data as { slug: string; categories: string[]; cardBlurb: string | null }[]);
-  const workCategories = new Map<string, string[]>(workRows.map((w) => [w.slug, w.categories ?? []]));
-  // The card clamps to two lines, so it needs the short text. cardBlurb is
-  // written to that budget; the longer legacy field stays on the detail page.
-  const workBlurbs = new Map<string, string>(
-    workRows.filter((w) => w.cardBlurb).map((w) => [w.slug, w.cardBlurb as string])
-  );
+  const workItems: WorkItem[] = rows.map((w) => {
+    // legacy_project_id is what distinguishes a row that came from Project
+    // from one that came from Achievement, and it still decides the URL
+    // prefix. Both route families stay live until /work/[slug] replaces them.
+    const isProject = w.legacy_project_id !== null;
+    const externalUrl = w.links?.[0]?.url ?? null;
+    const href = isProject
+      ? `/projects/${w.slug}`
+      : w.content
+        ? `/achievements/${w.slug}`
+        : externalUrl;
 
-  const projectItems: WorkItem[] = projects.map((p) => ({
-    key: `project-${p.id}`,
-    title: p.name,
-    pitch: workBlurbs.get(p.slug) ?? p.excerpt ?? p.description,
-    outcome: p.outcome,
-    categories: workCategoriesFor(workCategories, p.slug, projectCategories(p.type)),
-    cover: p.imageUrl ?? getFirstImageFromContent(p.overview),
-    coverFallback: coverFallbackText(null, p.name),
-    href: `/projects/${p.slug}`,
-    external: false,
-    featured: p.featured,
-    dateLabel: formatDateRange(p.startDate, p.endDate),
-    skills: extractJoinedSkills(p),
-    sortDate: p.startDate,
-  }));
-
-  const achievementItems: WorkItem[] = achievements.map((a) => {
-    const externalUrl = getAchievementLinks(a)[0]?.url ?? null;
     return {
-      key: `achievement-${a.id}`,
-      title: a.name,
-      pitch: workBlurbs.get(a.slug) ?? a.description,
-      outcome: a.result,
-      categories: workCategoriesFor(workCategories, a.slug, ['leadership']),
-      // Explicit cover first, then the first image in the body, then
-      // typography. Same precedence projects use.
-      cover: a.imageUrl ?? getFirstImageFromContent(a.content),
-      coverFallback: coverFallbackText(a.result, a.name),
-      href: a.content ? `/achievements/${a.slug}` : externalUrl,
-      external: !a.content && Boolean(externalUrl),
-      featured: a.featured,
-      dateLabel: formatMonthYear(a.date),
-      skills: a.tags ?? [],
-      sortDate: a.date,
+      key: `work-${w.slug}`,
+      title: w.name,
+      // cardBlurb is written to the card's two-line budget; tldr is the
+      // longer detail-page summary and is only a fallback here.
+      pitch: w.cardBlurb ?? w.tldr,
+      outcome: w.outcome,
+      categories: workCategoriesFor(
+        new Map([[w.slug, w.categories ?? []]]),
+        w.slug,
+        ['develop']
+      ),
+      cover: w.imageUrl ?? getFirstImageFromContent(w.content),
+      coverFallback: coverFallbackText(w.outcome, w.name),
+      href,
+      external: !isProject && !w.content && Boolean(externalUrl),
+      featured: w.featured,
+      dateLabel: isProject
+        ? formatDateRange(w.startDate, w.endDate)
+        : formatMonthYear(w.startDate),
+      skills: w.skills ?? [],
+      sortDate: w.startDate,
     };
   });
 
@@ -844,7 +839,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
       sortDate: g.latestDate,
     }));
 
-  return [...projectItems, ...ossItems, ...achievementItems].sort((a, b) => {
+  return [...workItems, ...ossItems].sort((a, b) => {
     if (a.featured !== b.featured) return a.featured ? -1 : 1;
     return new Date(b.sortDate).getTime() - new Date(a.sortDate).getTime();
   });
