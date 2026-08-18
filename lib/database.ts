@@ -153,14 +153,23 @@ export type BlogPostWithTags = BlogPost & {
   tagList: Tag[]; // Resolved tag objects from junction table
 };
 
+// A labeled link. Shared by Work.links and OpenSourceContribution.links so
+// both tables render the same way: the repo link in the teal accent from its
+// own githubUrl column, every other link in the amber signal.
+export type WorkLink = {
+  label: string;
+  url: string;
+};
+
 export type OpenSourceContribution = {
   id: number;
   projectName: string;
   organization: string | null;
   description: string;
   prUrl: string | null;
-  repoUrl: string | null;
-  liveUrl: string | null; // Live/deployed site for the project (e.g. openlibrary.org), not a specific PR
+  githubUrl: string | null; // Repo link, renamed from repoUrl to match Work
+  links: WorkLink[] | null; // Labeled links; absorbed the old liveUrl column
+  skills: string[]; // Per-PR skills; grouped cards union them
   merged: boolean;
   featured: boolean;
   imageUrl: string | null; // Card cover: /open-source/<slug>/cover.<ext>
@@ -353,8 +362,9 @@ export type OpenSourceProjectGroup = {
   projectName: string;
   slug: string;
   organization: string | null;
-  repoUrl: string | null;
-  liveUrl: string | null;
+  githubUrl: string | null;
+  links: WorkLink[] | null;
+  skills: string[]; // Union of the group's per-PR skills
   mergedCount: number;
   totalCount: number;
   latestDate: string;
@@ -377,8 +387,9 @@ export async function getOpenSourceContributionsGroupedByProject(): Promise<Open
         projectName: c.projectName,
         slug,
         organization: c.organization,
-        repoUrl: c.repoUrl,
-        liveUrl: c.liveUrl,
+        githubUrl: c.githubUrl,
+        links: c.links ?? null,
+        skills: [...(c.skills ?? [])],
         mergedCount: c.merged ? 1 : 0,
         totalCount: 1,
         latestDate: c.date,
@@ -390,8 +401,12 @@ export async function getOpenSourceContributionsGroupedByProject(): Promise<Open
       existing.mergedCount += c.merged ? 1 : 0;
       existing.totalCount += 1;
       existing.featured = existing.featured || c.featured;
-      existing.liveUrl = existing.liveUrl ?? c.liveUrl;
+      existing.links = existing.links ?? c.links ?? null;
       existing.imageUrl = existing.imageUrl ?? c.imageUrl;
+      // Union the group's skills, preserving first-seen order.
+      for (const sk of c.skills ?? []) {
+        if (!existing.skills.includes(sk)) existing.skills.push(sk);
+      }
       if (new Date(c.date) > new Date(existing.latestDate)) {
         existing.latestDate = c.date;
       }
@@ -656,6 +671,10 @@ export type WorkItem = {
   external: boolean;
   featured: boolean;
   dateLabel: string; // rendered uppercase in mono: "Nov 2023", "Aug 2024 - Present"
+  // Skills shown as small chips next to the date, so the grid says what a
+  // piece of work was built with without opening it. Capped at render time,
+  // not here, so the detail page can use the same field in full.
+  skills: string[];
   sortDate: string;
 };
 
@@ -683,13 +702,25 @@ function coverFallbackText(preferred: string | null, name: string): string {
     .toUpperCase();
 }
 
+// Pulls skill names out of the ProjectTag(Tag(name)) join. supabase-js returns
+// the nested relation as an array of { Tag: { name } }, and a row with no tags
+// comes back as an empty array rather than null.
+function extractJoinedSkills(row: unknown): string[] {
+  const joins = (row as { ProjectTag?: { Tag?: { name?: string } | null }[] }).ProjectTag;
+  if (!Array.isArray(joins)) return [];
+  return joins
+    .map((j) => j?.Tag?.name)
+    .filter((n): n is string => typeof n === 'string' && n.length > 0)
+    .sort();
+}
+
 export async function getWorkItems(): Promise<WorkItem[]> {
   const [projectsRes, achievements, ossGroups] = await Promise.all([
-    // Lean fetch: the grid doesn't render tech tags, so skip the
-    // per-project tag queries getAllProjects would run.
+    // The grid renders skill chips now, so projects come back with their
+    // tag rows joined rather than the lean select this used to run.
     supabase
       .from('Project')
-      .select('*')
+      .select('*, ProjectTag(Tag(name))')
       .order('featured', { ascending: false })
       .order('startDate', { ascending: false }),
     getAllAchievements(),
@@ -713,6 +744,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
     external: false,
     featured: p.featured,
     dateLabel: formatDateRange(p.startDate, p.endDate),
+    skills: extractJoinedSkills(p),
     sortDate: p.startDate,
   }));
 
@@ -732,6 +764,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
       external: !a.content && Boolean(externalUrl),
       featured: a.featured,
       dateLabel: formatMonthYear(a.date),
+      skills: a.tags ?? [],
       sortDate: a.date,
     };
   });
@@ -751,6 +784,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
       external: false,
       featured: g.featured,
       dateLabel: formatMonthYear(g.latestDate),
+      skills: g.skills,
       sortDate: g.latestDate,
     }));
 

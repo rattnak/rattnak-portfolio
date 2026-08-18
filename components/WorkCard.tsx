@@ -5,7 +5,14 @@
 import Link from "next/link";
 import type { WorkItem } from "@/lib/database";
 
+// The card has room for a few skills before the row wraps and starts
+// competing with the title. Extras collapse into a "+N" chip rather than
+// being dropped silently, so the count stays honest.
+const MAX_CARD_SKILLS = 3;
+
 export default function WorkCard({ item }: { item: WorkItem }) {
+  const shownSkills = item.skills.slice(0, MAX_CARD_SKILLS);
+  const overflowCount = item.skills.length - shownSkills.length;
   const body = (
     <>
       <div className="work-card-cover">
@@ -34,7 +41,26 @@ export default function WorkCard({ item }: { item: WorkItem }) {
           </span>
         ))}
       </div>
-      <div className="work-card-date instrument">{item.dateLabel}</div>
+      <div className="work-card-meta">
+        <span className="work-card-date instrument">{item.dateLabel}</span>
+        {shownSkills.length > 0 && (
+          <span className="work-card-skills">
+            {shownSkills.map((skill) => (
+              <span key={skill} className="work-card-skill instrument">
+                {skill}
+              </span>
+            ))}
+            {overflowCount > 0 && (
+              <span
+                className="work-card-skill work-card-skill-more instrument"
+                title={item.skills.slice(MAX_CARD_SKILLS).join(", ")}
+              >
+                +{overflowCount}
+              </span>
+            )}
+          </span>
+        )}
+      </div>
     </>
   );
 

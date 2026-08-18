@@ -8,7 +8,7 @@ type Contribution = {
   id: number;
   description: string;
   prUrl: string | null;
-  repoUrl: string | null;
+  githubUrl: string | null;
   merged: boolean;
   date: Date | string;
 };
@@ -16,8 +16,10 @@ type Contribution = {
 type ProjectGroup = {
   projectName: string;
   organization: string | null;
-  repoUrl: string | null;
-  liveUrl: string | null;
+  githubUrl: string | null;
+  // Labeled links, absorbed from the old liveUrl column. Rendered in the
+  // amber signal; the repo link above stays teal.
+  links: { label: string; url: string }[] | null;
   mergedCount: number;
   totalCount: number;
   contributions: Contribution[];
@@ -62,12 +64,12 @@ export default function OpenSourceProjectDetailClient({ group, repoInfo }: Props
     return () => observer.disconnect();
   }, []);
 
-  const hasActions = group.repoUrl || group.liveUrl;
+  const hasActions = group.githubUrl || (group.links?.length ?? 0) > 0;
   const actions = hasActions && (
     <div className="flex flex-wrap project-detail-actions" style={{ gap: condensed ? '0.5rem' : '0.75rem' }}>
-      {group.repoUrl && (
+      {group.githubUrl && (
         <a
-          href={group.repoUrl}
+          href={group.githubUrl}
           target="_blank"
           rel="noreferrer"
           className={condensed ? "btn-icon" : "btn btn-secondary group btn-icon-mobile"}
@@ -78,19 +80,20 @@ export default function OpenSourceProjectDetailClient({ group, repoInfo }: Props
           {!condensed && <span className="btn-icon-mobile-label">View on GitHub</span>}
         </a>
       )}
-      {group.liveUrl && (
+      {(group.links ?? []).map((link) => (
         <a
-          href={group.liveUrl}
+          key={link.url}
+          href={link.url}
           target="_blank"
           rel="noreferrer"
           className={condensed ? "btn-icon" : "btn btn-primary group btn-icon-mobile"}
-          aria-label={condensed ? "Live Website" : undefined}
-          title={condensed ? "Live Website" : undefined}
+          aria-label={condensed ? link.label : undefined}
+          title={condensed ? link.label : undefined}
         >
           <ExternalIcon />
-          {!condensed && <span className="btn-icon-mobile-label">Live Website</span>}
+          {!condensed && <span className="btn-icon-mobile-label">{link.label}</span>}
         </a>
-      )}
+      ))}
     </div>
   );
 
