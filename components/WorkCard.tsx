@@ -6,14 +6,23 @@ import Link from "next/link";
 import Tag from "./Tag";
 import type { WorkItem } from "@/lib/database";
 
-// The card has room for a few skills before the row wraps and starts
-// competing with the title. Extras collapse into a "+N" chip rather than
-// being dropped silently, so the count stays honest.
-const MAX_CARD_SKILLS = 3;
+// Skills share one line with the date and must never wrap: a second row
+// pushes the card taller than its neighbours and breaks the grid's rhythm.
+// Rather than counting characters, the row is clipped by CSS and the "+N"
+// marker is pinned outside the scrolling area, so the cut is always clean
+// whatever the skill names happen to be.
+//
+// The cap here is a ceiling on how many can ever be laid out, not a promise
+// that all of them fit; CSS decides what is actually visible.
+const MAX_CARD_SKILLS = 4;
 
 export default function WorkCard({ item }: { item: WorkItem }) {
   const shownSkills = item.skills.slice(0, MAX_CARD_SKILLS);
-  const overflowCount = item.skills.length - shownSkills.length;
+  // The marker counts every skill, not just the hidden ones: it reads as
+  // "this work has 5 skills, here is the start of the list", and the whole
+  // card already links to the detail page where all of them are listed.
+  const totalSkills = item.skills.length;
+  const hasMore = totalSkills > shownSkills.length;
   const body = (
     <>
       <div className="work-card-cover">
@@ -49,17 +58,19 @@ export default function WorkCard({ item }: { item: WorkItem }) {
             WCAG-AA palette in lib/tagColors.ts, keyed by name. */}
         {shownSkills.length > 0 && (
           <span className="work-card-skills">
-            {shownSkills.map((skill) => (
-              <Tag key={skill} size="sm">
-                {skill}
-              </Tag>
-            ))}
-            {overflowCount > 0 && (
+            <span className="work-card-skills-track">
+              {shownSkills.map((skill) => (
+                <Tag key={skill} size="sm">
+                  {skill}
+                </Tag>
+              ))}
+            </span>
+            {hasMore && (
               <span
                 className="work-card-skill-more instrument"
-                title={item.skills.slice(MAX_CARD_SKILLS).join(", ")}
+                title={item.skills.join(", ")}
               >
-                +{overflowCount}
+                +{totalSkills}
               </span>
             )}
           </span>

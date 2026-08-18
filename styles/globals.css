@@ -3020,34 +3020,53 @@ a:focus-visible {
   margin-top: 0.125rem;
 }
 
+/* The skills row never wraps. A second row of chips makes one card taller
+   than its neighbours, which is what breaks the grid's alignment. The track
+   holds the chips and is clipped; the +N marker sits outside it and keeps
+   its full width, so the count is never the thing that gets cut off. */
+.work-card-skills {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.work-card-skills-track {
+  display: flex;
+  gap: 0.25rem;
+  min-width: 0;
+  overflow: hidden;
+  flex-wrap: nowrap;
+}
+
+/* Chips keep their own width and are clipped by the track rather than
+   squeezed, so a long skill name is cut cleanly instead of compressed
+   into an unreadable sliver. */
+.work-card-skills-track > * {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 .work-card-meta .work-card-date {
   margin-top: 0;
 }
 
-.work-card-skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  min-width: 0;
-}
-
-/* Deliberately not the full Tag treatment: at card size, 3 colored pills
-   next to a muted date would out-shout the title. These read as quiet
-   metadata and pick up color only on the border. */
-.work-card-skill {
+/* Underlined to read as "there is more to see", and never shrinks: it is
+   pinned outside the clipped track. The whole card is already one link to
+   the detail page, where every skill is listed, so this is a signpost
+   rather than its own link (a nested <a> inside the card link would be
+   invalid markup and would break the card's own click target). */
+.work-card-skill-more {
+  flex: 0 0 auto;
   font-size: 0.6875rem;
   line-height: 1.4;
   letter-spacing: 0.02em;
   color: var(--text-muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 0.0625rem 0.375rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
   white-space: nowrap;
-}
-
-.work-card-skill-more {
-  color: var(--text-muted);
-  border-style: dashed;
 }
 
 /* STAR sections in the detail body.

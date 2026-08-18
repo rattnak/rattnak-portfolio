@@ -705,6 +705,32 @@ function coverFallbackText(preferred: string | null, name: string): string {
 // Pulls skill names out of the ProjectTag(Tag(name)) join. supabase-js returns
 // the nested relation as an array of { Tag: { name } }, and a row with no tags
 // comes back as an empty array rather than null.
+// Work.categories stores the Postgres WorkCategory enum in upper snake case;
+// the grid filters on the lowercase WorkCategory union. This is the only place
+// the two spellings meet.
+const DB_CATEGORY_TO_WORK: Record<string, WorkCategory> = {
+  DEVELOP: 'develop',
+  OPEN_SOURCE: 'opensource',
+  DESIGN: 'design',
+  LEADERSHIP: 'leadership',
+};
+
+// Categories for one row, read from the Work table by slug. Falls back to the
+// caller's default when the row is missing or somehow has an empty array, so a
+// gap in Work can never drop an item out of every filter chip.
+function workCategoriesFor(
+  bySlug: Map<string, string[]>,
+  slug: string,
+  fallback: WorkCategory[]
+): WorkCategory[] {
+  const raw = bySlug.get(slug);
+  if (!raw || raw.length === 0) return fallback;
+  const order = Object.keys(WORK_CATEGORY_META) as WorkCategory[];
+  const mapped = new Set(raw.map((v) => DB_CATEGORY_TO_WORK[v]).filter(Boolean));
+  const ordered = order.filter((c) => mapped.has(c));
+  return ordered.length > 0 ? ordered : fallback;
+}
+
 function extractJoinedSkills(row: unknown): string[] {
   const joins = (row as { ProjectTag?: { Tag?: { name?: string } | null }[] }).ProjectTag;
   if (!Array.isArray(joins)) return [];
@@ -715,7 +741,7 @@ function extractJoinedSkills(row: unknown): string[] {
 }
 
 export async function getWorkItems(): Promise<WorkItem[]> {
-  const [projectsRes, achievements, ossGroups] = await Promise.all([
+  const [projectsRes, achievements, ossGroups, workRes] = await Promise.all([
     // The grid renders skill chips now, so projects come back with their
     // tag rows joined rather than the lean select this used to run.
     supabase
@@ -725,6 +751,10 @@ export async function getWorkItems(): Promise<WorkItem[]> {
       .order('startDate', { ascending: false }),
     getAllAchievements(),
     getOpenSourceContributionsGroupedByProject(),
+    // Categories live on Work now (see docs/WORK_TABLE_MIGRATION.md step 7).
+    // The rest of the grid still reads Project and Achievement, so this is a
+    // narrow join on slug rather than the full step 8 cutover.
+    supabase.from('Work').select('slug, categories'),
   ]);
 
   if (projectsRes.error) {
@@ -732,12 +762,23 @@ export async function getWorkItems(): Promise<WorkItem[]> {
   }
   const projects = projectsRes.error ? [] : (projectsRes.data as Project[]);
 
+  // A failed Work read must not silently flatten every row back to one
+  // category, so it falls back per row to the old behavior below.
+  if (workRes.error) {
+    console.error('Error fetching Work categories for grid:', workRes.error);
+  }
+  const workCategories = new Map<string, string[]>(
+    (workRes.error ? [] : (workRes.data as { slug: string; categories: string[] }[])).map(
+      (w) => [w.slug, w.categories ?? []]
+    )
+  );
+
   const projectItems: WorkItem[] = projects.map((p) => ({
     key: `project-${p.id}`,
     title: p.name,
     pitch: p.excerpt ?? p.description,
     outcome: p.outcome,
-    categories: projectCategories(p.type),
+    categories: workCategoriesFor(workCategories, p.slug, projectCategories(p.type)),
     cover: p.imageUrl ?? getFirstImageFromContent(p.overview),
     coverFallback: coverFallbackText(null, p.name),
     href: `/projects/${p.slug}`,
@@ -755,7 +796,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
       title: a.name,
       pitch: a.description,
       outcome: a.result,
-      categories: ['leadership'],
+      categories: workCategoriesFor(workCategories, a.slug, ['leadership']),
       // Explicit cover first, then the first image in the body, then
       // typography. Same precedence projects use.
       cover: a.imageUrl ?? getFirstImageFromContent(a.content),
