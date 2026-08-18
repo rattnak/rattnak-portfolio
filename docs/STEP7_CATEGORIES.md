@@ -22,7 +22,7 @@ hints freely, they are read off the tldr and skills, not off knowing the work.
   date:       Nov 2025
   skills:     Expo, React Native, TypeScript
   tldr:       A React Native mobile application that transforms live stadium experiences by connecting thousands of fans through synchronized, interactive light shows powered by a Node.js Express backend.
-  categories: DEVELOP
+  categories: DEVELOP, DESIGN
 
 ## quickpay-mobile-app
   type:       project
@@ -30,7 +30,7 @@ hints freely, they are read off the tldr and skills, not off knowing the work.
   skills:     Expo, Figma, React Native, Stripe, TypeScript
   tldr:       A React Native mobile application that simplifies personal finance management by unifying multiple bank accounts, enabling QR code payments, and providing interactive budget visualization th
   hint: skills mention design tooling, may be {DEVELOP, DESIGN}
-  categories: DEVELOP
+  categories: DEVELOP, DESIGN
 
 ## fhsu-blackboard-data-queries
   type:       project
@@ -45,14 +45,14 @@ hints freely, they are read off the tldr and skills, not off knowing the work.
   skills:     Firebase, IndexedDB, JavaScript
   tldr:       A Progressive Web App (PWA) implementing the Pomodoro Technique with offline-first architecture. Built with vanilla JavaScript, Firebase Firestore, and IndexedDB, it provides dual-layer data
   hint: skills mention design tooling, may be {DEVELOP, DESIGN}
-  categories: DEVELOP
+  categories: DEVELOP, DESIGN
 
 ## ibtss-26-ai-learning-passport
   type:       project
   date:       Jun 2026
   skills:     Next.js, PostgreSQL
   tldr:       A digital passport web app for the IBTSS 2026 Pre-Conference Workshop on AI in Higher Education. Participants register, visit workshop stations, scan QR codes to collect stamps, receive reso
-  categories: DEVELOP
+  categories: DEVELOP, DESIGN
 
 ## syncia
   type:       project
@@ -60,7 +60,7 @@ hints freely, they are read off the tldr and skills, not off knowing the work.
   skills:     Next.js, OAuth, PostgreSQL
   tldr:       A project coordination platform for FHSU student teams built with Next.js 15, Supabase, and Microsoft Graph. Features Azure AD SSO restricted to @fhsu.edu accounts, project workspaces with r
   hint: skills mention design tooling, may be {DEVELOP, DESIGN}
-  categories: DEVELOP
+  categories: DEVELOP, DESIGN
 
 ## ed2go-modern-campus-etl
   type:       project
@@ -97,7 +97,7 @@ hints freely, they are read off the tldr and skills, not off knowing the work.
   skills:     Public Speaking, Full-Stack Development
   tldr:       Selected as student representative to deliver a speech at the launching ceremony of DICHI Academy's Full-Stack Developer Trainee program.
   hint: text suggests built or engineered something alongside LEADERSHIP
-  categories: LEADERSHIP
+  categories: LEADERSHIP, DEVELOP, DESIGN
 
 ## huawei-seeds-for-the-future-global-ambassador-2024
   type:       achievement / Program
@@ -127,7 +127,7 @@ hints freely, they are read off the tldr and skills, not off knowing the work.
   skills:     (none)
   tldr:       Led a team of 7 students to receive 2nd Place in the 2023 Huawei Seeds For The Future Tech4Good competing against 17 teams from South Korea, Thailand, Laos, Cambodia, Vietnam
   hint: text suggests built or engineered something alongside LEADERSHIP
-  categories: LEADERSHIP
+  categories: LEADERSHIP, DESIGN
 
 ## cambodian-seed-delegate-huawei-seeds-for-the-future-2023
   type:       achievement / Delegate
@@ -142,5 +142,5 @@ hints freely, they are read off the tldr and skills, not off knowing the work.
   skills:     Leadership, Project Management
   tldr:       Founded SafeSangkum, a startup developed through the Techo Startup Center incubation track, covering business model design, pitching, and go-to-market strategy.
   hint: text suggests built or engineered something, design work alongside LEADERSHIP
-  categories: LEADERSHIP
+  categories: LEADERSHIP, DESIGN
 

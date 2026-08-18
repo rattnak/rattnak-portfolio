@@ -7,6 +7,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import DeckEmbed from "./DeckEmbed";
 import Breadcrumb from "./Breadcrumb";
 import remarkGfm from "remark-gfm";
 import Slideshow from "./Slideshow";
@@ -226,11 +227,17 @@ export default function AchievementDetailClient({ achievement }: Props) {
                     transition: 'color 0.2s'
                   }} {...props} />
                 ),
+                // Body images render at their own size, not stretched to the
+                // column. A screenshot narrower than the text column was
+                // previously scaled up to fill it, which softens the pixels
+                // and crops nothing but lies about the original dimensions.
+                // maxWidth caps oversized images without enlarging small ones.
                 img: ({node, alt, ...props}) => (
                   <img
                     alt={alt}
                     style={{
-                      width: '100%',
+                      maxWidth: '100%',
+                      height: 'auto',
                       borderRadius: '0.75rem',
                       border: '1px solid var(--border)',
                       marginTop: '0.5rem',
@@ -243,7 +250,16 @@ export default function AchievementDetailClient({ achievement }: Props) {
                 // ```slideshow: one image path per line, renders a Slideshow.
                 // ```architecture: JSON spec, renders an interactive ArchDiagram.
                 // ```diff: +/- prefixed lines colored via tokens.
+                // ```deck: a share URL, optionally a label on the next line,
+                //           renders an embedded Canva / Google Slides / PDF.
                 code: ({node, className, children, ...props}) => {
+                  if (className === 'language-deck') {
+                    const [url, ...rest] = String(children)
+                      .split('\n')
+                      .map((line) => line.trim())
+                      .filter(Boolean);
+                    if (url) return <DeckEmbed url={url} label={rest.join(' ') || undefined} />;
+                  }
                   if (className === 'language-slideshow') {
                     const images = String(children)
                       .split('\n')
@@ -289,7 +305,7 @@ export default function AchievementDetailClient({ achievement }: Props) {
                     child.tagName === 'code' &&
                     Array.isArray((child as any).properties?.className) &&
                     (child as any).properties.className.includes(`language-${name}`);
-                  if (fenceOf('slideshow') || fenceOf('architecture') || fenceOf('diff')) {
+                  if (fenceOf('slideshow') || fenceOf('architecture') || fenceOf('diff') || fenceOf('deck')) {
                     return <>{children}</>;
                   }
                   return <pre {...props}>{children}</pre>;

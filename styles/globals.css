@@ -3077,3 +3077,90 @@ a:focus-visible {
 .project-overview-content h3.star-result + p {
   color: var(--text-primary);
 }
+
+/* Embedded slide deck (```deck fence, components/DeckEmbed.tsx).
+   16:9 because that is what both Canva and Google Slides export at; a
+   different ratio letterboxes inside the provider's own viewer rather than
+   cropping, so matching it avoids double bars. */
+.deck-embed {
+  margin: 2rem 0;
+}
+
+.deck-embed-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border);
+}
+
+.deck-embed-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.deck-embed-caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 0.625rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.deck-embed-caption a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.deck-embed-caption a:hover {
+  text-decoration: underline;
+}
+
+/* Fallback when the host is not one we can safely frame: a real link
+   instead of an iframe that would render a login page or refuse outright. */
+.deck-embed-fallback {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  text-decoration: none;
+  background-color: var(--background-secondary);
+}
+
+.deck-embed-fallback:hover {
+  border-color: var(--accent-primary);
+}
+
+.deck-embed-fallback-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-primary);
+}
+
+.deck-embed-fallback-title {
+  font-size: var(--text-base);
+  color: var(--text-primary);
+}
+
+/* Body images in project write-ups, matching the achievement renderer:
+   capped to the column but never enlarged past their natural size, so a
+   narrow screenshot stays sharp instead of being upscaled to fill. */
+.project-overview-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  margin: 0.5rem 0 1.5rem;
+}

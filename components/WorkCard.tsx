@@ -3,6 +3,7 @@
 // fallback), title, one pitch line, lowercase category words, mono
 // date. Server component; the whole card is a single link.
 import Link from "next/link";
+import Tag from "./Tag";
 import type { WorkItem } from "@/lib/database";
 
 // The card has room for a few skills before the row wraps and starts
@@ -43,16 +44,19 @@ export default function WorkCard({ item }: { item: WorkItem }) {
       </div>
       <div className="work-card-meta">
         <span className="work-card-date instrument">{item.dateLabel}</span>
+        {/* The same Tag component the detail pages use, so a skill is the
+            same color everywhere it appears. Colors come from the shared
+            WCAG-AA palette in lib/tagColors.ts, keyed by name. */}
         {shownSkills.length > 0 && (
           <span className="work-card-skills">
             {shownSkills.map((skill) => (
-              <span key={skill} className="work-card-skill instrument">
+              <Tag key={skill} size="sm">
                 {skill}
-              </span>
+              </Tag>
             ))}
             {overflowCount > 0 && (
               <span
-                className="work-card-skill work-card-skill-more instrument"
+                className="work-card-skill-more instrument"
                 title={item.skills.slice(MAX_CARD_SKILLS).join(", ")}
               >
                 +{overflowCount}
