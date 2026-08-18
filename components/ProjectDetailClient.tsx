@@ -214,10 +214,17 @@ export default function ProjectDetailClient({ project }: Props) {
         {/* TLDR: a distinct callout, not just the first paragraph of body copy.
             The label sits on the box's top border like a fieldset legend,
             rather than as its own line of text inside. */}
-        <div className="project-detail-tldr" style={{ marginBottom: '2.5rem' }}>
-          <span className="instrument-label project-detail-tldr-mark">TL;DR</span>
-          <p style={{ margin: 0 }}>{project.description}</p>
-        </div>
+        {/* The card already showed `excerpt`, so repeating it here tells a
+            reader who just clicked through nothing new. `description` is the
+            longer summary and is what belongs on the detail page; the callout
+            is dropped entirely on rows where the two are the same text, rather
+            than rendering a duplicate of the card line. */}
+        {project.description && project.description !== project.excerpt && (
+          <div className="project-detail-tldr" style={{ marginBottom: '2.5rem' }}>
+            <span className="instrument-label project-detail-tldr-mark">TL;DR</span>
+            <p style={{ margin: 0 }}>{project.description}</p>
+          </div>
+        )}
 
         {project.imageUrl && (
           <div style={{ marginBottom: '2.5rem', borderRadius: '0.75rem', overflow: 'hidden', backgroundColor: 'var(--background-secondary)' }}>

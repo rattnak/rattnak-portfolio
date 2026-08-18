@@ -3049,3 +3049,31 @@ a:focus-visible {
   color: var(--text-muted);
   border-style: dashed;
 }
+
+/* STAR sections in the detail body.
+   The eight project write-ups already follow Problem / Solution / My
+   Contributions, which is STAR with the Result missing. These rules give
+   each h3 a quiet mono eyebrow and a rule above it, so the four parts read
+   as a structure rather than as three headings and a wall of prose.
+   Styling keys off the existing markup: no content is rewritten to get it. */
+.project-overview-content h3 {
+  position: relative;
+  padding-top: 1.25rem;
+  margin-top: 2.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.project-overview-content h3:first-of-type {
+  margin-top: 1.5rem;
+}
+
+/* The Result section is the one STAR part the write-ups do not have yet.
+   When it is added it gets the accent treatment, since the outcome is the
+   part a reader skims for. */
+.project-overview-content h3.star-result {
+  border-top-color: var(--accent-primary);
+}
+
+.project-overview-content h3.star-result + p {
+  color: var(--text-primary);
+}
