@@ -731,6 +731,17 @@ function workCategoriesFor(
   return ordered.length > 0 ? ordered : fallback;
 }
 
+// A grouped open source card shows its most recent contribution's blurb, and
+// a PR description is written for a changelog, not for a two-line card. Cut it
+// at a word boundary so the clamp never lands mid-word; the detail page lists
+// every contribution in full.
+function shortenPitch(text: string, max = 110): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const at = cut.lastIndexOf(' ');
+  return (at > max * 0.6 ? cut.slice(0, at) : cut).replace(/[,;:.]$/, '') + '...';
+}
+
 function extractJoinedSkills(row: unknown): string[] {
   const joins = (row as { ProjectTag?: { Tag?: { name?: string } | null }[] }).ProjectTag;
   if (!Array.isArray(joins)) return [];
@@ -754,7 +765,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
     // Categories live on Work now (see docs/WORK_TABLE_MIGRATION.md step 7).
     // The rest of the grid still reads Project and Achievement, so this is a
     // narrow join on slug rather than the full step 8 cutover.
-    supabase.from('Work').select('slug, categories'),
+    supabase.from('Work').select('slug, categories, cardBlurb'),
   ]);
 
   if (projectsRes.error) {
@@ -767,16 +778,20 @@ export async function getWorkItems(): Promise<WorkItem[]> {
   if (workRes.error) {
     console.error('Error fetching Work categories for grid:', workRes.error);
   }
-  const workCategories = new Map<string, string[]>(
-    (workRes.error ? [] : (workRes.data as { slug: string; categories: string[] }[])).map(
-      (w) => [w.slug, w.categories ?? []]
-    )
+  const workRows = workRes.error
+    ? []
+    : (workRes.data as { slug: string; categories: string[]; cardBlurb: string | null }[]);
+  const workCategories = new Map<string, string[]>(workRows.map((w) => [w.slug, w.categories ?? []]));
+  // The card clamps to two lines, so it needs the short text. cardBlurb is
+  // written to that budget; the longer legacy field stays on the detail page.
+  const workBlurbs = new Map<string, string>(
+    workRows.filter((w) => w.cardBlurb).map((w) => [w.slug, w.cardBlurb as string])
   );
 
   const projectItems: WorkItem[] = projects.map((p) => ({
     key: `project-${p.id}`,
     title: p.name,
-    pitch: p.excerpt ?? p.description,
+    pitch: workBlurbs.get(p.slug) ?? p.excerpt ?? p.description,
     outcome: p.outcome,
     categories: workCategoriesFor(workCategories, p.slug, projectCategories(p.type)),
     cover: p.imageUrl ?? getFirstImageFromContent(p.overview),
@@ -794,7 +809,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
     return {
       key: `achievement-${a.id}`,
       title: a.name,
-      pitch: a.description,
+      pitch: workBlurbs.get(a.slug) ?? a.description,
       outcome: a.result,
       categories: workCategoriesFor(workCategories, a.slug, ['leadership']),
       // Explicit cover first, then the first image in the body, then
@@ -815,7 +830,7 @@ export async function getWorkItems(): Promise<WorkItem[]> {
     .map((g) => ({
       key: `oss-${g.slug}`,
       title: g.projectName,
-      pitch: g.contributions[0]?.description ?? '',
+      pitch: shortenPitch(g.contributions[0]?.description ?? ''),
       outcome: g.mergedCount > 0 ? `${g.mergedCount} merged` : null,
       categories: ['opensource'],
       cover: g.imageUrl,
