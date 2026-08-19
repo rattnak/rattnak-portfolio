@@ -883,6 +883,18 @@ export async function getAllBlogPostsWithTags(): Promise<BlogPostWithTags[]> {
 // up its colour by name), so the other fields are filled with inert values.
 // ================================
 
+// A link labelled as the live site, versus everything else. The two are kept
+// apart because ProjectDetailClient renders them as separate buttons, so a
+// row with one link must not satisfy both.
+function liveLink(links: WorkLink[] | null): WorkLink | undefined {
+  return (links ?? []).find((l) => /live|site|demo/i.test(l.label));
+}
+
+function firstNonLiveLink(links: WorkLink[] | null): WorkLink | undefined {
+  const live = liveLink(links);
+  return (links ?? []).find((l) => l !== live);
+}
+
 function skillsAsTagList(skills: string[] | null | undefined): Tag[] {
   return (skills ?? []).map((name, i) => ({
     id: -(i + 1), // negative: these are synthetic, not rows in Tag
@@ -955,15 +967,18 @@ export async function getWorkProjectBySlug(slug: string): Promise<ProjectWithTag
     description: w.tldr,
     overview: w.content,
     outcome: w.outcome,
-    // `url` folded into links during the migration; the first entry stands in
-    // for the single legacy field the component still reads.
-    url: w.links?.[0]?.url ?? null,
+    // `url` and `liveUrl` were separate columns before the migration folded
+    // both into `links`. The detail page still renders them as two different
+    // buttons ("View Case Study" and "Live Website"), so handing the same
+    // entry to both draws one link twice. liveUrl claims the live-site entry;
+    // url only gets what is left over.
+    url: firstNonLiveLink(w.links)?.url ?? null,
     type: types.length > 0 ? types : ['DEVELOP'],
     organizer: w.organizer,
     tags: w.skills ?? [],
     imageUrl: w.imageUrl,
     githubUrl: w.githubUrl,
-    liveUrl: w.links?.find((l) => /live|site|demo/i.test(l.label))?.url ?? null,
+    liveUrl: liveLink(w.links)?.url ?? null,
     featured: w.featured,
     startDate: w.startDate,
     endDate: w.endDate,
