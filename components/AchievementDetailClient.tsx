@@ -30,6 +30,10 @@ type Achievement = {
   organizer?: string | null;
   url?: string | null;
   links?: AchievementLink[] | null;
+  // A deck among the links renders as an inline viewer after the body,
+  // matching the project detail page. The ```deck fence still works for
+  // decks authored inside the markdown itself.
+  deckUrl?: string | null;
   tags?: string[];
   date: Date | string;
   featured?: boolean;
@@ -315,6 +319,13 @@ export default function AchievementDetailClient({ achievement }: Props) {
               {achievement.content}
             </ReactMarkdown>
           </article>
+        )}
+
+        {achievement.deckUrl && (
+          <section style={{ marginTop: '2.5rem' }}>
+            <h2 className="project-detail-section-title">Presentation</h2>
+            <DeckEmbed url={achievement.deckUrl} label={`${achievement.name} deck`} />
+          </section>
         )}
       </div>
     </div>

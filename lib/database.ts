@@ -134,6 +134,7 @@ export type Competition = Achievement;
 
 export type AchievementWithTags = Achievement & {
   tagList: Tag[];
+  deckUrl?: string | null; // Slide deck, embedded rather than linked
 };
 
 // Legacy type alias for backward compatibility
@@ -1027,7 +1028,10 @@ export async function getWorkAchievementBySlug(slug: string): Promise<Achievemen
     result: w.outcome ?? '',
     organizer: w.organizer,
     url: null, // folded into links; getAchievementLinks reads `links` first
-    links: w.links ?? null,
+    // The deck renders as an inline viewer, so it is kept out of the link
+    // buttons the same way the project page does it.
+    links: (w.links ?? []).filter((l) => !isDeckLink(l)),
+    deckUrl: (w.links ?? []).find(isDeckLink)?.url ?? null,
     imageUrl: w.imageUrl,
     tags: w.skills ?? [],
     date: w.startDate,
