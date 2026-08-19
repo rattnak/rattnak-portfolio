@@ -62,6 +62,10 @@ export type Project = {
 
 export type ProjectWithTags = Project & {
   tagList: Tag[]; // Resolved tag objects from junction table
+  // Labeled links carried over from Work.links: press coverage, a
+  // certificate, a write-up. Absent on rows still read from the Project
+  // table, which has no such column.
+  links?: WorkLink[] | null;
 };
 
 export type AchievementLink = {
@@ -979,6 +983,7 @@ export async function getWorkProjectBySlug(slug: string): Promise<ProjectWithTag
     imageUrl: w.imageUrl,
     githubUrl: w.githubUrl,
     liveUrl: liveLink(w.links)?.url ?? null,
+    links: w.links ?? null,
     featured: w.featured,
     startDate: w.startDate,
     endDate: w.endDate,

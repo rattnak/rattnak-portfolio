@@ -27,6 +27,10 @@ type Project = {
   imageUrl?: string | null;
   githubUrl?: string | null;
   liveUrl?: string | null;
+  // Additional labeled links beyond the repo and the live site: press
+  // coverage, a certificate, a write-up. Rendered one button each, the same
+  // way the open source detail page renders its links.
+  links?: { label: string; url: string }[] | null;
   featured?: boolean;
   startDate: Date | string;
   endDate?: Date | string | null;
@@ -105,6 +109,24 @@ function ProjectActions({ project, compact = false }: { project: Project; compac
           {!compact && <span className="btn-icon-mobile-label">View Case Study</span>}
         </a>
       )}
+      {(project.links ?? [])
+        // url and liveUrl already render above; skip whichever entries they
+        // came from so a link is never drawn twice.
+        .filter((l) => l.url !== project.url && l.url !== project.liveUrl)
+        .map((link) => (
+          <a
+            key={link.url}
+            href={link.url}
+            target="_blank"
+            rel="noreferrer"
+            className={compact ? "btn-icon" : `btn btn-secondary group${iconOnlyClass}`}
+            aria-label={compact ? link.label : undefined}
+            title={compact ? link.label : undefined}
+          >
+            <ExternalIcon />
+            {!compact && <span className="btn-icon-mobile-label">{link.label}</span>}
+          </a>
+        ))}
     </div>
   );
 }
@@ -124,7 +146,8 @@ export default function ProjectDetailClient({ project }: Props) {
   const hasActions =
     (isOngoingKind && project.githubUrl) ||
     project.liveUrl ||
-    (categories.includes("design") && project.url);
+    (categories.includes("design") && project.url) ||
+    (project.links?.length ?? 0) > 0;
 
   // Condensed sticky header: a sentinel sits at the header's natural
   // position; once it scrolls past the (sticky) navbar, the header
