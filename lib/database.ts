@@ -66,6 +66,7 @@ export type ProjectWithTags = Project & {
   // certificate, a write-up. Absent on rows still read from the Project
   // table, which has no such column.
   links?: WorkLink[] | null;
+  deckUrl?: string | null; // Slide deck, embedded rather than linked
 };
 
 export type AchievementLink = {
@@ -887,6 +888,12 @@ export async function getAllBlogPostsWithTags(): Promise<BlogPostWithTags[]> {
 // up its colour by name), so the other fields are filled with inert values.
 // ================================
 
+// A link holding a slide deck, by label. Kept apart from the button links
+// because ProjectDetailClient renders it as an embedded viewer.
+function isDeckLink(l: WorkLink): boolean {
+  return /deck|slides|presentation/i.test(l.label);
+}
+
 // A link labelled as the live site, versus everything else. The two are kept
 // apart because ProjectDetailClient renders them as separate buttons, so a
 // row with one link must not satisfy both.
@@ -983,7 +990,12 @@ export async function getWorkProjectBySlug(slug: string): Promise<ProjectWithTag
     imageUrl: w.imageUrl,
     githubUrl: w.githubUrl,
     liveUrl: liveLink(w.links)?.url ?? null,
-    links: w.links ?? null,
+    // The deck is pulled out of links so it renders as an inline viewer
+    // rather than as one more button that navigates away.
+    links: (w.links ?? []).filter((l) => !isDeckLink(l)).length > 0
+      ? (w.links ?? []).filter((l) => !isDeckLink(l))
+      : null,
+    deckUrl: (w.links ?? []).find(isDeckLink)?.url ?? null,
     featured: w.featured,
     startDate: w.startDate,
     endDate: w.endDate,

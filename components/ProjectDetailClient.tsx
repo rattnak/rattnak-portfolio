@@ -2,6 +2,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import DeckEmbed from "./DeckEmbed";
 import Tag from "./Tag";
 import Breadcrumb from "./Breadcrumb";
 import { WORK_CATEGORY_META, projectCategories, type ProjectType } from "@/lib/database";
@@ -31,6 +32,10 @@ type Project = {
   // coverage, a certificate, a write-up. Rendered one button each, the same
   // way the open source detail page renders its links.
   links?: { label: string; url: string }[] | null;
+  // A slide deck to embed under the write-up. Kept as its own field rather
+  // than an entry in `links`, because a deck renders inline as a viewer, not
+  // as a button that navigates away.
+  deckUrl?: string | null;
   featured?: boolean;
   startDate: Date | string;
   endDate?: Date | string | null;
@@ -265,6 +270,16 @@ export default function ProjectDetailClient({ project }: Props) {
               style={{ fontSize: 'var(--text-base)', lineHeight: 1.7, color: 'var(--text-secondary)' }}
               dangerouslySetInnerHTML={{ __html: project.overview }}
             />
+          </section>
+        )}
+
+        {/* The deck sits after the write-up: the prose says what the work was,
+            the slides show it. `overview` is injected as raw HTML, so the
+            embed cannot live inside it and is rendered as a component here. */}
+        {project.deckUrl && (
+          <section style={{ marginTop: '2.5rem' }}>
+            <h2 className="project-detail-section-title">Presentation</h2>
+            <DeckEmbed url={project.deckUrl} label={`${project.name} deck`} />
           </section>
         )}
       </div>
